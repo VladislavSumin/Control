@@ -11,14 +11,14 @@ java {
     targetCompatibility = JavaVersion.VERSION_1_8
 }
 
-group = "ru.falseteam.myhome"
+group = "ru.falseteam.control.api"
 version = "0.1.0"
 
 dependencies {
     with(Dependencies.Kotlin) {
         implementation(stdLibJdk8)
-    }
-    with(Dependencies) {
+        implementation(coroutines)
+        implementation(serialization)
     }
 }
 

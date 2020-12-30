@@ -2,14 +2,8 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import ru.falseteam.config.Configuration.Dependencies
 
 plugins {
-    java
     kotlin("jvm")
     kotlin("plugin.serialization") version ru.falseteam.config.Configuration.Versions.kotlin
-}
-
-repositories {
-    mavenCentral()
-    jcenter()
 }
 
 java {
@@ -17,10 +11,12 @@ java {
     targetCompatibility = JavaVersion.VERSION_1_8
 }
 
-group = "ru.falseteam.myhome"
+group = "ru.falseteam.control.server"
 version = "0.1.0"
 
 dependencies {
+    implementation(project(":api"))
+
     with(Dependencies.Kotlin) {
         implementation(stdLibJdk8)
         implementation(reflect)
@@ -31,14 +27,6 @@ dependencies {
         implementation(ktorSerialization)
 
         implementation(kodein)
-
-        implementation(r2dbcH2)
-        implementation(r2dbcPool)
-
-        implementation(reactorExtensions)
-        implementation(reactorCoroutines)
-
-        implementation(graphqlSchemaGenerator)
 
         implementation(log4j2Api)
         implementation(log4j2Core)
