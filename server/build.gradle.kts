@@ -16,6 +16,7 @@ version = "0.1.0"
 
 dependencies {
     implementation(project(":api"))
+    implementation("ru.falseteam.rsub:rsub-ktor-websocket-connector-server")
 
     with(Dependencies.Kotlin) {
         implementation(stdLibJdk8)
