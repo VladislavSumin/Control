@@ -1,2 +1,2 @@
 rootProject.name = "Control"
-include(":app",":server")
+include(":app", ":server", ":api")
