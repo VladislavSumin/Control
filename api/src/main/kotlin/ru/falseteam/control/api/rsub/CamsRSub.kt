@@ -1,8 +1,8 @@
-package ru.falseteam.control.server.domain.cams
+package ru.falseteam.control.api.rsub
 
 import kotlinx.coroutines.flow.Flow
 import ru.falseteam.control.api.dto.CameraDTO
 
-interface CamsInteractor {
+interface CamsRSub {
     fun observeAll(): Flow<List<CameraDTO>>
 }

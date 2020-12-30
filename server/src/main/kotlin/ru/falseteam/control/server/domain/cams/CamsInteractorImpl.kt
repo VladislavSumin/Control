@@ -19,5 +19,5 @@ class CamsInteractorImpl : CamsInteractor {
     )
 
 
-    override fun observeCams(): Flow<List<CameraDTO>> = cams
+    override fun observeAll(): Flow<List<CameraDTO>> = cams
 }
