@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.ScrollableColumn
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Card
@@ -13,10 +12,16 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.setContent
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.flow.MutableStateFlow
+import ru.falseteam.control.domain.cams.Camera
+import ru.falseteam.control.domain.cams.CamsInteractor
+import ru.falseteam.control.domain.cams.CamsInteractorImpl
 import ru.falseteam.control.ui.ControlTheme
 
 class MainActivity : AppCompatActivity() {
@@ -26,21 +31,14 @@ class MainActivity : AppCompatActivity() {
             ControlTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colors.background) {
-                    CamsList(cams)
+                    CamsList()
                 }
             }
         }
     }
 }
 
-val cams = listOf(
-    Camera("Camera 1", "10.0.0.1"),
-    Camera("Camera 2", "10.0.0.2"),
-    Camera("Camera 3", "10.0.0.3"),
-    Camera("Camera 4", "10.0.0.4"),
-)
-
-data class Camera(val name: String, val address: String)
+val camsIterator = CamsInteractorImpl()
 
 @Composable
 fun CameraCard(camera: Camera) {
@@ -63,11 +61,13 @@ fun CameraCard(camera: Camera) {
 }
 
 @Composable
-fun CamsList(cams: List<Camera>) {
+fun CamsList() {
+    val cams = camsIterator.observeCams()
+        .collectAsState(initial = listOf<Camera>(Camera("asf", "asfdf")))
     ScrollableColumn(
 //        modifier = Modifier.padding(4.dp, 0.dp)
     ) {
-        cams.forEach { CameraCard(camera = it) }
+        cams.value.forEach { CameraCard(camera = it) }
     }
 }
 
@@ -75,6 +75,6 @@ fun CamsList(cams: List<Camera>) {
 @Composable
 fun DefaultPreview() {
     ControlTheme {
-        CamsList(cams)
+        CamsList()
     }
 }
