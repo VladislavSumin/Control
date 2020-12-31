@@ -5,7 +5,6 @@ import ru.falseteam.control.api.rsub.CamsRSub
 import ru.falseteam.control.server.domain.cams.CamsInteractor
 import ru.falseteam.control.server.domain.cams.CamsInteractorImpl
 import ru.falseteam.control.server.rsub.CamsRSubImpl
-import ru.falseteam.control.server.rsub.createRSubServer
 import ru.falseteam.rsub.server.RSubServer
 
 val Kodein = DI {
@@ -14,8 +13,8 @@ val Kodein = DI {
 
     // rSub
     bind<RSubServer>() with singleton {
-        createRSubServer(instance()).apply {
-            registerImpl(instance<CamsRSub>(), "CamsRSub")
+        RSubServer().apply {
+            registerImpl(instance<CamsRSub>())
         }
     }
     bind<CamsRSub>() with singleton { CamsRSubImpl(instance()) }
