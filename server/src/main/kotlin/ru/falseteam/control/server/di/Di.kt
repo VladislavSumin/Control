@@ -13,6 +13,10 @@ val Kodein = DI {
     bind<CamsInteractor>() with singleton { CamsInteractorImpl() }
 
     // rSub
-    bind<RSubServer>() with singleton { createRSubServer(instance()) }
+    bind<RSubServer>() with singleton {
+        createRSubServer(instance()).apply {
+            registerImpl(instance<CamsRSub>(), "CamsRSub")
+        }
+    }
     bind<CamsRSub>() with singleton { CamsRSubImpl(instance()) }
 }

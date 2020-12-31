@@ -15,8 +15,9 @@ object Configuration {
             const val serialization = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.0.1"
         }
 
-        const val ktor = "io.ktor:ktor-server-netty:${Versions.ktor}"
+        const val ktorServer = "io.ktor:ktor-server-netty:${Versions.ktor}"
         const val ktorWebSocket = "io.ktor:ktor-websockets:${Versions.ktor}"
+        const val ktorClient = "io.ktor:ktor-client-okhttp:${Versions.ktor}"
         const val ktorSerialization = "io.ktor:ktor-serialization:${Versions.ktor}"
 
         const val kodein = "org.kodein.di:kodein-di:7.1.0"
