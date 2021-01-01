@@ -24,6 +24,7 @@ import ru.falseteam.control.domain.cams.CamsInteractor
 import ru.falseteam.control.domain.cams.CamsInteractorImpl
 import ru.falseteam.control.ui.ControlTheme
 import ru.falseteam.control.ui.screens.AddCameraScreen
+import ru.falseteam.control.ui.screens.CamsScreen
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,51 +33,10 @@ class MainActivity : AppCompatActivity() {
             ControlTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colors.background) {
-                    CamsList()
+                    CamsScreen()
 //                    AddCameraScreen()
                 }
             }
         }
-    }
-}
-
-val camsIterator by Kodein.instance<CamsInteractor>()
-
-@Composable
-fun CameraCard(camera: CameraDTO) {
-    Card(
-        elevation = 2.dp,
-        modifier = Modifier
-            .padding(4.dp, 4.dp)
-            .clickable(onClick = { /*TODO*/ })
-
-    ) {
-        Column(
-            Modifier
-                .fillMaxWidth()
-                .padding(4.dp)
-        ) {
-            Text(text = camera.name)
-            Text(text = camera.address)
-        }
-    }
-}
-
-@Composable
-fun CamsList() {
-    val cams = camsIterator.observeAll()
-        .collectAsState(initial = listOf(CameraDTO(0, "asf", "asfdf", 123)))
-    ScrollableColumn(
-//        modifier = Modifier.padding(4.dp, 0.dp)
-    ) {
-        cams.value.forEach { CameraCard(camera = it) }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    ControlTheme {
-        CamsList()
     }
 }
