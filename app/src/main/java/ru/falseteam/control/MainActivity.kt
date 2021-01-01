@@ -23,6 +23,7 @@ import ru.falseteam.control.di.Kodein
 import ru.falseteam.control.domain.cams.CamsInteractor
 import ru.falseteam.control.domain.cams.CamsInteractorImpl
 import ru.falseteam.control.ui.ControlTheme
+import ru.falseteam.control.ui.screens.AddCameraScreen
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,7 +32,8 @@ class MainActivity : AppCompatActivity() {
             ControlTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colors.background) {
-                    CamsList()
+//                    CamsList()
+                    AddCameraScreen()
                 }
             }
         }
