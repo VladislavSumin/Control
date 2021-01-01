@@ -1,23 +1,25 @@
 
-CREATE TABLE hockeyPlayer (
-  player_number INTEGER NOT NULL,
-  full_name TEXT NOT NULL
+CREATE TABLE camera (
+  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
+  name TEXT NOT NULL,
+  ip TEXT NOT NULL,
+  port INTEGER NOT NULL
 );
 
-CREATE INDEX hockeyPlayer_full_name ON hockeyPlayer(full_name);
+-- CREATE INDEX hockeyPlayer_full_name ON hockeyPlayer(full_name);
 
-INSERT INTO hockeyPlayer (player_number, full_name)
-VALUES (15, 'Ryan Getzlaf');
+INSERT INTO camera (name, ip, port)
+VALUES ('Camera 1', '10.0.0.1', 34567);
 
 
 selectAll:
 SELECT *
-FROM hockeyPlayer;
+FROM camera;
 
 insert:
-INSERT INTO hockeyPlayer(player_number, full_name)
-VALUES (?, ?);
+INSERT INTO camera(id, name, ip, port)
+VALUES (?, ?, ?, ?);
 
-insertFullPlayerObject:
-INSERT INTO hockeyPlayer(player_number, full_name)
+insertFullObject:
+INSERT INTO camera(id, name, ip, port)
 VALUES ?;

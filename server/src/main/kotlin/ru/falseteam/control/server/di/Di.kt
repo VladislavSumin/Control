@@ -4,6 +4,7 @@ import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver
 import org.kodein.di.*
 import ru.falseteam.control.api.rsub.CamsRSub
+import ru.falseteam.control.server.database.CameraQueries
 import ru.falseteam.control.server.database.Database
 import ru.falseteam.control.server.domain.cams.CamsInteractor
 import ru.falseteam.control.server.domain.cams.CamsInteractorImpl
@@ -25,6 +26,7 @@ val Kodein = DI {
         }
         Database(instance())
     }
+    bind<CameraQueries>() with factory { instance<Database>().cameraQueries }
 
     // Domain
     bind<CamsInteractor>() with singleton { CamsInteractorImpl() }
