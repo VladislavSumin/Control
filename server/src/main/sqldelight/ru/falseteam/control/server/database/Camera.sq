@@ -2,13 +2,13 @@
 CREATE TABLE camera (
   id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
   name TEXT NOT NULL,
-  ip TEXT NOT NULL,
+  address TEXT NOT NULL,
   port INTEGER NOT NULL
 );
 
 -- CREATE INDEX hockeyPlayer_full_name ON hockeyPlayer(full_name);
 
-INSERT INTO camera (name, ip, port)
+INSERT INTO camera (name, address, port)
 VALUES ('Camera 1', '10.0.0.1', 34567);
 
 
@@ -17,9 +17,9 @@ SELECT *
 FROM camera;
 
 insert:
-INSERT INTO camera(id, name, ip, port)
+INSERT INTO camera(id, name, address, port)
 VALUES (?, ?, ?, ?);
 
 insertFullObject:
-INSERT INTO camera(id, name, ip, port)
+INSERT INTO camera(id, name, address, port)
 VALUES ?;

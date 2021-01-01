@@ -32,8 +32,8 @@ class MainActivity : AppCompatActivity() {
             ControlTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colors.background) {
-//                    CamsList()
-                    AddCameraScreen()
+                    CamsList()
+//                    AddCameraScreen()
                 }
             }
         }
@@ -65,7 +65,7 @@ fun CameraCard(camera: CameraDTO) {
 @Composable
 fun CamsList() {
     val cams = camsIterator.observeAll()
-        .collectAsState(initial = listOf(CameraDTO(0, "asf", "asfdf")))
+        .collectAsState(initial = listOf(CameraDTO(0, "asf", "asfdf", 123)))
     ScrollableColumn(
 //        modifier = Modifier.padding(4.dp, 0.dp)
     ) {

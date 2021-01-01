@@ -29,7 +29,7 @@ val Kodein = DI {
     bind<CameraQueries>() with factory { instance<Database>().cameraQueries }
 
     // Domain
-    bind<CamsInteractor>() with singleton { CamsInteractorImpl() }
+    bind<CamsInteractor>() with singleton { CamsInteractorImpl(instance()) }
 
     // rSub
     bind<RSubServer>() with singleton {

@@ -1,23 +1,37 @@
 package ru.falseteam.control.server.domain.cams
 
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
+import com.squareup.sqldelight.runtime.coroutines.asFlow
+import com.squareup.sqldelight.runtime.coroutines.mapToList
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.withContext
 import ru.falseteam.control.api.dto.CameraDTO
+import ru.falseteam.control.server.database.Camera
+import ru.falseteam.control.server.database.CameraQueries
 
-class CamsInteractorImpl : CamsInteractor {
-    private val cams = MutableStateFlow(
-        listOf(
-            CameraDTO(0, "Camera 1", "10.0.0.1"),
-            CameraDTO(1, "Camera 2", "10.0.0.2"),
-            CameraDTO(2, "Camera 3", "10.0.0.3"),
-            CameraDTO(3, "Camera 4", "10.0.0.4"),
-            CameraDTO(4, "Camera 5", "10.0.0.5"),
-            CameraDTO(5, "Camera 6", "10.0.0.6"),
-            CameraDTO(6, "Camera 7", "10.0.0.7"),
-            CameraDTO(7, "Camera 8", "10.0.0.8"),
+class CamsInteractorImpl(
+    private val cameraQueries: CameraQueries
+) : CamsInteractor {
+    override fun observeAll(): Flow<List<CameraDTO>> =
+        cameraQueries.selectAll()
+            .asFlow()
+            .mapToList()
+            .flowOn(Dispatchers.IO)
+            .map { list ->
+                list.map { it.toDTO() }
+            }.shareIn(
+                scope = GlobalScope,
+                started = SharingStarted.WhileSubscribed(replayExpirationMillis = 0),
+                replay = 1
+            )
+
+    private fun Camera.toDTO(): CameraDTO {
+        return CameraDTO(
+            id = id,
+            name = name,
+            address = address,
+            port = port.toInt()
         )
-    )
-
-
-    override fun observeAll(): Flow<List<CameraDTO>> = cams
+    }
 }
