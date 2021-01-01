@@ -5,12 +5,13 @@ import com.squareup.sqldelight.runtime.coroutines.mapToList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.withContext
 import ru.falseteam.control.api.dto.CameraDTO
 import ru.falseteam.control.server.database.Camera
 import ru.falseteam.control.server.database.CameraQueries
 
 class CamsInteractorImpl(
-    cameraQueries: CameraQueries
+    private val cameraQueries: CameraQueries
 ) : CamsInteractor {
     private val allObservable = cameraQueries.selectAll()
         .asFlow()
@@ -24,6 +25,20 @@ class CamsInteractorImpl(
         )
 
     override fun observeAll(): Flow<List<CameraDTO>> = allObservable
+
+    override suspend fun insert(camera: CameraDTO) = withContext(Dispatchers.IO) {
+        cameraQueries.insert(camera.toEntity())
+    }
+
+    private fun CameraDTO.toEntity(): Camera {
+        return Camera(
+            id = id,
+            name = name,
+            address = address,
+            port = port.toLong()
+        )
+    }
+
 
     private fun Camera.toDTO(): CameraDTO {
         return CameraDTO(

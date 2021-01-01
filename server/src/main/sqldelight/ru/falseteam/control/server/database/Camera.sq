@@ -17,9 +17,5 @@ SELECT *
 FROM camera;
 
 insert:
-INSERT INTO camera(id, name, address, port)
-VALUES (?, ?, ?, ?);
-
-insertFullObject:
-INSERT INTO camera(id, name, address, port)
+INSERT INTO camera(name, address, port)
 VALUES ?;
