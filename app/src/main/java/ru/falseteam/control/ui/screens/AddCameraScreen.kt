@@ -12,12 +12,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.viewModel
 import kotlinx.coroutines.flow.asStateFlow
+import org.kodein.di.direct
+import ru.falseteam.control.di.Kodein
+import ru.falseteam.control.di.kodeinViewModel
 import ru.falseteam.control.ui.PrimaryAccentButton
 import ru.falseteam.control.ui.PrimaryButton
 
 @Composable
 @Preview(showBackground = true)
-fun AddCameraScreen(viewModel: AddCameraViewModel = viewModel()) {
+fun AddCameraScreen(viewModel: AddCameraViewModel = kodeinViewModel()) {
     val state = viewModel.state.collectAsState().value
     val isLoading = state is AddCameraState.Loading
 
