@@ -11,7 +11,7 @@ import ru.falseteam.control.domain.cams.CamsInteractorImpl
 import ru.falseteam.rsub.client.RSubClient
 import ru.falseteam.rsub.connector.ktorwebsocket.client.RSubConnectorKtorWebSocket
 
-val Kodein = DI {
+val Kodein = DI.lazy {
     // Domain
     bind<CamsInteractor>() with singleton { CamsInteractorImpl(instance()) }
 

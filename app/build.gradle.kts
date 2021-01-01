@@ -51,6 +51,7 @@ dependencies {
 
     with(ru.falseteam.config.Configuration.Dependencies) {
         implementation(kodein)
+        implementation(kodeinAndroidX)
         implementation(ktorClient)
     }
 
