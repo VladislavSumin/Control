@@ -3,6 +3,8 @@ package ru.falseteam.control.di
 import io.ktor.client.*
 import io.ktor.client.features.websocket.*
 import org.kodein.di.*
+import ru.falseteam.control.api.CamsApi
+import ru.falseteam.control.api.CamsApiImpl
 import ru.falseteam.control.api.rsub.CamsRSub
 import ru.falseteam.control.domain.cams.CamsInteractor
 import ru.falseteam.control.domain.cams.CamsInteractorImpl
@@ -12,6 +14,9 @@ import ru.falseteam.rsub.connector.ktorwebsocket.client.RSubConnectorKtorWebSock
 val Kodein = DI {
     // Domain
     bind<CamsInteractor>() with singleton { CamsInteractorImpl(instance()) }
+
+    // Api
+    bind<CamsApi>() with singleton { CamsApiImpl(instance()) }
 
     // rSub
     bind<HttpClient>() with singleton {
