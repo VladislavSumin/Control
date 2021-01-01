@@ -1,13 +1,8 @@
 package ru.falseteam.control.ui
 
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.Button
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.CombinedModifier
@@ -44,13 +39,14 @@ fun PrimaryAccentButton(
     )
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 private fun ButtonInternal(
     onClick: () -> Unit,
     text: String,
     modifier: Modifier,
     showProgress: Boolean,
-    enabled: Boolean,
+    enabledGlobal: Boolean,
     btnHeight: Dp,
     progressHeight: Dp,
     shape: Shape,
@@ -62,8 +58,19 @@ private fun ButtonInternal(
             Modifier
                 .height(btnHeight)
         ),
-        enabled = enabled,
-        shape = shape
+        enabled = if (showProgress) false else enabledGlobal,
+        shape = shape,
+
+        // No change button colors to disabled if status in progress
+        colors = object : ButtonColors {
+            val colors = ButtonDefaults.buttonColors()
+
+            override fun backgroundColor(enabled: Boolean): Color =
+                colors.backgroundColor(enabledGlobal)
+
+            override fun contentColor(enabled: Boolean) =
+                colors.contentColor(enabledGlobal)
+        }
 
     ) {
         if (showProgress) {
