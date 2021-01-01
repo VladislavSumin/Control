@@ -4,6 +4,7 @@ import ru.falseteam.config.Configuration.Dependencies
 plugins {
     kotlin("jvm")
     kotlin("plugin.serialization") version ru.falseteam.config.Configuration.Versions.kotlin
+    id("com.squareup.sqldelight")
 }
 
 java {
@@ -13,6 +14,12 @@ java {
 
 group = "ru.falseteam.control.server"
 version = "0.1.0"
+
+sqldelight {
+    database("Database") {
+        packageName = "ru.falseteam.control.server.database"
+    }
+}
 
 dependencies {
     implementation(project(":api"))
@@ -33,6 +40,8 @@ dependencies {
         implementation(log4j2Core)
         implementation(log4jSlf4jImpl)
     }
+    implementation("com.squareup.sqldelight:sqlite-driver:1.4.3")
+    implementation("com.squareup.sqldelight:coroutines-extensions-jvm:1.4.3")
 }
 
 tasks.withType<KotlinCompile> {
