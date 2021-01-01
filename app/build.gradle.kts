@@ -60,7 +60,7 @@ dependencies {
     implementation("androidx.compose.ui:ui:1.0.0-alpha09")
     implementation("androidx.compose.material:material:1.0.0-alpha09")
     implementation("androidx.compose.ui:ui-tooling:1.0.0-alpha09")
-//    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.3.0-alpha06")
+    implementation("androidx.navigation:navigation-compose:1.0.0-alpha04")
     testImplementation("junit:junit:4.13.1")
     androidTestImplementation("androidx.test.ext:junit:1.1.2")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.3.0")

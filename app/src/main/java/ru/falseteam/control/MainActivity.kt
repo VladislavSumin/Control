@@ -17,6 +17,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.setContent
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.navigate
+import androidx.navigation.compose.rememberNavController
 import org.kodein.di.instance
 import ru.falseteam.control.api.dto.CameraDTO
 import ru.falseteam.control.di.Kodein
@@ -31,10 +35,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             ControlTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(color = MaterialTheme.colors.background) {
-                    CamsScreen()
-//                    AddCameraScreen()
+                val navController = rememberNavController()
+                NavHost(navController = navController, startDestination = Destinations.CamsScreen) {
+                    composable(Destinations.CamsScreen) { CamsScreen(navController) }
+                    composable(Destinations.AddCameraScreen) { AddCameraScreen() }
                 }
             }
         }

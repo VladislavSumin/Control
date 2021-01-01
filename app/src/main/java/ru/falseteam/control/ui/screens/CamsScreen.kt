@@ -12,22 +12,26 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.ComposeNavigator
+import androidx.navigation.compose.navigate
+import androidx.navigation.compose.rememberNavController
 import org.kodein.di.instance
+import ru.falseteam.control.Destinations
 import ru.falseteam.control.R
 import ru.falseteam.control.api.dto.CameraDTO
 import ru.falseteam.control.di.Kodein
 import ru.falseteam.control.domain.cams.CamsInteractor
 
 @Composable
-@Preview(showBackground = true)
-fun CamsScreen() {
+fun CamsScreen(navController: NavController) {
     val camsInteractor: CamsInteractor by Kodein.instance()
     val camsState = camsInteractor.observeAll()
         .collectAsState(initial = null)
 
     Scaffold(
         floatingActionButton = {
-            FloatingActionButton(onClick = { /*TODO*/ }) {
+            FloatingActionButton(onClick = { navController.navigate(Destinations.AddCameraScreen) }) {
                 Image(vectorResource(id = R.drawable.ic_add))
             }
         },
