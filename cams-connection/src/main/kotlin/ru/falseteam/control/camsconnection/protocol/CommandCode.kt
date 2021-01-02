@@ -5,7 +5,7 @@ import java.lang.Exception
 /**
  * Command code list
  */
-internal enum class CommandCode(val code: Int) {
+enum class CommandCode(val code: Int) {
     NULL(0),
 
     LOGIN_REQ(1000),

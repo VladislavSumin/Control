@@ -3,13 +3,9 @@ package ru.falseteam.control.camsconnection
 import io.ktor.network.selector.*
 import io.ktor.network.sockets.*
 import io.ktor.utils.io.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.channelFlow
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.*
+import kotlinx.coroutines.channels.ticker
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import org.slf4j.LoggerFactory
@@ -35,18 +31,22 @@ class CameraConnection(
     val connectionObservable = channelFlow {
         while (true) {
             send(CameraConnectionState.Connecting)
-            var client: Socket? = null
+            var clientGlobal: Socket? = null
             try {
-                client = connect()
+                coroutineScope {
+                    val client = connect()
+                    clientGlobal = client
 
-                val writeChannel = client.openWriteChannel()
-                val readChannel = client.openReadChannel()
-                val sessionId = auth(readChannel, writeChannel)
-                log.trace("Auth complete for connection $address:$port")
-                send(CameraConnectionState.Connected)
-
-                client.awaitClosed()
-                throw IOException("connection closed")
+                    val writeChannel = client.openWriteChannel()
+                    val readChannel = client.openReadChannel()
+                    val sessionId = auth(readChannel, writeChannel)
+                    log.trace("Auth complete for connection $address:$port, sessionId=$sessionId")
+                    val receiveFlow = makeReceiveFlow(readChannel, this)
+                    launch { ping(writeChannel, sessionId) }
+                    send(CameraConnectionState.Connected(receiveFlow) { writeChannel.write(it) })
+                    client.awaitClosed()
+                    throw IOException("connection closed by camera")
+                }
             } catch (e: CancellationException) {
                 log.trace("Connection with $address:$port closed. (Coroutine cancelled)")
                 throw e
@@ -55,7 +55,7 @@ class CameraConnection(
                 send(CameraConnectionState.Disconnected(e))
             } finally {
                 try {
-                    client?.close()
+                    clientGlobal?.close()
                 } catch (e: Exception) {
                     log.warn("Error when closing connection with $address:$port", e)
                 }
@@ -67,9 +67,27 @@ class CameraConnection(
         .flowOn(Dispatchers.IO)
         .shareIn(GlobalScope, SharingStarted.WhileSubscribed(replayExpirationMillis = 0), 1)
 
+    //TODO research maybe ping not need if auth return AliveInterval = 0
+    private suspend fun ping(write: ByteWriteChannel, sessionId: Int) {
+        ticker(10000, 2000).receiveAsFlow().collect {
+            log.trace("Ping $address:$port")
+            write.write(CommandRepository.keepAlive(sessionId))
+        }
+    }
+
+    private fun makeReceiveFlow(read: ByteReadChannel, scope: CoroutineScope) = flow {
+        while (true) {
+            val msg = read.readMsg()
+            if (msg.messageId == CommandCode.KEEPALIVE_RSP) continue
+            emit(msg)
+        }
+    }.shareIn(scope, SharingStarted.Eagerly)
+
     private suspend fun auth(read: ByteReadChannel, write: ByteWriteChannel): Int {
-        write.write(CommandRepository.auth())
+        val msg = CommandRepository.auth()
+        write.write(msg)
         val response = read.readMsg()
+        //FIXME add response code parsing, to check wrong auth()
         if (response.messageId != CommandCode.LOGIN_RSP) throw IOException("Auth failed")
         return response.sessionId
     }
@@ -85,6 +103,8 @@ class CameraConnection(
 
     private suspend fun ByteWriteChannel.write(msg: Msg) {
         writeLock.withLock {
+            log.trace("Send ${msg.messageId.name} to $address:$port")
+
             val buffer = ByteBuffer.allocate(msg.getSize())
             buffer.order(ByteOrder.LITTLE_ENDIAN)
             with(buffer) {
@@ -131,6 +151,7 @@ class CameraConnection(
             buffer.flip()
             data = buffer.array()
 
+            log.trace("Received ${this.messageId.name} from $address:$port")
             return this
         }
     }

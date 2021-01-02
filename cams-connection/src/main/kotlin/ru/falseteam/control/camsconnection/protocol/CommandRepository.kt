@@ -4,26 +4,39 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
-
+//TODO remove data classes
 internal object CommandRepository {
+    private val json = Json {
+        encodeDefaults = true
+    }
+
     fun auth() = compile(
         CommandCode.LOGIN_REQ, 0,
-        Json.encodeToString(AuthData())
+        json.encodeToString(AuthData())
     )
 
     @Serializable
     data class AuthData(
         val EncryptType: String = "MD5",
         val LoginType: String = "DVRIP-Web",
-        val Password: String = "tlJwpbo6",
-        val Username: String = "admin",
+        val PassWord: String = "tlJwpbo6",
+        val UserName: String = "admin",
     )
 
-//    fun keepAlive(sessionID: Int) = compile(
-//        CommandCode.KEEPALIVE_REQ, sessionID,
-//        "Name" to "KeepAlive",
-//        "SessionID" to "0x%X".format(sessionID)
-//    )
+    fun keepAlive(sessionID: Int) = compile(
+        CommandCode.KEEPALIVE_REQ, sessionID,
+        json.encodeToString(
+            KeepAliveData(
+                SessionID = "0x%X".format(sessionID)
+            )
+        )
+    )
+
+    @Serializable
+    data class KeepAliveData(
+        val Name: String = "KeepAlive",
+        val SessionID: String,
+    )
 //
 //    fun monitorClaim(sessionID: Int) = compile(
 //        CommandCode.MONITOR_CLAIM, sessionID,

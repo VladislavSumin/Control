@@ -30,7 +30,7 @@ import java.lang.StringBuilder
  * @param dataLength 4 byte, data length
  * @param data - data
  */
-internal data class Msg(
+data class Msg(
     var headFlag: Byte = -1,
     var version: Byte = 0x01,
     var reserved01: Byte = 0x00,
