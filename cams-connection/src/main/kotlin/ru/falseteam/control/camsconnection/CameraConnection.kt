@@ -1,13 +1,14 @@
 package ru.falseteam.control.camsconnection
 
+import io.ktor.network.selector.*
+import io.ktor.network.sockets.*
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.channelFlow
 import org.slf4j.LoggerFactory
 import java.io.IOException
 import java.net.InetSocketAddress
-import java.nio.channels.AsynchronousSocketChannel
 import java.util.concurrent.CancellationException
-import java.util.concurrent.Future
 
 class CameraConnection(
     private val address: String,
@@ -17,22 +18,20 @@ class CameraConnection(
         private val log = LoggerFactory.getLogger("cams.connection")
     }
 
-    val connectionObservable = channelFlow<CameraConnectionState> {
+    val connectionObservable = channelFlow {
         while (true) {
             send(CameraConnectionState.Connecting)
-            var client: AsynchronousSocketChannel? = null
+            var client: Socket? = null
             try {
                 client = connect()
                 send(CameraConnectionState.Connected)
-
-                while (client.isOpen) {
-                    delay(300)
-                }
+                client.awaitClosed()
                 throw IOException("connection closed")
             } catch (e: CancellationException) {
                 log.trace("Connection with $address:$port closed. (Coroutine cancelled)")
                 throw e
             } catch (e: Exception) {
+                log.trace("Connection with $address:$port closed or not established with exception: ${e.message}")
                 send(CameraConnectionState.Disconnected(e))
             } finally {
                 try {
@@ -46,22 +45,12 @@ class CameraConnection(
         }
     }
 
-    private suspend fun connect(): AsynchronousSocketChannel {
+    private suspend fun connect(): Socket {
         log.trace("Connecting to $address:$port")
-        val client = AsynchronousSocketChannel.open()
-        val socketAddress = InetSocketAddress(address, port)
-        client.connect(socketAddress).await()
+        val socket = aSocket(ActorSelectorManager(Dispatchers.IO))
+            .tcp()
+            .connect(InetSocketAddress(address, port))
         log.trace("Connection with $address:$port established")
-        return client
-    }
-
-    private suspend fun <T> Future<T>.await(): T {
-        return try {
-            while (!isDone) delay(2)
-            get()
-        } catch (e: CancellationException) {
-            cancel(false)
-            throw e
-        }
+        return socket
     }
 }

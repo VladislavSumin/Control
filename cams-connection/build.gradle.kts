@@ -22,6 +22,7 @@ dependencies {
         implementation(coroutines)
     }
     with(Dependencies) {
+        implementation(ktorNetwork)
         implementation(slf4j)
     }
 }

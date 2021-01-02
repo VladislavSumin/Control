@@ -18,6 +18,7 @@ object Configuration {
         const val ktorServer = "io.ktor:ktor-server-netty:${Versions.ktor}"
         const val ktorWebSocket = "io.ktor:ktor-websockets:${Versions.ktor}"
         const val ktorClient = "io.ktor:ktor-client-okhttp:${Versions.ktor}"
+        const val ktorNetwork = "io.ktor:ktor-network:${Versions.ktor}"
         const val ktorSerialization = "io.ktor:ktor-serialization:${Versions.ktor}"
         const val ktorClientSerialization = "io.ktor:ktor-client-serialization:${Versions.ktor}"
 
