@@ -2,4 +2,4 @@ rootProject.name = "Control"
 
 includeBuild("../rSub")
 
-include(":app", ":server", ":api")
+include(":app", ":server", ":api", "cams-connection")
