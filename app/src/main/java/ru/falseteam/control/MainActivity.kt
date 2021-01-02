@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity() {
                 val navController = rememberNavController()
                 NavHost(navController = navController, startDestination = Destinations.CamsScreen) {
                     composable(Destinations.CamsScreen) { CamsScreen(navController) }
-                    composable(Destinations.AddCameraScreen) { AddCameraScreen() }
+                    composable(Destinations.AddCameraScreen) { AddCameraScreen(navController) }
                 }
             }
         }

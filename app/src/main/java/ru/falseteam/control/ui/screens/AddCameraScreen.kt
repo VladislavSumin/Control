@@ -2,32 +2,35 @@ package ru.falseteam.control.ui.screens
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.*
+import androidx.compose.material.Text
+import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.savedinstancestate.savedInstanceState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.viewModel
-import kotlinx.coroutines.flow.asStateFlow
-import org.kodein.di.direct
+import androidx.navigation.NavController
 import ru.falseteam.control.api.dto.CameraDTO
-import ru.falseteam.control.di.Kodein
 import ru.falseteam.control.di.kodeinViewModel
 import ru.falseteam.control.ui.PrimaryAccentButton
-import ru.falseteam.control.ui.PrimaryButton
 
 @Composable
-@Preview(showBackground = true)
-fun AddCameraScreen(viewModel: AddCameraViewModel = kodeinViewModel()) {
+fun AddCameraScreen(
+    navController: NavController,
+    viewModel: AddCameraViewModel = kodeinViewModel()
+) {
     val state = viewModel.state.collectAsState().value
     val isLoading = state is AddCameraState.Loading
 
     val (name, setName) = savedInstanceState { "" }
     val (address, setAddress) = savedInstanceState { "" }
     val (port, setPort) = savedInstanceState { "" }
+
+    if (state is AddCameraState.Success) {
+        navController.popBackStack()
+        return
+    }
 
     Column(
         Modifier
@@ -43,7 +46,6 @@ fun AddCameraScreen(viewModel: AddCameraViewModel = kodeinViewModel()) {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(0.dp, 4.dp)
-
         )
 
         TextField(
