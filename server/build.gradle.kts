@@ -23,6 +23,7 @@ sqldelight {
 
 dependencies {
     implementation(project(":api"))
+    implementation(project(":cams-connection"))
     implementation("ru.falseteam.rsub:rsub-ktor-websocket-connector-server")
 
     with(Dependencies.Kotlin) {

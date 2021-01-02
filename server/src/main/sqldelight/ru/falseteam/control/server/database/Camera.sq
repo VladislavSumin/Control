@@ -9,7 +9,7 @@ CREATE TABLE camera (
 -- CREATE INDEX hockeyPlayer_full_name ON hockeyPlayer(full_name);
 
 INSERT INTO camera (name, address, port)
-VALUES ('Camera 1', '10.0.0.1', 34567);
+VALUES ('Test Coridor Camera', '10.10.2.2', 34567);
 
 
 selectAll:

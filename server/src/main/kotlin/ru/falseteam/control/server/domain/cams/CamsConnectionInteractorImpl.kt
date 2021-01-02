@@ -1,10 +1,12 @@
 package ru.falseteam.control.server.domain.cams
 
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.slf4j.LoggerFactory
 import ru.falseteam.control.api.dto.CameraDTO
+import ru.falseteam.control.camsconnection.CameraConnection
 
 class CamsConnectionInteractorImpl(
     private val camsInteractor: CamsInteractor
@@ -34,6 +36,13 @@ class CamsConnectionInteractorImpl(
     private suspend fun processCamera(camera: CameraDTO) {
         try {
             log.trace("Start process camera ${camera.name}")
+            CameraConnection(
+                address = camera.address,
+                port = camera.port
+            ).connectionObservable.collect {
+//                println("New camera status for ${camera.name} is $it")
+            }
+
         } finally {
             log.trace("Stopped process camera ${camera.name}")
         }
