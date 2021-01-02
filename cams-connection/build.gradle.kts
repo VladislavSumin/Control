@@ -19,8 +19,10 @@ dependencies {
     with(Dependencies.Kotlin) {
         implementation(stdLibJdk8)
         implementation(reflect)
+        implementation(coroutines)
     }
     with(Dependencies) {
+        implementation(slf4j)
     }
 }
 

@@ -39,6 +39,7 @@ dependencies {
         implementation(log4j2Api)
         implementation(log4j2Core)
         implementation(log4jSlf4jImpl)
+        implementation(slf4j)
     }
     implementation("com.squareup.sqldelight:sqlite-driver:1.4.3")
     implementation("com.squareup.sqldelight:coroutines-extensions-jvm:1.4.3")
