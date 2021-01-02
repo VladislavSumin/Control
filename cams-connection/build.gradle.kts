@@ -20,6 +20,7 @@ dependencies {
         implementation(stdLibJdk8)
         implementation(reflect)
         implementation(coroutines)
+        implementation(serialization)
     }
     with(Dependencies) {
         implementation(ktorNetwork)
