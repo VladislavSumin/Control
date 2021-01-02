@@ -53,6 +53,7 @@ dependencies {
         implementation(kodein)
         implementation(kodeinAndroidX)
         implementation(ktorClient)
+        implementation(ktorClientSerialization)
     }
 
     implementation("androidx.core:core-ktx:1.3.2")

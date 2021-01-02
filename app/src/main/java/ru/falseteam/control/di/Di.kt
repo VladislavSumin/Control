@@ -2,6 +2,7 @@ package ru.falseteam.control.di
 
 import androidx.lifecycle.ViewModelProvider
 import io.ktor.client.*
+import io.ktor.client.features.json.*
 import io.ktor.client.features.websocket.*
 import org.kodein.di.*
 import ru.falseteam.control.api.CamsApi
@@ -15,7 +16,7 @@ import ru.falseteam.rsub.connector.ktorwebsocket.client.RSubConnectorKtorWebSock
 
 val Kodein = DI.lazy {
     // Domain
-    bind<CamsInteractor>() with singleton { CamsInteractorImpl(instance()) }
+    bind<CamsInteractor>() with singleton { CamsInteractorImpl(instance(), instance()) }
 
     // Api
     bind<CamsApi>() with singleton { CamsApiImpl(instance()) }
@@ -27,6 +28,7 @@ val Kodein = DI.lazy {
     // rSub
     bind<HttpClient>() with singleton {
         HttpClient {
+            install(JsonFeature)
             install(WebSockets)
         }
     }

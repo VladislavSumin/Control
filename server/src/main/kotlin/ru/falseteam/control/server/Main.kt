@@ -1,7 +1,9 @@
 package ru.falseteam.control.server
 
 import io.ktor.application.*
+import io.ktor.features.*
 import io.ktor.routing.*
+import io.ktor.serialization.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import io.ktor.websocket.*
@@ -16,6 +18,9 @@ fun main(args: Array<String>) {
     val camsApi: CamsApi by Kodein.instance()
 
     embeddedServer(Netty, 8080) {
+        install(ContentNegotiation) {
+            json()
+        }
         install(WebSockets)
         routing {
             camsApi.install(this)

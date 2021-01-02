@@ -5,4 +5,5 @@ import ru.falseteam.control.api.dto.CameraDTO
 
 interface CamsInteractor {
     fun observeAll(): Flow<List<CameraDTO>>
+    suspend fun put(camera: CameraDTO)
 }

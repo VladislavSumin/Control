@@ -19,6 +19,7 @@ object Configuration {
         const val ktorWebSocket = "io.ktor:ktor-websockets:${Versions.ktor}"
         const val ktorClient = "io.ktor:ktor-client-okhttp:${Versions.ktor}"
         const val ktorSerialization = "io.ktor:ktor-serialization:${Versions.ktor}"
+        const val ktorClientSerialization = "io.ktor:ktor-client-serialization:${Versions.ktor}"
 
         const val kodein = "org.kodein.di:kodein-di:7.1.0"
         const val kodeinAndroidX = "org.kodein.di:kodein-di-framework-android-x:7.1.0"

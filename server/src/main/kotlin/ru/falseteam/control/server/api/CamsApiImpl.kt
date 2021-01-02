@@ -1,5 +1,7 @@
 package ru.falseteam.control.server.api
 
+import io.ktor.http.*
+import io.ktor.http.cio.*
 import io.ktor.request.*
 import io.ktor.routing.*
 import ru.falseteam.control.api.dto.CameraDTO
@@ -13,6 +15,7 @@ class CamsApiImpl(
         put(path = "/api/v1/cams") {
             val camera = context.receive<CameraDTO>()
             camsInteractor.insert(camera)
+            context.response.status(HttpStatusCode.OK)
         }
     }
 }

@@ -13,6 +13,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.viewModel
 import kotlinx.coroutines.flow.asStateFlow
 import org.kodein.di.direct
+import ru.falseteam.control.api.dto.CameraDTO
 import ru.falseteam.control.di.Kodein
 import ru.falseteam.control.di.kodeinViewModel
 import ru.falseteam.control.ui.PrimaryAccentButton
@@ -71,7 +72,16 @@ fun AddCameraScreen(viewModel: AddCameraViewModel = kodeinViewModel()) {
         Spacer(modifier = Modifier.weight(1f))
 
         PrimaryAccentButton(
-            onClick = { viewModel.onClickAdd() },
+            onClick = {
+                viewModel.onClickAdd(
+                    CameraDTO(
+                        id = 0,
+                        name = name,
+                        address = address,
+                        port = port.toInt()
+                    )
+                )
+            },
             text = "Add camera",
             showProgress = isLoading,
             modifier = Modifier
