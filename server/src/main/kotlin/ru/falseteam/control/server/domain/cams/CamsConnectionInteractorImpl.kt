@@ -1,12 +1,14 @@
 package ru.falseteam.control.server.domain.cams
 
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import org.slf4j.LoggerFactory
 import ru.falseteam.control.api.dto.CameraDTO
+import ru.falseteam.control.camsconnection.AbstractCameraConnection
 import ru.falseteam.control.camsconnection.CameraConnection
+import ru.falseteam.control.camsconnection.CameraConnectionState
 
 class CamsConnectionInteractorImpl(
     private val camsInteractor: CamsInteractor
@@ -39,7 +41,19 @@ class CamsConnectionInteractorImpl(
             CameraConnection(
                 address = camera.address,
                 port = camera.port
-            ).connectionObservable.collect {
+            ).connectionObservable.collectLatest {
+                if (it is CameraConnectionState.Connected) {
+                    it.movementEvent
+                        .flatMapLatest {
+                            flow {
+                                emit(true)
+                                delay(5000)
+                                emit(false)
+                            }
+                        }
+                        .distinctUntilChanged()
+                        .collect { println("MOVEMENT ALARM, URGENT!!!! (state = $it)") }
+                }
 //                println("New camera status for ${camera.name} is $it")
             }
 

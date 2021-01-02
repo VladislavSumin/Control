@@ -37,7 +37,8 @@ internal object CommandRepository {
         val Name: String = "KeepAlive",
         val SessionID: String,
     )
-//
+
+    //
 //    fun monitorClaim(sessionID: Int) = compile(
 //        CommandCode.MONITOR_CLAIM, sessionID,
 //        "Name" to "OPMonitor",
@@ -81,10 +82,15 @@ internal object CommandRepository {
 //        "SessionID" to "0x%X".format(sessionID)
 //    )
 //
-//    fun alarmStart(sessionID: Int) = compile(
-//        CommandCode.GUARD_REQ, sessionID,
-//        "SessionID" to "0x%X".format(sessionID)
-//    )
+    fun alarmStart(sessionID: Int) = compile(
+        CommandCode.GUARD_REQ, sessionID,
+        json.encodeToString(AlarmStartData("0x%X".format(sessionID)))
+    )
+
+    @Serializable
+    data class AlarmStartData(
+        val SessionID: String
+    )
 
 
     private fun compile(commandCode: CommandCode, sessionID: Int, data: String) =
