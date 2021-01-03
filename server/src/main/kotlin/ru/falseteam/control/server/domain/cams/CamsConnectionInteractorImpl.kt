@@ -9,6 +9,7 @@ import ru.falseteam.control.api.dto.CameraDTO
 import ru.falseteam.control.camsconnection.AbstractCameraConnection
 import ru.falseteam.control.camsconnection.CameraConnection
 import ru.falseteam.control.camsconnection.CameraConnectionState
+import ru.falseteam.control.camsconnection.CameraVideoConnection
 
 class CamsConnectionInteractorImpl(
     private val camsInteractor: CamsInteractor
@@ -61,4 +62,25 @@ class CamsConnectionInteractorImpl(
             log.trace("Stopped process camera ${camera.name}")
         }
     }
+
+//    private suspend fun processCamera(camera: CameraDTO) {
+//        try {
+//            log.trace("Start process camera ${camera.name}")
+//            CameraVideoConnection(
+//                address = camera.address,
+//                port = camera.port
+//            ).connectionObservable.collectLatest {
+//                if (it is CameraConnectionState.ConnectedVideo) {
+//                    it.videoFlow
+//                        .collect {
+//                            println("MOVEMENT ALARM, URGENT!!!!")
+//                        }
+//                }
+////                println("New camera status for ${camera.name} is $it")
+//            }
+//
+//        } finally {
+//            log.trace("Stopped process camera ${camera.name}")
+//        }
+//    }
 }

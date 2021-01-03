@@ -38,37 +38,47 @@ internal object CommandRepository {
         val SessionID: String,
     )
 
-    //
-//    fun monitorClaim(sessionID: Int) = compile(
-//        CommandCode.MONITOR_CLAIM, sessionID,
-//        "Name" to "OPMonitor",
-//        "OPMonitor" to mapOf(
-//            "Action" to "Claim",
-//            "Parameter" to mapOf(
-//                "Channel" to 0,
-//                "CombinMode" to "NONE",
-//                "StreamType" to "Main",
-//                "TransMode" to "TCP"
-//            )
-//        ),
-//        "SessionID" to "0x%X".format(sessionID)
-//    )
-//
-//    fun monitorStart(sessionID: Int) = compile(
-//        CommandCode.MONITOR_REQ, sessionID,
-//        "OPMonitor" to mapOf(
-//            "Action" to "Start",
-//            "Parameter" to mapOf(
-//                "Channel" to 0,
-//                "CombinMode" to "NONE",
-//                "StreamType" to "Main",
-//                "TransMode" to "TCP"
-//            )
-//        ),
-//        "SessionID" to "0x%X".format(sessionID)
-//    )
-//
-//    fun monitorStop(sessionID: Int) = compile(
+    fun monitorClaim(sessionID: Int) = compile(
+        CommandCode.MONITOR_CLAIM, sessionID,
+        json.encodeToString(
+            MonitorClaimData(
+                SessionID = "0x%X".format(sessionID)
+            )
+        )
+    )
+
+    @Serializable
+    data class MonitorClaimData(
+        val Name: String = "OPMonitor",
+        val OPMonitor: OpMonitor = OpMonitor(),
+        val SessionID: String
+    ) {
+        @Serializable
+        data class OpMonitor(
+            val Action: String = "Claim",
+            val Parameter: MonitorParameter = MonitorParameter()
+        ) {
+            @Serializable
+            data class MonitorParameter(
+                val Channel: Int = 0,
+                val CombinMode: String = "NONE",
+                val StreamType: String = "Main",
+                val TransMode: String = "TCP",
+            )
+        }
+    }
+
+    fun monitorStart(sessionID: Int) = compile(
+        CommandCode.MONITOR_REQ, sessionID,
+        json.encodeToString(
+            MonitorClaimData(
+                SessionID = "0x%X".format(sessionID),
+                OPMonitor = MonitorClaimData.OpMonitor(Action = "Start")
+            )
+        )
+    )
+
+    //    fun monitorStop(sessionID: Int) = compile(
 //        CommandCode.MONITOR_REQ, sessionID,
 //        "OPMonitor" to mapOf(
 //            "Action" to "Stop",
