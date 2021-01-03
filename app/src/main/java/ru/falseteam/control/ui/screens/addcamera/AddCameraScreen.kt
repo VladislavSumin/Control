@@ -1,4 +1,4 @@
-package ru.falseteam.control.ui.screens
+package ru.falseteam.control.ui.screens.addcamera
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
@@ -14,8 +14,6 @@ import androidx.navigation.NavController
 import ru.falseteam.control.api.dto.CameraDTO
 import ru.falseteam.control.di.kodeinViewModel
 import ru.falseteam.control.ui.PrimaryAccentButton
-import ru.falseteam.control.ui.screens.addcamera.AddCameraState
-import ru.falseteam.control.ui.screens.addcamera.AddCameraViewModel
 
 @Composable
 fun AddCameraScreen(

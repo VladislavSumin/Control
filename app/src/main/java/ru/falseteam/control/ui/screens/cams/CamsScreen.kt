@@ -1,4 +1,4 @@
-package ru.falseteam.control.ui.screens
+package ru.falseteam.control.ui.screens.cams
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.ScrollableColumn
@@ -10,21 +10,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.compose.ComposeNavigator
 import androidx.navigation.compose.navigate
-import androidx.navigation.compose.rememberNavController
-import org.kodein.di.instance
 import ru.falseteam.control.Destinations
 import ru.falseteam.control.R
-import ru.falseteam.control.api.dto.CameraDTO
-import ru.falseteam.control.di.Kodein
 import ru.falseteam.control.di.kodeinViewModel
-import ru.falseteam.control.domain.cams.CamsInteractor
-import ru.falseteam.control.ui.screens.cams.CameraUiModel
-import ru.falseteam.control.ui.screens.cams.CamsViewModel
 
 @Composable
 fun CamsScreen(navController: NavController, viewModel: CamsViewModel = kodeinViewModel()) {
