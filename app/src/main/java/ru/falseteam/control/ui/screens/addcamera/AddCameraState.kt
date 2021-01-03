@@ -1,4 +1,4 @@
-package ru.falseteam.control.ui.screens
+package ru.falseteam.control.ui.screens.addcamera
 
 sealed class AddCameraState {
     object Input : AddCameraState()
