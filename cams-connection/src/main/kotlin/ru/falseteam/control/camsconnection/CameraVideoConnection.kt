@@ -6,7 +6,8 @@ import kotlinx.coroutines.flow.*
 import ru.falseteam.control.camsconnection.protocol.CommandCode
 import ru.falseteam.control.camsconnection.protocol.CommandRepository
 
-internal class CameraVideoConnection(address: String, port: Int) : AbstractCameraConnection(address, port) {
+internal class CameraVideoConnection(private val address: String, private val port: Int) :
+    AbstractCameraConnection(address, port) {
     public override val connectionObservable: Flow<CameraConnectionState>
         get() = super.connectionObservable.map {
             if (it is CameraConnectionState.AbstractConnected) {
@@ -22,6 +23,7 @@ internal class CameraVideoConnection(address: String, port: Int) : AbstractCamer
         .filter { it.messageId == CommandCode.MONITOR_DATA }
         .map { it.data }
         .onStart {
+            log.debug("Requesting video stream from $address:$port")
             state.send(CommandRepository.monitorClaim(state.sessionId))
             state.send(CommandRepository.monitorStart(state.sessionId))
         }

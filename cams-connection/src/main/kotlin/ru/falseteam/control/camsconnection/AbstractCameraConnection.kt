@@ -8,6 +8,7 @@ import kotlinx.coroutines.channels.ticker
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import ru.falseteam.control.camsconnection.protocol.CommandCode
 import ru.falseteam.control.camsconnection.protocol.CommandRepository
@@ -22,7 +23,7 @@ open class AbstractCameraConnection(
     private val address: String,
     private val port: Int,
 ) {
-    protected val log = LoggerFactory.getLogger("cams.connection")
+    protected val log: Logger = LoggerFactory.getLogger("cams.connection")
 
     private val writeLock = Mutex()
 
