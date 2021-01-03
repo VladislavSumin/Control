@@ -22,9 +22,7 @@ open class AbstractCameraConnection(
     private val address: String,
     private val port: Int,
 ) {
-    companion object {
-        private val log = LoggerFactory.getLogger("cams.connection")
-    }
+    protected val log = LoggerFactory.getLogger("cams.connection")
 
     private val writeLock = Mutex()
 
@@ -69,13 +67,11 @@ open class AbstractCameraConnection(
             log.trace("Reconnecting to $address:$port")
         }
     }
-        .flowOn(Dispatchers.IO)
-        .shareIn(GlobalScope, SharingStarted.WhileSubscribed(replayExpirationMillis = 0), 1)
 
     //TODO research maybe ping not need if auth return AliveInterval = 0
     private suspend fun ping(write: ByteWriteChannel, sessionId: Int) {
         ticker(10000, 2000).receiveAsFlow().collect {
-            log.trace("Ping $address:$port")
+            // log.trace("Ping $address:$port")
             write.write(CommandRepository.keepAlive(sessionId))
         }
     }
@@ -83,8 +79,14 @@ open class AbstractCameraConnection(
     private fun makeReceiveFlow(read: ByteReadChannel, scope: CoroutineScope) = flow {
         while (true) {
             val msg = read.readMsg()
-            if (msg.messageId == CommandCode.KEEPALIVE_RSP) continue
-            emit(msg)
+            when (msg.messageId) {
+                CommandCode.MONITOR_DATA -> emit(msg) // check first, mos popular msg
+                CommandCode.GUARD_RSP,
+                CommandCode.MONITOR_CLAIM_RSP,
+                CommandCode.MONITOR_RSP -> log.trace("Received ${msg.messageId.name} from $address:$port")
+                CommandCode.KEEPALIVE_RSP -> Unit // no action
+                else -> emit(msg)
+            }
         }
     }.shareIn(scope, SharingStarted.Eagerly)
 
@@ -108,7 +110,7 @@ open class AbstractCameraConnection(
 
     private suspend fun ByteWriteChannel.write(msg: Msg) {
         writeLock.withLock {
-            log.trace("Send ${msg.messageId.name} to $address:$port")
+            // log.trace("Send ${msg.messageId.name} to $address:$port")
 
             val buffer = ByteBuffer.allocate(msg.getSize())
             buffer.order(ByteOrder.LITTLE_ENDIAN)
@@ -156,7 +158,7 @@ open class AbstractCameraConnection(
             buffer.flip()
             data = buffer.array()
 
-            log.trace("Received ${this.messageId.name} from $address:$port")
+            // log.trace("Received ${this.messageId.name} from $address:$port")
             return this
         }
     }

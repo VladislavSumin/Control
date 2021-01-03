@@ -6,8 +6,8 @@ import kotlinx.coroutines.flow.*
 import ru.falseteam.control.camsconnection.protocol.CommandCode
 import ru.falseteam.control.camsconnection.protocol.CommandRepository
 
-class CameraVideoConnection(address: String, port: Int) : AbstractCameraConnection(address, port) {
-    public override val connectionObservable: SharedFlow<CameraConnectionState>
+internal class CameraVideoConnection(address: String, port: Int) : AbstractCameraConnection(address, port) {
+    public override val connectionObservable: Flow<CameraConnectionState>
         get() = super.connectionObservable.map {
             if (it is CameraConnectionState.AbstractConnected) {
                 CameraConnectionState.ConnectedVideo(setupMovementEvent(it))
@@ -15,7 +15,6 @@ class CameraVideoConnection(address: String, port: Int) : AbstractCameraConnecti
         }
             .flowOn(Dispatchers.IO)
             .shareIn(GlobalScope, SharingStarted.WhileSubscribed(replayExpirationMillis = 0), 1)
-
 
     private fun setupMovementEvent(
         state: CameraConnectionState.AbstractConnected,

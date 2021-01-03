@@ -7,6 +7,7 @@ import java.lang.Exception
 
 sealed class CameraConnectionState {
     object Connecting : CameraConnectionState()
+
     internal data class AbstractConnected(
         val connectionScope: CoroutineScope,
         val sessionId: Int,
@@ -15,10 +16,11 @@ sealed class CameraConnectionState {
     ) : CameraConnectionState()
 
     data class Connected(
-        val movementEvent: Flow<Unit>
+        val movementEvent: Flow<Unit>,
+        val videoFlow: Flow<ByteArray>,
     ) : CameraConnectionState()
 
-    data class ConnectedVideo(
+    internal data class ConnectedVideo(
         val videoFlow: Flow<ByteArray>
     ) : CameraConnectionState()
 
