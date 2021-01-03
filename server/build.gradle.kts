@@ -44,6 +44,8 @@ dependencies {
     }
     implementation("com.squareup.sqldelight:sqlite-driver:1.4.3")
     implementation("com.squareup.sqldelight:coroutines-extensions-jvm:1.4.3")
+
+    implementation("net.bramp.ffmpeg:ffmpeg:0.6.2")
 }
 
 tasks.withType<KotlinCompile> {
