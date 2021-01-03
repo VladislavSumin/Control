@@ -5,17 +5,16 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 sealed class CameraStatusDTO {
-    abstract val id: Long
 
     @Serializable
     @SerialName("connecting")
-    data class Connecting(override val id: Long) : CameraStatusDTO()
+    object Connecting : CameraStatusDTO()
 
     @Serializable
     @SerialName("connected")
-    data class Connected(override val id: Long) : CameraStatusDTO()
+    object Connected : CameraStatusDTO()
 
     @Serializable
     @SerialName("disconnected")
-    data class Disconnected(override val id: Long) : CameraStatusDTO()
+    object Disconnected : CameraStatusDTO()
 }
