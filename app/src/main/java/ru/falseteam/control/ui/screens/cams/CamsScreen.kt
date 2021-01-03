@@ -21,12 +21,15 @@ import ru.falseteam.control.Destinations
 import ru.falseteam.control.R
 import ru.falseteam.control.api.dto.CameraDTO
 import ru.falseteam.control.di.Kodein
+import ru.falseteam.control.di.kodeinViewModel
 import ru.falseteam.control.domain.cams.CamsInteractor
+import ru.falseteam.control.ui.screens.cams.CameraUiModel
+import ru.falseteam.control.ui.screens.cams.CamsViewModel
 
 @Composable
-fun CamsScreen(navController: NavController) {
-    val camsInteractor: CamsInteractor by Kodein.instance()
-    val camsState = camsInteractor.observeAll()
+fun CamsScreen(navController: NavController, viewModel: CamsViewModel = kodeinViewModel()) {
+//    val camsInteractor: CamsInteractor by Kodein.instance()
+    val camsState = viewModel.camsUi
         .collectAsState(initial = null)
 
     Scaffold(
@@ -52,7 +55,7 @@ fun CamsScreen(navController: NavController) {
 }
 
 @Composable
-private fun CameraCard(camera: CameraDTO) {
+private fun CameraCard(camera: CameraUiModel) {
     Card(
         elevation = 2.dp,
         modifier = Modifier
@@ -67,12 +70,13 @@ private fun CameraCard(camera: CameraDTO) {
         ) {
             Text(text = camera.name)
             Text(text = camera.address)
+            Text(text = camera.isConnected.toString())
         }
     }
 }
 
 @Composable
-private fun CamsList(cams: List<CameraDTO>) {
+private fun CamsList(cams: List<CameraUiModel>) {
     ScrollableColumn {
         cams.forEach { CameraCard(camera = it) }
     }
