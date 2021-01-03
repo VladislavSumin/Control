@@ -1,0 +1,19 @@
+PRAGMA foreign_keys = on;
+
+CREATE TABLE camera (
+  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
+  name TEXT NOT NULL,
+  address TEXT NOT NULL,
+  port INTEGER NOT NULL
+);
+
+CREATE TABLE cameraRecord(
+  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
+  cameraId INTEGER NOT NULL,
+  FOREIGN KEY (cameraId) REFERENCES camera(id) ON DELETE RESTRICT
+);
+
+INSERT INTO camera (name, address, port)
+VALUES ('Test Coridor Camera', '10.10.2.2', 34567);
+
+
