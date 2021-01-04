@@ -25,7 +25,7 @@ class CamsApiImpl(
         webSocket(path = "/api/v1/livestream/{id}") {
             val id = call.parameters["id"]!!.toLong()
             camsConnectionInteractor.observeVideoStream(id).collect {
-                this.send(Frame.Binary(false, it))
+                this.send(Frame.Binary(true, it))
             }
         }
     }

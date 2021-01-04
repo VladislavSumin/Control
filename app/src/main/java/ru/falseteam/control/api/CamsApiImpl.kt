@@ -9,7 +9,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import ru.falseteam.control.api.dto.CameraDTO
 
-private const val ADDRESS = "http://10.0.0.56:8080"
+private const val HOSTNAME = "10.0.0.56:8080"
+private const val ADDRESS = "http://$HOSTNAME"
 
 class CamsApiImpl(private val httpClient: HttpClient) : CamsApi {
     override suspend fun put(cameraDTO: CameraDTO) {
@@ -20,7 +21,7 @@ class CamsApiImpl(private val httpClient: HttpClient) : CamsApi {
     }
 
     override fun getVideoStream(cameraDTO: CameraDTO): Flow<ByteArray> = flow {
-        httpClient.webSocket(path = "$ADDRESS/api/v1/livestream/${cameraDTO.id}") {
+        httpClient.webSocket(host = HOSTNAME, path = "/api/v1/livestream/${cameraDTO.id}") {
             for (frame in incoming) {
                 emit((frame as Frame.Binary).data)
             }
