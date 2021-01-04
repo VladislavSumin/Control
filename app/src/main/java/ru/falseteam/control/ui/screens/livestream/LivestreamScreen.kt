@@ -7,7 +7,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.AmbientContext
 import androidx.compose.ui.viewinterop.AndroidView
+import org.kodein.di.direct
+import org.kodein.di.instance
 import ru.falseteam.control.R
+import ru.falseteam.control.di.Kodein
 
 @Composable
 fun LivestreamScreen() {
@@ -32,7 +35,7 @@ private class SurfaceCallback(
     }
 
     override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
-        videoDecode.init(holder.surface, videoPath)
+        videoDecode.init(holder.surface, Kodein.direct.instance())
         videoDecode.start()
     }
 
