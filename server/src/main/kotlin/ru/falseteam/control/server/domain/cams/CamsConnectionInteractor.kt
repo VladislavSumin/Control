@@ -7,4 +7,5 @@ interface CamsConnectionInteractor {
     suspend fun processConnections()
 
     fun observeStatus(): Flow<Map<Long, CameraStatusDTO>>
+    suspend fun observeVideoStream(id:Long): Flow<ByteArray>
 }

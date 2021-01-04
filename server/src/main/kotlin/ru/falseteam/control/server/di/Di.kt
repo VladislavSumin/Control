@@ -35,7 +35,7 @@ val Kodein = DI {
     bind<CamsConnectionInteractor>() with singleton { CamsConnectionInteractorImpl(instance()) }
 
     // Api
-    bind<CamsApi>() with singleton { CamsApiImpl(instance()) }
+    bind<CamsApi>() with singleton { CamsApiImpl(instance(), instance()) }
 
     // rSub
     bind<RSubServer>() with singleton {

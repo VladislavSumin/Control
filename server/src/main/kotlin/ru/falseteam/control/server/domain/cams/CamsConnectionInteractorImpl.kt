@@ -41,6 +41,13 @@ class CamsConnectionInteractorImpl(
 
     override fun observeStatus(): Flow<Map<Long, CameraStatusDTO>> = cameraStatusState
 
+    override suspend fun observeVideoStream(id: Long): Flow<ByteArray> =
+        cameraConnectionsObservable.map { cams ->
+            cams.asSequence().first { it.key.id == id }.value
+        }.flatMapLatest {
+            it.videoObservable
+        }
+
     private suspend fun setupStatusChannel(scope: CoroutineScope): SendChannel<Pair<Long, CameraStatusDTO?>> {
         val channel = Channel<Pair<Long, CameraStatusDTO?>>()
         scope.launch {
