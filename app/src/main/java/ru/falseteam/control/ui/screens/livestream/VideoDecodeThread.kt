@@ -1,18 +1,15 @@
 package ru.falseteam.control.ui.screens.livestream
 
-import android.content.res.AssetFileDescriptor
 import android.media.MediaCodec
 import android.media.MediaFormat
 import android.util.Log
 import android.view.Surface
-import kotlinx.coroutines.*
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import ru.falseteam.control.api.dto.CameraDTO
 import ru.falseteam.control.domain.cams.CamsInteractor
-import java.io.FileInputStream
-import java.lang.Exception
 import java.nio.ByteBuffer
-import kotlin.experimental.and
 
 
 class VideoDecodeThread : Thread() {
@@ -24,11 +21,8 @@ class VideoDecodeThread : Thread() {
     private lateinit var decoder: MediaCodec
     private lateinit var camsInteractor: CamsInteractor
     private lateinit var surface: Surface
-    var rootIndex = 0
 
     private var isFirst = false
-    private var startWhen = 0L
-    private var time = 0L
     private val newBufferInfo = MediaCodec.BufferInfo()
 
 
@@ -43,40 +37,15 @@ class VideoDecodeThread : Thread() {
     }
 
     override fun run() {
-//        val csd = ByteBuffer.allocate(200)
-//        val csdSize = readNALU(csd)
-//
-//        val csd2 = ByteBuffer.allocate(200)
-//        val csdSize2 = readNALU(csd)
-
         val format = MediaFormat.createVideoFormat("video/avc", 0, 0)
-//        format.setByteBuffer("csd-0", ByteBuffer.wrap(csd.array(), 0, csdSize))
-//        format.setByteBuffer("csd-1", ByteBuffer.wrap(csd2.array(), 0, csdSize2))
 
         decoder.configure(format, surface, null, 0 /* Decode */)
         decoder.start()
-
-//        val job = GlobalScope.launch(Dispatchers.IO) {
-//            while (!isStop) {
-//                decoder.dequeueInputBuffer(1000).takeIf { it >= 0 }?.let { index ->
-//                    val inputBuffer = decoder.getInputBuffer(index)!!
-//                    val sampleSize = readNALU(inputBuffer)
-//                    val naluTypeRaw = inputBuffer.get(3)
-//                    val naluType = naluTypeRaw and 0b000011111
-//                    time += if (naluType > 5) 0 else 66000
-//                    decoder.queueInputBuffer(index, 0, sampleSize, time, 0)
-//                }
-//            }
-//        }
 
         DataMapper().start()
 
 
         readDecodedFrame()
-
-//        runBlocking {
-//            job.cancelAndJoin()
-//        }
 
         decoder.stop()
         decoder.release()
@@ -88,27 +57,18 @@ class VideoDecodeThread : Thread() {
             when {
                 index == MediaCodec.INFO_OUTPUT_BUFFERS_CHANGED -> {
                     Log.d(TAG, "INFO_OUTPUT_BUFFERS_CHANGED")
-                    decoder.outputBuffers
                 }
                 index == MediaCodec.INFO_OUTPUT_FORMAT_CHANGED -> {
                     Log.d(TAG, "INFO_OUTPUT_FORMAT_CHANGED format : " + decoder.outputFormat)
                 }
                 index == MediaCodec.INFO_TRY_AGAIN_LATER -> {
-                    Log.d(TAG, "INFO_TRY_AGAIN_LATER")
+//                    Log.d(TAG, "INFO_TRY_AGAIN_LATER")
                 }
                 index >= 0 -> {
-                    if (!isFirst) {
-                        startWhen = System.currentTimeMillis()
-                        isFirst = true
-                    }
-                    val sleepTime: Long =
-                        newBufferInfo.presentationTimeUs / 1000 - (System.currentTimeMillis() - startWhen)
-                    if (sleepTime > 0) sleep(sleepTime)
                     decoder.releaseOutputBuffer(index, true /* Surface init */)
                 }
                 else -> {
                     Log.d(TAG, "UNKNOWN_INDEX")
-
                 }
             }
 
