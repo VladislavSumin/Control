@@ -11,13 +11,12 @@ internal class CameraVideoConnection(private val address: String, private val po
     public override val connectionObservable: Flow<CameraConnectionState>
         get() = super.connectionObservable.map {
             if (it is CameraConnectionState.AbstractConnected) {
-                CameraConnectionState.ConnectedVideo(setupMovementEvent(it))
+                CameraConnectionState.ConnectedVideo(setupVideoEvent(it))
             } else it
         }
             .flowOn(Dispatchers.IO)
-            .shareIn(GlobalScope, SharingStarted.WhileSubscribed(replayExpirationMillis = 0), 1)
 
-    private fun setupMovementEvent(
+    private fun setupVideoEvent(
         state: CameraConnectionState.AbstractConnected,
     ) = state.receive
         .filter { it.messageId == CommandCode.MONITOR_DATA }
@@ -27,5 +26,4 @@ internal class CameraVideoConnection(private val address: String, private val po
             state.send(CommandRepository.monitorClaim(state.sessionId))
             state.send(CommandRepository.monitorStart(state.sessionId))
         }
-        .shareIn(state.connectionScope, SharingStarted.Lazily)
 }

@@ -13,14 +13,14 @@ class CameraConnection(private val address: String, private val port: Int) :
             if (it is CameraConnectionState.AbstractConnected) {
                 CameraConnectionState.Connected(
                     setupMovementEvent(it),
-                    setupVideoFlow()
+                    setupVideoFlow(it)
                 )
             } else it
         }
             .flowOn(Dispatchers.IO)
             .shareIn(GlobalScope, SharingStarted.WhileSubscribed(replayExpirationMillis = 0), 1)
 
-    private fun setupVideoFlow(): Flow<ByteArray> =
+    private fun setupVideoFlow(state: CameraConnectionState.AbstractConnected): Flow<ByteArray> =
         CameraVideoConnection(address, port).connectionObservable
             .filter {
                 when (it) {
@@ -32,6 +32,11 @@ class CameraConnection(private val address: String, private val port: Int) :
             }
             .map { it as CameraConnectionState.ConnectedVideo }
             .flatMapLatest { it.videoFlow }
+            .shareIn(
+                state.connectionScope,
+                SharingStarted.WhileSubscribed(replayExpirationMillis = 0)
+            )
+
 
     private fun setupMovementEvent(
         state: CameraConnectionState.AbstractConnected,

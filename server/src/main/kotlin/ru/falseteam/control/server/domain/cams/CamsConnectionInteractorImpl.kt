@@ -20,10 +20,15 @@ class CamsConnectionInteractorImpl(
     private val cameraStatusState: MutableStateFlow<Map<Long, CameraStatusDTO>> =
         MutableStateFlow(emptyMap())
 
+    private val cameraConnectionsObservable: Flow<Map<CameraDTO, CameraConnection>> =
+        camsInteractor.observeAll()
+            .map { cams -> cams.associateWith { CameraConnection(it.address, it.port) } }
+            .shareIn(GlobalScope, SharingStarted.WhileSubscribed(replayExpirationMillis = 0), 1)
+
     override suspend fun processConnections() = coroutineScope {
         log.debug("Start process camera connection")
         try {
-            camsInteractor.observeAll().collectLatest {
+            cameraConnectionsObservable.collectLatest {
                 coroutineScope {
                     val statusChannel = setupStatusChannel(this)
                     processCams(it, statusChannel)
@@ -57,12 +62,12 @@ class CamsConnectionInteractorImpl(
     }
 
     private suspend fun processCams(
-        cams: List<CameraDTO>,
+        cams: Map<CameraDTO, CameraConnection>,
         statusChannel: SendChannel<Pair<Long, CameraStatusDTO?>>
     ) = coroutineScope {
         try {
-            log.debug("Start process cams: ${cams.joinToString { it.name }}")
-            cams.forEach { launch { processCamera(it, statusChannel) } }
+            log.debug("Start process cams: ${cams.keys.joinToString { it.name }}")
+            cams.forEach { launch { processCamera(it.key, it.value, statusChannel) } }
         } finally {
             log.debug("Stopped process cams")
         }
@@ -70,14 +75,12 @@ class CamsConnectionInteractorImpl(
 
     private suspend fun processCamera(
         camera: CameraDTO,
+        cameraConnection: CameraConnection,
         statusChannel: SendChannel<Pair<Long, CameraStatusDTO?>>
     ) {
         try {
             log.trace("Start process camera ${camera.name}")
-            CameraConnection(
-                address = camera.address,
-                port = camera.port
-            ).connectionObservable
+            cameraConnection.connectionObservable
                 .onEach {
                     val status = when (it) {
                         is CameraConnectionState.Connecting -> CameraStatusDTO.Connecting
