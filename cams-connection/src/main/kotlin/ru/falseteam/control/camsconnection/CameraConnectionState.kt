@@ -17,11 +17,6 @@ sealed class CameraConnectionState {
 
     data class Connected(
         val movementEvent: Flow<Unit>,
-        val videoFlow: Flow<ByteArray>,
-    ) : CameraConnectionState()
-
-    internal data class ConnectedVideo(
-        val videoFlow: Flow<ByteArray>
     ) : CameraConnectionState()
 
     data class Disconnected(val exception: Exception) : CameraConnectionState()
