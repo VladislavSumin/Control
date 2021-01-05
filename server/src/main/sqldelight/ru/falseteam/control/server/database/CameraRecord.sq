@@ -1,3 +1,7 @@
 selectAll:
 SELECT *
 FROM cameraRecord;
+
+insert:
+INSERT INTO cameraRecord(cameraId)
+VALUES ?;

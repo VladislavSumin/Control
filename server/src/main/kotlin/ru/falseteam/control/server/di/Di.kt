@@ -8,11 +8,14 @@ import ru.falseteam.control.api.rsub.CamsStatusRSub
 import ru.falseteam.control.server.api.CamsApi
 import ru.falseteam.control.server.api.CamsApiImpl
 import ru.falseteam.control.server.database.CameraQueries
+import ru.falseteam.control.server.database.CameraRecordQueries
 import ru.falseteam.control.server.database.Database
 import ru.falseteam.control.server.domain.cams.CamsConnectionInteractor
 import ru.falseteam.control.server.domain.cams.CamsConnectionInteractorImpl
 import ru.falseteam.control.server.domain.cams.CamsInteractor
 import ru.falseteam.control.server.domain.cams.CamsInteractorImpl
+import ru.falseteam.control.server.domain.records.RecordsInteractor
+import ru.falseteam.control.server.domain.records.RecordsInteractorImpl
 import ru.falseteam.control.server.rsub.CamsRSubImpl
 import ru.falseteam.control.server.rsub.CamsStatusRSubImpl
 import ru.falseteam.rsub.server.RSubServer
@@ -29,10 +32,12 @@ val Kodein = DI {
         Database(instance())
     }
     bind<CameraQueries>() with factory { instance<Database>().cameraQueries }
+    bind<CameraRecordQueries>() with factory { instance<Database>().cameraRecordQueries }
 
     // Domain
     bind<CamsInteractor>() with singleton { CamsInteractorImpl(instance()) }
     bind<CamsConnectionInteractor>() with singleton { CamsConnectionInteractorImpl(instance()) }
+    bind<RecordsInteractor>() with singleton { RecordsInteractorImpl(instance()) }
 
     // Api
     bind<CamsApi>() with singleton { CamsApiImpl(instance(), instance()) }
