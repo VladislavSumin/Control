@@ -3,8 +3,10 @@ package ru.falseteam.control
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.ui.platform.setContent
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.navArgument
 import androidx.navigation.compose.rememberNavController
 import ru.falseteam.control.ui.ControlTheme
 import ru.falseteam.control.ui.screens.addcamera.AddCameraScreen
@@ -17,10 +19,13 @@ class MainActivity : AppCompatActivity() {
         setContent {
             ControlTheme {
                 val navController = rememberNavController()
-                NavHost(navController = navController, startDestination = Destinations.LivestreamScreen) {
+                NavHost(navController = navController, startDestination = Destinations.CamsScreen) {
                     composable(Destinations.CamsScreen) { CamsScreen(navController) }
                     composable(Destinations.AddCameraScreen) { AddCameraScreen(navController) }
-                    composable(Destinations.LivestreamScreen) { LivestreamScreen() }
+                    composable(
+                        Destinations.LivestreamScreen,
+                        arguments = listOf(navArgument("id") { type = NavType.LongType })
+                    ) { LivestreamScreen(it.arguments!!.getLong("id")) }
                 }
             }
         }

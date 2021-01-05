@@ -47,6 +47,8 @@ class VideoDecodeThread {
                     }
                     readDecodedFrame()
                 }
+            } catch (e: Exception) {
+                //TODO add error check
             } finally {
                 decoder.stop()
                 decoder.release()

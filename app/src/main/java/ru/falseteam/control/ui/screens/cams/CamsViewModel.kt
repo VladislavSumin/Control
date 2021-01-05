@@ -15,6 +15,7 @@ class CamsViewModel(
         cams.map {
             val isConnected = camsStatus[it.id] is CameraStatusDTO.Connected
             CameraUiModel(
+                it.id,
                 it.name,
                 "${it.address}:${it.port}",
                 isConnected

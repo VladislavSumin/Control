@@ -19,7 +19,6 @@ import ru.falseteam.control.di.kodeinViewModel
 
 @Composable
 fun CamsScreen(navController: NavController, viewModel: CamsViewModel = kodeinViewModel()) {
-//    val camsInteractor: CamsInteractor by Kodein.instance()
     val camsState = viewModel.camsUi
         .collectAsState(initial = null)
 
@@ -32,7 +31,7 @@ fun CamsScreen(navController: NavController, viewModel: CamsViewModel = kodeinVi
     ) {
         val cams = camsState.value
         if (cams != null) {
-            CamsList(cams)
+            CamsList(navController, cams)
         } else {
             Box(
                 modifier = Modifier
@@ -46,13 +45,12 @@ fun CamsScreen(navController: NavController, viewModel: CamsViewModel = kodeinVi
 }
 
 @Composable
-private fun CameraCard(camera: CameraUiModel) {
+private fun CameraCard(navController: NavController, camera: CameraUiModel) {
     Card(
         elevation = 2.dp,
         modifier = Modifier
             .padding(4.dp, 4.dp)
-            .clickable(onClick = { /*TODO*/ })
-
+            .clickable(onClick = { navController.navigate(Destinations.LivestreamScreen(camera.id)) })
     ) {
         Column(
             Modifier
@@ -67,8 +65,8 @@ private fun CameraCard(camera: CameraUiModel) {
 }
 
 @Composable
-private fun CamsList(cams: List<CameraUiModel>) {
+private fun CamsList(navController: NavController, cams: List<CameraUiModel>) {
     ScrollableColumn {
-        cams.forEach { CameraCard(camera = it) }
+        cams.forEach { CameraCard(navController = navController, camera = it) }
     }
 }
