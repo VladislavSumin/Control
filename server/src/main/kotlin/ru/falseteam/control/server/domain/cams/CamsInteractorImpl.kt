@@ -15,8 +15,7 @@ class CamsInteractorImpl(
 ) : CamsInteractor {
     private val allObservable = cameraQueries.selectAll()
         .asFlow()
-        .mapToList()
-        .flowOn(Dispatchers.IO)
+        .mapToList(Dispatchers.IO)
         .map { list -> list.map { it.toDTO() } }
         .shareIn(
             scope = GlobalScope,

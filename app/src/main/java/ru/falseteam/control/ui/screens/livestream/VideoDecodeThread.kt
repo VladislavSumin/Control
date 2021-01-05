@@ -4,15 +4,13 @@ import android.media.MediaCodec
 import android.media.MediaFormat
 import android.util.Log
 import android.view.Surface
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
-import ru.falseteam.control.api.dto.CameraDTO
 import ru.falseteam.control.domain.cams.CamsInteractor
 import java.nio.ByteBuffer
 
 
-class VideoDecodeThread : Thread() {
+class VideoDecodeThread {
 
     companion object {
         private const val TAG = "VideoDecoder"
@@ -21,9 +19,7 @@ class VideoDecodeThread : Thread() {
     private lateinit var decoder: MediaCodec
     private lateinit var camsInteractor: CamsInteractor
     private lateinit var surface: Surface
-
-    private var isFirst = false
-    private val newBufferInfo = MediaCodec.BufferInfo()
+    private lateinit var job: Job
 
 
     private var isStop = false
@@ -36,54 +32,50 @@ class VideoDecodeThread : Thread() {
         return true
     }
 
-    override fun run() {
-        val format = MediaFormat.createVideoFormat("video/avc", 0, 0)
-
-        decoder.configure(format, surface, null, 0 /* Decode */)
-        decoder.start()
-
-        DataMapper().start()
-
-
-        readDecodedFrame()
-
-        decoder.stop()
-        decoder.release()
+    fun start() {
+        job = GlobalScope.launch(Dispatchers.IO) {
+            val format = MediaFormat.createVideoFormat("video/avc", 0, 0)
+            decoder.configure(format, surface, null, 0 /* Decode */)
+            decoder.start()
+            try {
+                coroutineScope {
+                    val dataMapper = DataMapper()
+                    launch {
+                        camsInteractor.observeVideoStream(1).collect {
+                            dataMapper.processNextInput(it)
+                        }
+                    }
+                    readDecodedFrame()
+                }
+            } finally {
+                decoder.stop()
+                decoder.release()
+            }
+        }
     }
 
     private fun readDecodedFrame() {
+        val bufferInfo = MediaCodec.BufferInfo()
         while (!isStop) {
-            val index = decoder.dequeueOutputBuffer(newBufferInfo, 1000)
+            val index = decoder.dequeueOutputBuffer(bufferInfo, 1000)
             when {
-                index == MediaCodec.INFO_OUTPUT_BUFFERS_CHANGED -> {
-                    Log.d(TAG, "INFO_OUTPUT_BUFFERS_CHANGED")
-                }
-                index == MediaCodec.INFO_OUTPUT_FORMAT_CHANGED -> {
+                index == MediaCodec.INFO_OUTPUT_FORMAT_CHANGED ->
                     Log.d(TAG, "INFO_OUTPUT_FORMAT_CHANGED format : " + decoder.outputFormat)
-                }
-                index == MediaCodec.INFO_TRY_AGAIN_LATER -> {
-//                    Log.d(TAG, "INFO_TRY_AGAIN_LATER")
-                }
-                index >= 0 -> {
-                    decoder.releaseOutputBuffer(index, true /* Surface init */)
-                }
-                else -> {
-                    Log.d(TAG, "UNKNOWN_INDEX")
-                }
-            }
-
-            if (newBufferInfo.flags and MediaCodec.BUFFER_FLAG_END_OF_STREAM != 0) {
-                Log.d(TAG, "OutputBuffer BUFFER_FLAG_END_OF_STREAM")
-                break
+                index == MediaCodec.INFO_TRY_AGAIN_LATER -> Unit
+                index >= 0 -> decoder.releaseOutputBuffer(index, true /* Surface init */)
+                else -> Log.d(TAG, "UNKNOWN_INDEX")
             }
         }
     }
 
     fun close() {
         isStop = true
+        runBlocking {
+            job.cancelAndJoin()
+        }
     }
 
-    private inner class DataMapper() {
+    private inner class DataMapper {
         var bufferIndex = -1
         var receiverBuffer: ByteBuffer = ByteBuffer.allocate(0)
         var emitterIndex = 0
@@ -91,26 +83,28 @@ class VideoDecodeThread : Thread() {
         var firstNaluFind = false
         var naluFind = false
 
-        fun start() {
-            GlobalScope.launch {
-                getBuffer()
-                camsInteractor.observeVideoStream(CameraDTO(1, "1", "1", 1)).collect {
-                    emitterIndex = 0
-                    if (!firstNaluFind) findFirstNalu(it)
-                    processInput(it)
-                }
-            }
+        init {
+            getBuffer()
         }
+
+        fun processNextInput(input: ByteArray) {
+            emitterIndex = 0
+            if (!firstNaluFind) findFirstNalu(input)
+            processInput(input)
+        }
+
 
         private fun findFirstNalu(input: ByteArray) {
             while (input.size > emitterIndex) {
                 val currentByte = input[emitterIndex]
                 if (currentByte == 0x00.toByte()) zerosCount++
-                if (currentByte == 0x01.toByte() && zerosCount >= 2) {
+                else if (currentByte == 0x01.toByte() && zerosCount >= 2) {
                     zerosCount = 0
                     emitterIndex++
                     firstNaluFind = true
                     break
+                } else {
+                    zerosCount = 0
                 }
                 emitterIndex++
             }
@@ -126,7 +120,7 @@ class VideoDecodeThread : Thread() {
                         bufferIndex,
                         0,
                         receiverBuffer.position() - zerosCount - 2,
-                        0,//TODO
+                        0, //TODO
                         0
                     )
                     naluFind = false
