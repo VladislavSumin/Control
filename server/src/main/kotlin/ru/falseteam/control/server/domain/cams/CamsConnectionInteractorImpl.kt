@@ -10,7 +10,9 @@ import ru.falseteam.control.api.dto.CameraDTO
 import ru.falseteam.control.api.dto.CameraStatusDTO
 import ru.falseteam.control.camsconnection.CameraConnection
 import ru.falseteam.control.camsconnection.CameraConnectionState
+import java.io.File
 
+//TODO зарефачить это г.
 class CamsConnectionInteractorImpl(
     private val camsInteractor: CamsInteractor
 ) : CamsConnectionInteractor {
@@ -99,18 +101,8 @@ class CamsConnectionInteractorImpl(
                 }
                 .collectLatest {
                     if (it is CameraConnectionState.Connected) {
-                        it.movementEvent
-                            .flatMapLatest {
-                                flow {
-                                    emit(true)
-                                    delay(5000)
-                                    emit(false)
-                                }
-                            }
-                            .distinctUntilChanged()
-                            .collect { println("MOVEMENT ALARM, URGENT!!!! (state = $it)") }
+                        processMovement(camera, cameraConnection, it)
                     }
-//                println("New camera status for ${camera.name} is $it")
                 }
 
         } finally {
@@ -121,6 +113,55 @@ class CamsConnectionInteractorImpl(
         }
     }
 
+    private suspend fun processMovement(
+        camera: CameraDTO,
+        cameraConnection: CameraConnection,
+        connectionState: CameraConnectionState.Connected
+    ) {
+        connectionState.movementEvent
+            .flatMapLatest {
+                flow {
+                    emit(true)
+                    delay(8000)
+                    emit(false)
+                }
+            }
+            .distinctUntilChanged()
+            .collectLatest {
+                if (it) {
+                    recording(camera, cameraConnection)
+                }
+            }
+    }
+
+    private suspend fun recording(
+        camera: CameraDTO,
+        cameraConnection: CameraConnection,
+    ) {
+        log.debug("Start recording from ${camera.name}")
+        val file = File("data/tmp/${camera.id}_${System.currentTimeMillis()}.h264")
+        file.parentFile.mkdirs()
+        file.createNewFile()
+        val stream = file.outputStream()
+        try {
+            withContext(Dispatchers.IO) {
+                cameraConnection.videoObservable.collect { stream.write(it) }
+            }
+        } finally {
+            withContext(NonCancellable) {
+                stream.close()
+                log.debug("Finish recording from ${camera.name}")
+                transcodeAndSave(file, camera)
+            }
+        }
+    }
+
+    private fun transcodeAndSave(file: File, camera: CameraDTO) {
+        GlobalScope.launch {
+            //TODO
+        }
+    }
+
     private suspend fun <T> SendChannel<T>.sendSuppressClosed(element: T) {
         try {
             send(element)
@@ -128,25 +169,4 @@ class CamsConnectionInteractorImpl(
             // ignore
         }
     }
-
-//    private suspend fun processCamera(camera: CameraDTO) {
-//        try {
-//            log.trace("Start process camera ${camera.name}")
-//            CameraVideoConnection(
-//                address = camera.address,
-//                port = camera.port
-//            ).connectionObservable.collectLatest {
-//                if (it is CameraConnectionState.ConnectedVideo) {
-//                    it.videoFlow
-//                        .collect {
-//                            println("MOVEMENT ALARM, URGENT!!!!")
-//                        }
-//                }
-////                println("New camera status for ${camera.name} is $it")
-//            }
-//
-//        } finally {
-//            log.trace("Stopped process camera ${camera.name}")
-//        }
-//    }
 }
