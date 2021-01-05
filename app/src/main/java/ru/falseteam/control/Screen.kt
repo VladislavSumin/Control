@@ -5,7 +5,13 @@ import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.compose.navigate
 
 sealed class Screen(val path: String) {
+    companion object {
+        val DefaultScreen: Screen = Cams
+    }
+
+
     object Cams : Screen("cams")
+    object Records : Screen("records")
     object AddCamera : Screen("add_camera")
 
     class Livestream(id: Long) : Screen("livestream/$id") {
