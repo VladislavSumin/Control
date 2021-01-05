@@ -19,11 +19,11 @@ class MainActivity : AppCompatActivity() {
         setContent {
             ControlTheme {
                 val navController = rememberNavController()
-                NavHost(navController = navController, startDestination = Destinations.CamsScreen) {
-                    composable(Destinations.CamsScreen) { CamsScreen(navController) }
-                    composable(Destinations.AddCameraScreen) { AddCameraScreen(navController) }
+                NavHost(navController = navController, startDestination = Screen.Cams.path) {
+                    composable(Screen.Cams.path) { CamsScreen(navController) }
+                    composable(Screen.AddCamera.path) { AddCameraScreen(navController) }
                     composable(
-                        Destinations.LivestreamScreen,
+                        Screen.Livestream.basePath,
                         arguments = listOf(navArgument("id") { type = NavType.LongType })
                     ) { LivestreamScreen(it.arguments!!.getLong("id")) }
                 }

@@ -13,9 +13,10 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.navigate
-import ru.falseteam.control.Destinations
 import ru.falseteam.control.R
+import ru.falseteam.control.Screen
 import ru.falseteam.control.di.kodeinViewModel
+import ru.falseteam.control.navigate
 
 @Composable
 fun CamsScreen(navController: NavController, viewModel: CamsViewModel = kodeinViewModel()) {
@@ -24,7 +25,7 @@ fun CamsScreen(navController: NavController, viewModel: CamsViewModel = kodeinVi
 
     Scaffold(
         floatingActionButton = {
-            FloatingActionButton(onClick = { navController.navigate(Destinations.AddCameraScreen) }) {
+            FloatingActionButton(onClick = { navController.navigate(Screen.AddCamera) }) {
                 Image(vectorResource(id = R.drawable.ic_add))
             }
         },
@@ -50,7 +51,7 @@ private fun CameraCard(navController: NavController, camera: CameraUiModel) {
         elevation = 2.dp,
         modifier = Modifier
             .padding(4.dp, 4.dp)
-            .clickable(onClick = { navController.navigate(Destinations.LivestreamScreen(camera.id)) })
+            .clickable(onClick = { navController.navigate(Screen.Livestream(camera.id)) })
     ) {
         Column(
             Modifier
