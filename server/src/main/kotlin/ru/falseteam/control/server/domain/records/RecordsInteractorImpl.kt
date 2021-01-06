@@ -42,6 +42,10 @@ class RecordsInteractorImpl(
         return CameraRecord(
             id = id,
             cameraId = cameraId,
+            name = name,
+            timestamp = timestamp,
+            fileSize = fileSize,
+            length = length,
         )
     }
 
@@ -50,6 +54,10 @@ class RecordsInteractorImpl(
         return CameraRecordDto(
             id = id,
             cameraId = cameraId,
+            name = name,
+            timestamp = timestamp,
+            fileSize = fileSize,
+            length = length,
         )
     }
 }

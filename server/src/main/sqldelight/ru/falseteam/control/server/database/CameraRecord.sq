@@ -3,5 +3,5 @@ SELECT *
 FROM cameraRecord;
 
 insert:
-INSERT INTO cameraRecord(cameraId)
+INSERT INTO cameraRecord(cameraId, name, timestamp, fileSize, length)
 VALUES ?;
