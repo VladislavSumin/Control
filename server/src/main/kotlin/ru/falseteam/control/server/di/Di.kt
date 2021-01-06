@@ -38,7 +38,13 @@ val Kodein = DI {
 
     // Domain
     bind<CamsInteractor>() with singleton { CamsInteractorImpl(instance()) }
-    bind<CamsConnectionInteractor>() with singleton { CamsConnectionInteractorImpl(instance()) }
+    bind<CamsConnectionInteractor>() with singleton {
+        CamsConnectionInteractorImpl(
+            instance(),
+            instance(),
+            instance()
+        )
+    }
     bind<RecordsInteractor>() with singleton { RecordsInteractorImpl(instance()) }
     bind<VideoEncodeInteractor>() with singleton { VideoEncodeInteractorImpl() }
 

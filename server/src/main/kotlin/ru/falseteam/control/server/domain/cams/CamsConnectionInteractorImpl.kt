@@ -10,11 +10,15 @@ import ru.falseteam.control.api.dto.CameraDTO
 import ru.falseteam.control.api.dto.CameraStatusDTO
 import ru.falseteam.control.camsconnection.CameraConnection
 import ru.falseteam.control.camsconnection.CameraConnectionState
+import ru.falseteam.control.server.domain.records.RecordsInteractor
+import ru.falseteam.control.server.domain.videoencoder.VideoEncodeInteractor
 import java.io.File
 
 //TODO зарефачить это г.
 class CamsConnectionInteractorImpl(
-    private val camsInteractor: CamsInteractor
+    private val camsInteractor: CamsInteractor,
+    private val videoEncodeInteractor: VideoEncodeInteractor,
+    private val recordsInteractor: RecordsInteractor,
 ) : CamsConnectionInteractor {
     private val log = LoggerFactory.getLogger("controls.cams")
 
@@ -139,7 +143,9 @@ class CamsConnectionInteractorImpl(
         cameraConnection: CameraConnection,
     ) {
         log.debug("Start recording from ${camera.name}")
-        val file = File("data/tmp/${camera.id}_${System.currentTimeMillis()}.h264")
+        val currentTimeMillis = System.currentTimeMillis()
+        val name = "${camera.id}_$currentTimeMillis"
+        val file = File("data/tmp/$name.h264")
         file.parentFile.mkdirs()
         file.createNewFile()
         val stream = file.outputStream()
@@ -151,14 +157,19 @@ class CamsConnectionInteractorImpl(
             withContext(NonCancellable) {
                 stream.close()
                 log.debug("Finish recording from ${camera.name}")
-                transcodeAndSave(file, camera)
+                transcodeAndSave(file, camera, name, currentTimeMillis)
             }
         }
     }
 
-    private fun transcodeAndSave(file: File, camera: CameraDTO) {
-        GlobalScope.launch {
-            //TODO
+    private fun transcodeAndSave(file: File, camera: CameraDTO, name: String, timestamp: Long) {
+        GlobalScope.launch(Dispatchers.IO) {
+            val output = file.parentFile.resolve("$name.mp4").toPath()
+            videoEncodeInteractor.encode(
+                file.toPath(),
+                output
+            )
+            recordsInteractor.saveNewRecord(camera, timestamp, output)
         }
     }
 

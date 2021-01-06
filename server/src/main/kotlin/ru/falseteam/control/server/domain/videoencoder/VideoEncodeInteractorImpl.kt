@@ -18,8 +18,8 @@ class VideoEncodeInteractorImpl : VideoEncodeInteractor {
     init {
         val path = findInPath("ffmpeg")?.parent ?: throw Exception("ffmpeg not found")
         log.info("ffmpeg found in $path")
-        val ffmpeg = FFmpeg(path + "ffmpeg")
-        ffprobe = FFprobe(path + "ffprobe")
+        val ffmpeg = FFmpeg("$path/ffmpeg")
+        ffprobe = FFprobe("$path/ffprobe")
         executor = FFmpegExecutor(ffmpeg, ffprobe)
     }
 

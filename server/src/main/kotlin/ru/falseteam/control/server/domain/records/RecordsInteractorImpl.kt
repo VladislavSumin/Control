@@ -9,9 +9,11 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.withContext
+import ru.falseteam.control.api.dto.CameraDTO
 import ru.falseteam.control.api.dto.CameraRecordDto
 import ru.falseteam.control.server.database.CameraRecord
 import ru.falseteam.control.server.database.CameraRecordQueries
+import java.nio.file.Path
 
 class RecordsInteractorImpl(
     private val cameraRecordQueries: CameraRecordQueries,
@@ -28,7 +30,11 @@ class RecordsInteractorImpl(
 
     override fun observeAll(): Flow<List<CameraRecordDto>> = allObservable
 
-    override suspend fun insert(cameraRecord: CameraRecordDto) = withContext(Dispatchers.IO) {
+    override suspend fun saveNewRecord(cameraDTO: CameraDTO, timestamp: Long, record: Path) {
+        TODO("Not yet implemented")
+    }
+
+    private suspend fun insert(cameraRecord: CameraRecordDto) = withContext(Dispatchers.IO) {
         cameraRecordQueries.insert(cameraRecord.toEntity())
     }
 
