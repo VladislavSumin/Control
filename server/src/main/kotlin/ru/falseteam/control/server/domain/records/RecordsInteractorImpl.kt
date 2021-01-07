@@ -13,10 +13,13 @@ import ru.falseteam.control.api.dto.CameraDTO
 import ru.falseteam.control.api.dto.CameraRecordDto
 import ru.falseteam.control.server.database.CameraRecord
 import ru.falseteam.control.server.database.CameraRecordQueries
+import ru.falseteam.control.server.domain.videoencoder.VideoEncodeInteractor
+import java.nio.file.Files
 import java.nio.file.Path
 
 class RecordsInteractorImpl(
     private val cameraRecordQueries: CameraRecordQueries,
+    private val videoEncodeInteractor: VideoEncodeInteractor,
 ) : RecordsInteractor {
     private val allObservable = cameraRecordQueries.selectAll()
         .asFlow()
@@ -30,12 +33,28 @@ class RecordsInteractorImpl(
 
     override fun observeAll(): Flow<List<CameraRecordDto>> = allObservable
 
-    override suspend fun saveNewRecord(cameraDTO: CameraDTO, timestamp: Long, record: Path) {
-        TODO("Not yet implemented")
-    }
+    override suspend fun saveNewRecord(cameraDTO: CameraDTO, timestamp: Long, record: Path): Unit =
+        withContext(Dispatchers.IO) {
+            val duration = (videoEncodeInteractor.getDuration(record) * 1000).toLong()
+            val cameraRecordDto = CameraRecordDto(
+                cameraId = cameraDTO.id,
+                name = null,
+                timestamp = timestamp,
+                fileSize = record.toFile().length(),
+                length = duration
+            )
 
-    private suspend fun insert(cameraRecord: CameraRecordDto) = withContext(Dispatchers.IO) {
-        cameraRecordQueries.insert(cameraRecord.toEntity())
+            val id = insert(cameraRecordDto)
+            val recordLocation = Path.of("data/record/$id")
+            Files.createDirectories(recordLocation.parent)
+            Files.move(record, recordLocation)
+        }
+
+    private suspend fun insert(cameraRecord: CameraRecordDto): Long = withContext(Dispatchers.IO) {
+        cameraRecordQueries.transactionWithResult {
+            cameraRecordQueries.insert(cameraRecord.toEntity())
+            cameraRecordQueries.lastInsertRowId().executeAsOne()
+        }
     }
 
     private fun CameraRecordDto.toEntity(): CameraRecord {

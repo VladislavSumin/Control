@@ -169,6 +169,7 @@ class CamsConnectionInteractorImpl(
                 file.toPath(),
                 output
             )
+            file.delete()
             recordsInteractor.saveNewRecord(camera, timestamp, output)
         }
     }

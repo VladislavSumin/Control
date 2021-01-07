@@ -45,7 +45,7 @@ val Kodein = DI {
             instance()
         )
     }
-    bind<RecordsInteractor>() with singleton { RecordsInteractorImpl(instance()) }
+    bind<RecordsInteractor>() with singleton { RecordsInteractorImpl(instance(), instance()) }
     bind<VideoEncodeInteractor>() with singleton { VideoEncodeInteractorImpl() }
 
     // Api
