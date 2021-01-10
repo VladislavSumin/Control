@@ -67,6 +67,7 @@ private fun CameraCard(navController: NavController, camera: CameraUiModel) {
 
 @Composable
 private fun CamsList(navController: NavController, cams: List<CameraUiModel>) {
+    //TODO replace with recycler
     ScrollableColumn {
         cams.forEach { CameraCard(navController = navController, camera = it) }
     }

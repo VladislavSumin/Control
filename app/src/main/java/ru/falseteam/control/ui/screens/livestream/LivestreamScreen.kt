@@ -1,17 +1,18 @@
 package ru.falseteam.control.ui.screens.livestream
 
-import android.content.res.AssetFileDescriptor
 import android.view.SurfaceHolder
 import android.view.SurfaceView
-import android.widget.Button
-import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.AmbientContext
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import org.kodein.di.direct
 import org.kodein.di.instance
-import ru.falseteam.control.R
 import ru.falseteam.control.di.Kodein
 
 @Composable
@@ -23,7 +24,13 @@ fun LivestreamScreen(id: Long) {
         }
     }
 
-    AndroidView({ surfaceView }) {
+    AndroidView(
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight()
+            .padding(1.dp),
+        viewBlock = { surfaceView }
+    ) {
 
     }
 }

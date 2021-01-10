@@ -13,7 +13,7 @@ private const val HOSTNAME = "10.0.0.56:8080"
 private const val ADDRESS = "http://$HOSTNAME"
 
 class CamsApiImpl(private val httpClient: HttpClient) : CamsApi {
-    override suspend fun put(cameraDTO: CameraDTO) {
+    override suspend fun addCamera(cameraDTO: CameraDTO) {
         httpClient.put<Unit>("$ADDRESS/api/v1/cams") {
             contentType(ContentType.Application.Json)
             body = cameraDTO
