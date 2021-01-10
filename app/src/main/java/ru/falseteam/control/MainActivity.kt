@@ -26,19 +26,24 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             ControlTheme {
-                val navController = rememberNavController()
-                Scaffold(
-                    bottomBar = { Navigation(navController = navController, navItems = navItems) }
-                ) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .fillMaxHeight()
-                            .padding(it)
-                    ) {
-                        MainContent(navController = navController)
-                    }
-                }
+                MainScreen()
+            }
+        }
+    }
+
+    @Composable
+    private fun MainScreen() {
+        val navController = rememberNavController()
+        Scaffold(
+            bottomBar = { Navigation(navController = navController, navItems = navItems) }
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight()
+                    .padding(it)
+            ) {
+                MainContent(navController = navController)
             }
         }
     }
