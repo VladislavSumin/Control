@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.withContext
 import ru.falseteam.control.api.dto.CameraDTO
-import ru.falseteam.control.api.dto.CameraRecordDto
+import ru.falseteam.control.api.dto.CameraRecordDTO
 import ru.falseteam.control.server.database.CameraRecord
 import ru.falseteam.control.server.database.CameraRecordQueries
 import ru.falseteam.control.server.domain.videoencoder.VideoEncodeInteractor
@@ -31,12 +31,12 @@ class RecordsInteractorImpl(
             replay = 1
         )
 
-    override fun observeAll(): Flow<List<CameraRecordDto>> = allObservable
+    override fun observeAll(): Flow<List<CameraRecordDTO>> = allObservable
 
     override suspend fun saveNewRecord(cameraDTO: CameraDTO, timestamp: Long, record: Path): Unit =
         withContext(Dispatchers.IO) {
             val duration = (videoEncodeInteractor.getDuration(record) * 1000).toLong()
-            val cameraRecordDto = CameraRecordDto(
+            val cameraRecordDto = CameraRecordDTO(
                 cameraId = cameraDTO.id,
                 name = null,
                 timestamp = timestamp,
@@ -45,19 +45,19 @@ class RecordsInteractorImpl(
             )
 
             val id = insert(cameraRecordDto)
-            val recordLocation = Path.of("data/record/$id")
+            val recordLocation = Path.of("data/record/$id.mp4")
             Files.createDirectories(recordLocation.parent)
             Files.move(record, recordLocation)
         }
 
-    private suspend fun insert(cameraRecord: CameraRecordDto): Long = withContext(Dispatchers.IO) {
+    private suspend fun insert(cameraRecord: CameraRecordDTO): Long = withContext(Dispatchers.IO) {
         cameraRecordQueries.transactionWithResult {
             cameraRecordQueries.insert(cameraRecord.toEntity())
             cameraRecordQueries.lastInsertRowId().executeAsOne()
         }
     }
 
-    private fun CameraRecordDto.toEntity(): CameraRecord {
+    private fun CameraRecordDTO.toEntity(): CameraRecord {
         return CameraRecord(
             id = id,
             cameraId = cameraId,
@@ -69,8 +69,8 @@ class RecordsInteractorImpl(
     }
 
 
-    private fun CameraRecord.toDTO(): CameraRecordDto {
-        return CameraRecordDto(
+    private fun CameraRecord.toDTO(): CameraRecordDTO {
+        return CameraRecordDTO(
             id = id,
             cameraId = cameraId,
             name = name,
