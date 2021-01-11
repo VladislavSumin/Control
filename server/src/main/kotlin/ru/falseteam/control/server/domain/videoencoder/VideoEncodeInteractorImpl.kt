@@ -7,7 +7,7 @@ import net.bramp.ffmpeg.FFmpegExecutor
 import net.bramp.ffmpeg.FFprobe
 import net.bramp.ffmpeg.builder.FFmpegBuilder
 import org.slf4j.LoggerFactory
-import java.io.File
+import ru.falseteam.control.server.utils.PathUtils
 import java.nio.file.Path
 
 class VideoEncodeInteractorImpl : VideoEncodeInteractor {
@@ -16,10 +16,10 @@ class VideoEncodeInteractorImpl : VideoEncodeInteractor {
     private val ffprobe: FFprobe
 
     init {
-        val path = findInPath("ffmpeg")?.parent ?: throw Exception("ffmpeg not found")
-        log.info("ffmpeg found in $path")
-        val ffmpeg = FFmpeg("$path/ffmpeg")
-        ffprobe = FFprobe("$path/ffprobe")
+        val ffmpeg = FFmpeg(PathUtils.getPathOfProgram("ffmpeg")
+            ?: throw Exception("ffmpeg not found"))
+        ffprobe = FFprobe(PathUtils.getPathOfProgram("ffprobe")
+            ?: throw Exception("ffprobe not found"))
         executor = FFmpegExecutor(ffmpeg, ffprobe)
     }
 
@@ -38,16 +38,5 @@ class VideoEncodeInteractorImpl : VideoEncodeInteractor {
     override suspend fun getDuration(file: Path): Double = withContext(Dispatchers.IO) {
         ffprobe.probe(file.toAbsolutePath().toString())
             .getFormat().duration
-    }
-
-
-    //TODO move out
-    private fun findInPath(name: String): File? {
-        return System.getenv("PATH").split(File.pathSeparator)
-            .asSequence()
-            .map { File(it) }
-            .map { it.resolve(name) }
-            .filter { it.exists() }
-            .firstOrNull()
     }
 }
