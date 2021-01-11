@@ -10,7 +10,6 @@ import ru.falseteam.control.api.dto.CameraDTO
 import ru.falseteam.control.server.domain.cams.CamsConnectionInteractor
 import ru.falseteam.control.server.domain.cams.CamsInteractor
 
-
 class CamsApiImpl(
     private val camsInteractor: CamsInteractor,
     private val camsConnectionInteractor: CamsConnectionInteractor,
