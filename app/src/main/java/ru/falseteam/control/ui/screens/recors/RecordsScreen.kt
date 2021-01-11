@@ -1,12 +1,10 @@
 package ru.falseteam.control.ui.screens.recors
 
 import androidx.compose.foundation.ScrollableColumn
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Card
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
@@ -50,6 +48,10 @@ private fun RecordCard(record: CameraRecordDTO) {
             .fillMaxWidth()
             .padding(0.dp, 4.dp)
     ) {
-
+        Column(modifier = Modifier.fillMaxWidth()) {
+            Text(text = record.timestamp.toString())
+            Text(text = record.fileSize.toString())
+            Text(text = record.length.toString())
+        }
     }
 }
