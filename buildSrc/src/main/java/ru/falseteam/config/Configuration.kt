@@ -5,6 +5,7 @@ object Configuration {
         const val kotlin = "1.4.21"
         const val ktor = "1.5.0"
         const val log4j2 = "2.13.3"
+        const val kodein = "7.1.0"
     }
 
     object Dependencies {
@@ -22,8 +23,8 @@ object Configuration {
         const val ktorSerialization = "io.ktor:ktor-serialization:${Versions.ktor}"
         const val ktorClientSerialization = "io.ktor:ktor-client-serialization:${Versions.ktor}"
 
-        const val kodein = "org.kodein.di:kodein-di:7.1.0"
-        const val kodeinAndroidX = "org.kodein.di:kodein-di-framework-android-x:7.1.0"
+        const val kodein = "org.kodein.di:kodein-di:${Versions.kodein}"
+        const val kodeinAndroidX = "org.kodein.di:kodein-di-framework-android-x:${Versions.kodein}"
 
         const val log4j2Api = "org.apache.logging.log4j:log4j-api:${Versions.log4j2}"
         const val log4j2Core = "org.apache.logging.log4j:log4j-core:${Versions.log4j2}"
