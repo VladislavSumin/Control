@@ -34,7 +34,7 @@ class VideoDecodeThread {
 
     fun start() {
         job = GlobalScope.launch(Dispatchers.IO) {
-            val format = MediaFormat.createVideoFormat("video/avc", 0, 0)
+            val format = MediaFormat.createVideoFormat("video/avc", 800, 600)
             decoder.configure(format, surface, null, 0 /* Decode */)
             decoder.start()
             try {
