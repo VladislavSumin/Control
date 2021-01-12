@@ -22,7 +22,7 @@ fun LivestreamScreen(id: Long) {
         val context = AmbientContext.current
         val surfaceView = remember {
             SurfaceView(context).apply {
-                holder.addCallback(SurfaceCallback(VideoDecodeThread()))
+                holder.addCallback(SurfaceCallback(id, VideoDecodeThread()))
             }
         }
 
@@ -39,6 +39,7 @@ fun LivestreamScreen(id: Long) {
 }
 
 private class SurfaceCallback(
+    private val id: Long,
     private val videoDecode: VideoDecodeThread,
 ) : SurfaceHolder.Callback {
     override fun surfaceCreated(holder: SurfaceHolder) {
@@ -46,7 +47,7 @@ private class SurfaceCallback(
 
     override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
         videoDecode.init(holder.surface, Kodein.direct.instance())
-        videoDecode.start()
+        videoDecode.start(id)
     }
 
     override fun surfaceDestroyed(holder: SurfaceHolder) {
