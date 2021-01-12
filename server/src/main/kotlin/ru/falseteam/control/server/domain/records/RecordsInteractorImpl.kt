@@ -14,6 +14,7 @@ import ru.falseteam.control.api.dto.CameraRecordDTO
 import ru.falseteam.control.server.database.CameraRecord
 import ru.falseteam.control.server.database.CameraRecordQueries
 import ru.falseteam.control.server.domain.videoencoder.VideoEncodeInteractor
+import java.io.File
 import java.nio.file.Files
 import java.nio.file.Path
 
@@ -49,6 +50,10 @@ class RecordsInteractorImpl(
             Files.createDirectories(recordLocation.parent)
             Files.move(record, recordLocation)
         }
+
+    override fun getRecord(id: Long): File {
+        return File("data/record/$id.mp4")
+    }
 
     private suspend fun insert(cameraRecord: CameraRecordDTO): Long = withContext(Dispatchers.IO) {
         cameraRecordQueries.transactionWithResult {

@@ -8,6 +8,8 @@ import ru.falseteam.control.api.rsub.CamsRecordRSub
 import ru.falseteam.control.api.rsub.CamsStatusRSub
 import ru.falseteam.control.server.api.CamsApi
 import ru.falseteam.control.server.api.CamsApiImpl
+import ru.falseteam.control.server.api.RecordsApi
+import ru.falseteam.control.server.api.RecordsApiImpl
 import ru.falseteam.control.server.database.CameraQueries
 import ru.falseteam.control.server.database.CameraRecordQueries
 import ru.falseteam.control.server.database.Database
@@ -48,6 +50,7 @@ val Kodein = DI {
 
     // Api
     bind<CamsApi>() with singleton { CamsApiImpl(instance(), instance()) }
+    bind<RecordsApi>() with singleton { RecordsApiImpl(instance()) }
 
     // rSub
     bind<RSubServer>() with singleton {
