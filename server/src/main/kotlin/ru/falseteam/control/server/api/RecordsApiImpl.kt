@@ -5,7 +5,6 @@ import io.ktor.http.*
 import io.ktor.response.*
 import io.ktor.routing.*
 import ru.falseteam.control.server.domain.records.RecordsInteractor
-import java.io.File
 
 class RecordsApiImpl(
     private val recordsInteractor: RecordsInteractor,
