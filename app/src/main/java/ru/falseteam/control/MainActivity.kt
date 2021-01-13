@@ -1,16 +1,20 @@
 package ru.falseteam.control
 
 import android.os.Bundle
+import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.setContent
+import androidx.compose.ui.res.vectorResource
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -68,19 +72,14 @@ class MainActivity : AppCompatActivity() {
             navBackStackEntry?.arguments?.getString(KEY_ROUTE) ?: Screen.DefaultScreen.path
         if (navItems.find { it.screen.path == currentRoute } != null)
             BottomNavigation {
-                navItems.forEach { screen ->
+                navItems.forEach { navItem ->
                     BottomNavigationItem(
-                        icon = { /*Icon(Icons.Filled.Favorite)*/ },
-                        label = { Text(screen.name) },
-                        selected = currentRoute == screen.screen.path,
+                        icon = { Icon(vectorResource(id = navItem.icon)) },
+                        label = { Text(navItem.name) },
+                        selected = currentRoute == navItem.screen.path,
                         onClick = {
-                            navController.navigate(screen.screen) {
-                                // Pop up to the start destination of the graph to
-                                // avoid building up a large stack of destinations
-                                // on the back stack as users select items
+                            navController.navigate(navItem.screen) {
                                 popUpTo = navController.graph.startDestination
-                                // Avoid multiple copies of the same destination when
-                                // reselecting the same item
                                 launchSingleTop = true
                             }
                         }
@@ -94,8 +93,12 @@ class MainActivity : AppCompatActivity() {
         NavItem.Cams,
     )
 
-    private sealed class NavItem(val screen: Screen, val name: String) {
-        object Records : NavItem(Screen.Records, "Records")
-        object Cams : NavItem(Screen.Cams, "Cams")
+    private sealed class NavItem(
+        val screen: Screen,
+        val name: String,
+        @DrawableRes val icon: Int,
+    ) {
+        object Records : NavItem(Screen.Records, "Records", R.drawable.ic_security_camera)
+        object Cams : NavItem(Screen.Cams, "Cams", R.drawable.ic_security_camera)
     }
 }

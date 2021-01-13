@@ -4,9 +4,12 @@ import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver
 import org.kodein.di.*
 import ru.falseteam.control.api.rsub.CamsRSub
+import ru.falseteam.control.api.rsub.CamsRecordRSub
 import ru.falseteam.control.api.rsub.CamsStatusRSub
 import ru.falseteam.control.server.api.CamsApi
 import ru.falseteam.control.server.api.CamsApiImpl
+import ru.falseteam.control.server.api.RecordsApi
+import ru.falseteam.control.server.api.RecordsApiImpl
 import ru.falseteam.control.server.database.CameraQueries
 import ru.falseteam.control.server.database.CameraRecordQueries
 import ru.falseteam.control.server.database.Database
@@ -19,6 +22,7 @@ import ru.falseteam.control.server.domain.records.RecordsInteractorImpl
 import ru.falseteam.control.server.domain.videoencoder.VideoEncodeInteractor
 import ru.falseteam.control.server.domain.videoencoder.VideoEncodeInteractorImpl
 import ru.falseteam.control.server.rsub.CamsRSubImpl
+import ru.falseteam.control.server.rsub.CamsRecordRSubImpl
 import ru.falseteam.control.server.rsub.CamsStatusRSubImpl
 import ru.falseteam.rsub.server.RSubServer
 import java.nio.file.Path
@@ -39,25 +43,24 @@ val Kodein = DI {
     // Domain
     bind<CamsInteractor>() with singleton { CamsInteractorImpl(instance()) }
     bind<CamsConnectionInteractor>() with singleton {
-        CamsConnectionInteractorImpl(
-            instance(),
-            instance(),
-            instance()
-        )
+        CamsConnectionInteractorImpl(instance(), instance(), instance())
     }
     bind<RecordsInteractor>() with singleton { RecordsInteractorImpl(instance(), instance()) }
     bind<VideoEncodeInteractor>() with singleton { VideoEncodeInteractorImpl() }
 
     // Api
     bind<CamsApi>() with singleton { CamsApiImpl(instance(), instance()) }
+    bind<RecordsApi>() with singleton { RecordsApiImpl(instance()) }
 
     // rSub
     bind<RSubServer>() with singleton {
         RSubServer().apply {
             registerImpl(instance<CamsRSub>())
             registerImpl(instance<CamsStatusRSub>())
+            registerImpl(instance<CamsRecordRSub>())
         }
     }
     bind<CamsRSub>() with singleton { CamsRSubImpl(instance()) }
     bind<CamsStatusRSub>() with singleton { CamsStatusRSubImpl(instance()) }
+    bind<CamsRecordRSub>() with singleton { CamsRecordRSubImpl(instance()) }
 }

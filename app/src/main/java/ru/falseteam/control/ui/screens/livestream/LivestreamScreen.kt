@@ -5,6 +5,7 @@ import android.view.SurfaceView
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -17,25 +18,28 @@ import ru.falseteam.control.di.Kodein
 
 @Composable
 fun LivestreamScreen(id: Long) {
-    val context = AmbientContext.current
-    val surfaceView = remember {
-        SurfaceView(context).apply {
-            holder.addCallback(SurfaceCallback(VideoDecodeThread()))
+    Surface {
+        val context = AmbientContext.current
+        val surfaceView = remember {
+            SurfaceView(context).apply {
+                holder.addCallback(SurfaceCallback(id, VideoDecodeThread()))
+            }
         }
-    }
 
-    AndroidView(
-        modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight()
-            .padding(1.dp),
-        viewBlock = { surfaceView }
-    ) {
+        AndroidView(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight()
+                .padding(1.dp),
+            viewBlock = { surfaceView }
+        ) {
 
+        }
     }
 }
 
 private class SurfaceCallback(
+    private val id: Long,
     private val videoDecode: VideoDecodeThread,
 ) : SurfaceHolder.Callback {
     override fun surfaceCreated(holder: SurfaceHolder) {
@@ -43,7 +47,7 @@ private class SurfaceCallback(
 
     override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
         videoDecode.init(holder.surface, Kodein.direct.instance())
-        videoDecode.start()
+        videoDecode.start(id)
     }
 
     override fun surfaceDestroyed(holder: SurfaceHolder) {

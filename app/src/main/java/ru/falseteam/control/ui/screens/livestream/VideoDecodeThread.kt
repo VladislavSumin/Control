@@ -32,16 +32,16 @@ class VideoDecodeThread {
         return true
     }
 
-    fun start() {
+    fun start(id: Long) {
         job = GlobalScope.launch(Dispatchers.IO) {
-            val format = MediaFormat.createVideoFormat("video/avc", 0, 0)
+            val format = MediaFormat.createVideoFormat("video/avc", 800, 600)
             decoder.configure(format, surface, null, 0 /* Decode */)
             decoder.start()
             try {
                 coroutineScope {
                     val dataMapper = DataMapper()
                     launch {
-                        camsInteractor.observeVideoStream(1).collect {
+                        camsInteractor.observeVideoStream(id).collect {
                             dataMapper.processNextInput(it)
                         }
                     }

@@ -12,6 +12,7 @@ import org.apache.logging.log4j.LogManager
 import org.kodein.di.instance
 import org.slf4j.LoggerFactory
 import ru.falseteam.control.server.api.CamsApi
+import ru.falseteam.control.server.api.RecordsApi
 import ru.falseteam.control.server.di.Kodein
 import ru.falseteam.control.server.domain.cams.CamsConnectionInteractor
 import ru.falseteam.rsub.connector.ktorwebsocket.server.rSubWebSocket
@@ -23,6 +24,7 @@ fun main(args: Array<String>) {
 
     val rSubServer: RSubServer by Kodein.instance()
     val camsApi: CamsApi by Kodein.instance()
+    val recordsApi: RecordsApi by Kodein.instance()
     val camsConnectionInteractor: CamsConnectionInteractor by Kodein.instance()
 
     val server = embeddedServer(Netty, 8080) {
@@ -30,8 +32,10 @@ fun main(args: Array<String>) {
             json()
         }
         install(WebSockets)
+        install(PartialContent)
         routing {
             camsApi.install(this)
+            recordsApi.install(this)
             rSubWebSocket(rSubServer)
         }
     }
