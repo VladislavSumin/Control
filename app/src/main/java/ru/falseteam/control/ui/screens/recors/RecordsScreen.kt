@@ -88,7 +88,7 @@ private fun VideoRecord(id: Long) {
         AndroidView(
             modifier = Modifier.background(Color.Red),
             viewBlock = { videoView }) {
-            it.setVideoURI(Uri.parse("http://10.0.0.56:8080/api/v1/record_video/$id"))
+            it.setVideoURI(Uri.parse("http://10.0.0.56:8080/api/v1/records/video/$id"))
             //it.requestFocus()
             //it.start()
         }

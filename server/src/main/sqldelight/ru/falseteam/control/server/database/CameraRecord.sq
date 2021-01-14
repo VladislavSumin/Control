@@ -2,6 +2,11 @@ selectAll:
 SELECT *
 FROM cameraRecord;
 
+selectById:
+SELECT *
+FROM cameraRecord
+WHERE id = ?;
+
 insert:
 INSERT INTO cameraRecord(cameraId, name, timestamp, fileSize, length)
 VALUES ?;
