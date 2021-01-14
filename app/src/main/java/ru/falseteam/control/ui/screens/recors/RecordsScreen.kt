@@ -1,14 +1,7 @@
 package ru.falseteam.control.ui.screens.recors
 
 import android.net.Uri
-import android.view.ViewGroup
-import android.view.ViewGroup.LayoutParams.MATCH_PARENT
-import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
-import android.widget.Button
-import android.widget.MediaController
-import android.widget.VideoView
 import androidx.compose.foundation.ScrollableColumn
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Card
 import androidx.compose.material.CircularProgressIndicator
@@ -19,12 +12,18 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.AmbientContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavController
+import com.google.android.exoplayer2.MediaItem
+import com.google.android.exoplayer2.SimpleExoPlayer
+import com.google.android.exoplayer2.source.ProgressiveMediaSource
+import com.google.android.exoplayer2.ui.PlayerView
+import com.google.android.exoplayer2.upstream.DataSource
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
+import com.google.android.exoplayer2.util.Util
 import ru.falseteam.control.api.dto.CameraRecordDTO
 import ru.falseteam.control.di.kodeinViewModel
 
@@ -74,23 +73,35 @@ private fun RecordCard(record: CameraRecordDTO) {
 private fun VideoRecord(id: Long) {
     Surface {
         val context = AmbientContext.current
-        val videoView = remember {
-            val controller = MediaController(context)
-            val video = CustomVideoView(context)
 
-            video.setMediaController(controller)
-            video.layoutParams = ViewGroup.LayoutParams(MATCH_PARENT, WRAP_CONTENT)
-            controller.setAnchorView(video)
+        val factory = remember {
+            val dataSourceFactory: DataSource.Factory = DefaultDataSourceFactory(
+                context,
+                Util.getUserAgent(context, context.packageName)
+            )
 
-            video
+            ProgressiveMediaSource.Factory(dataSourceFactory)
+        }
+
+        val exoPlayer = remember {
+            SimpleExoPlayer.Builder(context).build()
+        }
+
+        val exoPlayerView = remember {
+            PlayerView(context).apply {
+                player = exoPlayer
+            }
         }
 
         AndroidView(
-            modifier = Modifier.background(Color.Red),
-            viewBlock = { videoView }) {
-            it.setVideoURI(Uri.parse("http://10.0.0.56:8080/api/v1/record_video/$id"))
-            //it.requestFocus()
-            //it.start()
+            modifier = Modifier
+                .fillMaxWidth()
+                .aspectRatio(16 / 9f),
+            viewBlock = { exoPlayerView }) {
+            val uri = Uri.parse("http://10.0.0.56:8080/api/v1/record_video/$id")
+            val mediaItem = MediaItem.Builder().setUri(uri).build()
+            exoPlayer.setMediaSource(factory.createMediaSource(mediaItem))
+            exoPlayer.prepare()
         }
     }
 }
