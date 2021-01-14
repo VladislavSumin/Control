@@ -9,9 +9,7 @@ import androidx.compose.material.Card
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
@@ -82,17 +80,24 @@ private fun RecordCard(record: CameraRecordDTO, playerCache: PlayerCache) {
 @Composable
 private fun VideoRecord(id: Long, playerCache: PlayerCache) {
     Surface {
+        val (oldId, setOldId) = remember { mutableStateOf(-1L) }
+        val player = remember {
+            playerCache.acquire()
+        }
         AndroidView(
             modifier = Modifier
                 .fillMaxWidth()
                 .aspectRatio(16 / 9f),
             viewBlock = {
-                playerCache.acquire()
+                player
             }) {
-            it.player?.apply {
-                this as SimpleExoPlayer
-                setMediaSource(playerCache.createMedia(id))
-                prepare()
+            if (oldId != id) {
+                setOldId(id)
+                it.player?.apply {
+                    this as SimpleExoPlayer
+                    setMediaSource(playerCache.createMedia(id))
+                    prepare()
+                }
             }
         }
     }
