@@ -34,6 +34,14 @@ class RecordsInteractorImpl(
 
     override fun observeAll(): Flow<List<CameraRecordDTO>> = allObservable
 
+    override suspend fun getAll(): List<CameraRecordDTO> = withContext(Dispatchers.IO) {
+        cameraRecordQueries.selectAll().executeAsList().map { it.toDTO() }
+    }
+
+    override suspend fun getById(id: Long): CameraRecordDTO? = withContext(Dispatchers.IO) {
+        cameraRecordQueries.selectById(id).executeAsOneOrNull()?.toDTO()
+    }
+
     override suspend fun saveNewRecord(cameraDTO: CameraDTO, timestamp: Long, record: Path): Unit =
         withContext(Dispatchers.IO) {
             val duration = (videoEncodeInteractor.getDuration(record) * 1000).toLong()
