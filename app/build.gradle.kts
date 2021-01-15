@@ -64,6 +64,7 @@ dependencies {
     implementation("androidx.compose.material:material:1.0.0-alpha09")
     implementation("androidx.compose.ui:ui-tooling:1.0.0-alpha09")
     implementation("androidx.navigation:navigation-compose:1.0.0-alpha04")
+    implementation("com.google.android.exoplayer:exoplayer:2.12.2")
     testImplementation("junit:junit:4.13.1")
     androidTestImplementation("androidx.test.ext:junit:1.1.2")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.3.0")
