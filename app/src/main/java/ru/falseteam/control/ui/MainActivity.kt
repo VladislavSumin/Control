@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
@@ -21,7 +22,11 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.*
+import org.kodein.di.direct
+import org.kodein.di.instance
 import ru.falseteam.control.R
+import ru.falseteam.control.di.Kodein
+import ru.falseteam.control.domain.themes.ThemesInteractor
 import ru.falseteam.control.ui.screens.Screen
 import ru.falseteam.control.ui.screens.addcamera.AddCameraScreen
 import ru.falseteam.control.ui.screens.cams.CamsScreen
@@ -34,7 +39,12 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            ControlTheme {
+            val isDarkTheme by
+            Kodein.direct.instance<ThemesInteractor>().observeIsDarkTheme().collectAsState(
+                initial = false
+            )
+
+            ControlTheme(darkTheme = isDarkTheme) {
                 MainScreen()
             }
         }
