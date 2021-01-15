@@ -49,7 +49,7 @@ fun RecordsScreen(navController: NavController, viewModel: RecordsViewModel = ko
 }
 
 @Composable
-private fun RecordsList(records: List<CameraRecordDTO>) {
+private fun RecordsList(records: List<RecordUiModel>) {
     val context = AmbientContext.current
     val playerCache = remember {
         PlayerCache(context)
@@ -63,7 +63,7 @@ private fun RecordsList(records: List<CameraRecordDTO>) {
 }
 
 @Composable
-private fun RecordCard(record: CameraRecordDTO, playerCache: PlayerCache) {
+private fun RecordCard(record: RecordUiModel, playerCache: PlayerCache) {
     Card(
         shape = RectangleShape,
         elevation = 2.dp,
@@ -86,9 +86,7 @@ private fun RecordCard(record: CameraRecordDTO, playerCache: PlayerCache) {
                 }
             }
             VideoRecord(record.id, playerCache)
-            Text(text = record.timestamp.toString())
-            Text(text = record.fileSize.toString())
-            Text(text = record.length.toString())
+            Text(text = record.id.toString())
             Divider(modifier = Modifier.padding(8.dp, 0.dp))
             Row {
                 IconButton(onClick = { /*TODO*/ }) {
