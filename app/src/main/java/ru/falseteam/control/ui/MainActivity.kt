@@ -1,6 +1,7 @@
 package ru.falseteam.control.ui
 
 import android.os.Bundle
+import android.view.View
 import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.Column
@@ -11,8 +12,11 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.AmbientConfiguration
 import androidx.compose.ui.platform.setContent
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -73,7 +77,7 @@ class MainActivity : AppCompatActivity() {
         val currentRoute =
             navBackStackEntry?.arguments?.getString(KEY_ROUTE) ?: Screen.DefaultScreen.path
         if (navItems.find { it.screen.path == currentRoute } != null)
-            BottomNavigation {
+            BottomNavigation(backgroundColor = MaterialTheme.colors.surface, elevation = 12.dp) {
                 navItems.forEach { navItem ->
                     BottomNavigationItem(
                         icon = { Icon(vectorResource(id = navItem.icon)) },
