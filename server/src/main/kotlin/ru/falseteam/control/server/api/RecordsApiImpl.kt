@@ -10,12 +10,23 @@ class RecordsApiImpl(
     private val recordsInteractor: RecordsInteractor,
 ) : RecordsApi {
     override fun install(routing: Routing) = routing.apply {
-        get("/api/v1/record_video/{id}") {
+        get("/api/v1/records/video/{id}") {
             val id = call.parameters["id"]!!.toLong()
             val file = recordsInteractor.getRecord(id)
             if (file.exists()) {
                 call.respondFile(file)
             } else call.respond(HttpStatusCode.NotFound)
+        }
+
+        get("/api/v1/records") {
+            call.respond(recordsInteractor.getAll())
+        }
+
+        get("/api/v1/records/{id}") {
+            val id = call.parameters["id"]!!.toLong()
+            val record = recordsInteractor.getById(id)
+            if (record != null) call.respond(record)
+            else call.respond(HttpStatusCode.NotFound)
         }
     }
 }

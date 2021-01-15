@@ -117,7 +117,7 @@ private class PlayerCache(
     }
 
     fun createMedia(id: Long): ProgressiveMediaSource {
-        val uri = Uri.parse("http://10.0.0.56:8080/api/v1/record_video/$id")
+        val uri = Uri.parse("http://10.0.0.56:8080/api/v1/records/video/$id")
         val mediaItem = MediaItem.Builder().setUri(uri).build()
         return mediaFactory.createMediaSource(mediaItem)
     }
