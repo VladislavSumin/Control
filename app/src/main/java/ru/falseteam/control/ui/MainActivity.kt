@@ -1,4 +1,4 @@
-package ru.falseteam.control
+package ru.falseteam.control.ui
 
 import android.os.Bundle
 import androidx.annotation.DrawableRes
@@ -8,22 +8,23 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.setContent
 import androidx.compose.ui.res.vectorResource
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.*
-import ru.falseteam.control.ui.ControlTheme
+import ru.falseteam.control.R
+import ru.falseteam.control.ui.screens.Screen
 import ru.falseteam.control.ui.screens.addcamera.AddCameraScreen
 import ru.falseteam.control.ui.screens.cams.CamsScreen
 import ru.falseteam.control.ui.screens.livestream.LivestreamScreen
+import ru.falseteam.control.ui.screens.navigate
 import ru.falseteam.control.ui.screens.recors.RecordsScreen
+import ru.falseteam.control.ui.screens.settings.SettingsScreen
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,6 +58,7 @@ class MainActivity : AppCompatActivity() {
         NavHost(navController = navController, startDestination = Screen.DefaultScreen.path) {
             composable(Screen.Cams.path) { CamsScreen(navController) }
             composable(Screen.Records.path) { RecordsScreen(navController) }
+            composable(Screen.Settings.path) { SettingsScreen(navController) }
             composable(Screen.AddCamera.path) { AddCameraScreen(navController) }
             composable(
                 Screen.Livestream.basePath,
@@ -91,6 +93,7 @@ class MainActivity : AppCompatActivity() {
     private val navItems = listOf(
         NavItem.Records,
         NavItem.Cams,
+        NavItem.Settings,
     )
 
     private sealed class NavItem(
@@ -98,7 +101,8 @@ class MainActivity : AppCompatActivity() {
         val name: String,
         @DrawableRes val icon: Int,
     ) {
-        object Records : NavItem(Screen.Records, "Records", R.drawable.ic_security_camera)
+        object Records : NavItem(Screen.Records, "Records", R.drawable.ic_camera_records)
         object Cams : NavItem(Screen.Cams, "Cams", R.drawable.ic_security_camera)
+        object Settings : NavItem(Screen.Settings, "Settings", R.drawable.ic_settings)
     }
 }
