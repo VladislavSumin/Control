@@ -12,9 +12,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.compose.navigate
+import ru.falseteam.control.BuildConfig
 import ru.falseteam.control.R
 import ru.falseteam.control.di.kodeinViewModel
+import ru.falseteam.control.ui.green900
+import ru.falseteam.control.ui.red900
 import ru.falseteam.control.ui.screens.Screen
 import ru.falseteam.control.ui.screens.navigate
 
@@ -48,20 +50,47 @@ fun CamsScreen(navController: NavController, viewModel: CamsViewModel = kodeinVi
 @Composable
 private fun CameraCard(navController: NavController, camera: CameraUiModel) {
     Card(
-        elevation = 2.dp,
         modifier = Modifier
-            .padding(4.dp, 4.dp)
+            .padding(8.dp, 6.dp)
             .clickable(onClick = { navController.navigate(Screen.Livestream(camera.id)) })
     ) {
         Column(
             Modifier
                 .fillMaxWidth()
-                .padding(8.dp, 4.dp)
+                .padding(12.dp, 12.dp)
         ) {
-            Text(text = camera.name)
-            Text(text = camera.address)
-            Text(text = camera.isConnected.toString())
+            Row {
+                Text(
+                    modifier = Modifier.weight(1f),
+                    style = MaterialTheme.typography.h6,
+                    text = camera.name
+                )
+                IsCameraConnectedText(isConnected = camera.isConnected)
+            }
+
+            Row {
+                Text(
+                    modifier = Modifier.weight(1f),
+                    text = "Host: ${camera.address}"
+                )
+                if (BuildConfig.DEBUG) {
+                    Text(
+                        modifier = Modifier.align(Alignment.CenterVertically),
+                        text = "id: ${camera.id}",
+                        style = MaterialTheme.typography.body2
+                    )
+                }
+            }
         }
+    }
+}
+
+@Composable
+private fun IsCameraConnectedText(isConnected: Boolean) {
+    if (isConnected) {
+        Text(text = "Connected", color = green900)
+    } else {
+        Text(text = "Disconnected", color = red900)
     }
 }
 
