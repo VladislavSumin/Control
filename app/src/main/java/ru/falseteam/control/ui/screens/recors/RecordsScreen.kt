@@ -26,7 +26,6 @@ import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.exoplayer2.upstream.DataSource
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.Util
-import com.google.android.material.datepicker.MaterialDatePicker
 import ru.falseteam.control.R
 import ru.falseteam.control.di.kodeinViewModel
 import ru.falseteam.control.ui.PrimaryButton
@@ -37,7 +36,7 @@ fun RecordsScreen(navController: NavController, viewModel: RecordsViewModel = ko
     val scaffoldState = rememberScaffoldState()
     Scaffold(
         scaffoldState = scaffoldState,
-        topBar = { TopBar(scaffoldState = scaffoldState) },
+        topBar = { TopBar(scaffoldState, viewModel) },
         drawerContent = { FilterContent() },
     ) { Content(viewModel) }
 }
@@ -46,17 +45,20 @@ fun RecordsScreen(navController: NavController, viewModel: RecordsViewModel = ko
 private fun Content(viewModel: RecordsViewModel) {
     when (val state = viewModel.state.collectAsState(RecordsState.Loading).value) {
         RecordsState.Loading -> LoadingScreen()
-        is RecordsState.Error -> ErrorScreen(state)
+        is RecordsState.Error -> ErrorScreen(state, viewModel)
         is RecordsState.ShowResult -> ShowResultScreen(state)
     }
 }
 
 @Composable
-private fun TopBar(scaffoldState: ScaffoldState) {
+private fun TopBar(scaffoldState: ScaffoldState, viewModel: RecordsViewModel) {
     TopAppBar {
         Spacer(modifier = Modifier.weight(1f))
         IconButton(onClick = { scaffoldState.drawerState.open() }) {
             Icon(vectorResource(id = R.drawable.ic_filter))
+        }
+        IconButton(onClick = { viewModel.forceUpdate() }) {
+            Icon(vectorResource(id = R.drawable.ic_refresh))
         }
     }
 }
@@ -90,7 +92,7 @@ private fun LoadingScreen() {
 }
 
 @Composable
-private fun ErrorScreen(state: RecordsState.Error) {
+private fun ErrorScreen(state: RecordsState.Error, viewModel: RecordsViewModel) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -108,7 +110,7 @@ private fun ErrorScreen(state: RecordsState.Error) {
             )
             PrimaryButton(
                 text = "Retry",
-                onClick = { /*TODO*/ },
+                onClick = { viewModel.forceUpdate() },
                 modifier = Modifier
                     .padding(0.dp, 16.dp, 0.dp, 0.dp)
                     .align(Alignment.CenterHorizontally)
