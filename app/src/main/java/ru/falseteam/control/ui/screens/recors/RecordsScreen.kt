@@ -29,13 +29,14 @@ import com.google.android.exoplayer2.util.Util
 import ru.falseteam.control.R
 import ru.falseteam.control.api.dto.CameraRecordDTO
 import ru.falseteam.control.di.kodeinViewModel
+import ru.falseteam.control.ui.PrimaryButton
 import ru.falseteam.control.ui.red900
 
 @Composable
 fun RecordsScreen(navController: NavController, viewModel: RecordsViewModel = kodeinViewModel()) {
     when (val state = viewModel.state.collectAsState(RecordsState.Loading).value) {
         RecordsState.Loading -> LoadingScreen()
-        RecordsState.Error -> ErrorScreen()
+        is RecordsState.Error -> ErrorScreen(state)
         is RecordsState.ShowResult -> ShowResultScreen(state)
     }
 }
@@ -53,8 +54,31 @@ private fun LoadingScreen() {
 }
 
 @Composable
-private fun ErrorScreen() {
-
+private fun ErrorScreen(state: RecordsState.Error) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight()
+            .padding(16.dp)
+    ) {
+        Column(modifier = Modifier.align(Alignment.Center)) {
+            Text(
+                text = "Не удалось загрузить записи с сервера",
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            )
+            Text(
+                text = "Ошибка: ${state.error}",
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            )
+            PrimaryButton(
+                text = "Retry",
+                onClick = { /*TODO*/ },
+                modifier = Modifier
+                    .padding(0.dp, 16.dp, 0.dp, 0.dp)
+                    .align(Alignment.CenterHorizontally)
+            )
+        }
+    }
 }
 
 @Composable

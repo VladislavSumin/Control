@@ -29,8 +29,7 @@ class RecordsViewModel(
                 }
             state.emit(RecordsState.ShowResult(records))
         } catch (e: Exception) {
-            //TODO add error logging
-            state.emit(RecordsState.Error)
+            state.emit(RecordsState.Error(e.message ?: "No error message"))
         }
     }
 
