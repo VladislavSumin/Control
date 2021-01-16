@@ -5,15 +5,16 @@ import android.net.Uri
 import android.util.AttributeSet
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.Card
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.material.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.AmbientContext
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.util.Pools
@@ -25,8 +26,10 @@ import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.exoplayer2.upstream.DataSource
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.Util
+import ru.falseteam.control.R
 import ru.falseteam.control.api.dto.CameraRecordDTO
 import ru.falseteam.control.di.kodeinViewModel
+import ru.falseteam.control.ui.red900
 
 @Composable
 fun RecordsScreen(navController: NavController, viewModel: RecordsViewModel = kodeinViewModel()) {
@@ -46,7 +49,7 @@ fun RecordsScreen(navController: NavController, viewModel: RecordsViewModel = ko
 }
 
 @Composable
-private fun RecordsList(records: List<CameraRecordDTO>) {
+private fun RecordsList(records: List<RecordUiModel>) {
     val context = AmbientContext.current
     val playerCache = remember {
         PlayerCache(context)
@@ -60,19 +63,41 @@ private fun RecordsList(records: List<CameraRecordDTO>) {
 }
 
 @Composable
-private fun RecordCard(record: CameraRecordDTO, playerCache: PlayerCache) {
+private fun RecordCard(record: RecordUiModel, playerCache: PlayerCache) {
     Card(
         shape = RectangleShape,
         elevation = 2.dp,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(0.dp, 4.dp)
+            .padding(0.dp, 6.dp)
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
+            Row {
+                Text(
+                    text = "Без названия...",
+                    style = MaterialTheme.typography.body2,
+                    modifier = Modifier
+                        .align(Alignment.CenterVertically)
+                        .padding(16.dp, 0.dp)
+                )
+                Spacer(modifier = Modifier.weight(1f))
+                IconButton(onClick = { /*TODO*/ }) {
+                    Icon(vectorResource(id = R.drawable.ic_edit))
+                }
+            }
             VideoRecord(record.id, playerCache)
-            Text(text = record.timestamp.toString())
-            Text(text = record.fileSize.toString())
-            Text(text = record.length.toString())
+            Text(text = record.id.toString())
+            Divider(modifier = Modifier.padding(8.dp, 0.dp))
+            Row {
+                IconButton(onClick = { /*TODO*/ }) {
+                    Icon(vectorResource(id = R.drawable.ic_save))
+
+                }
+                Spacer(modifier = Modifier.weight(1f))
+                IconButton(onClick = { /*TODO*/ }) {
+                    Icon(vectorResource(id = R.drawable.ic_delete), tint = red900)
+                }
+            }
         }
     }
 }
