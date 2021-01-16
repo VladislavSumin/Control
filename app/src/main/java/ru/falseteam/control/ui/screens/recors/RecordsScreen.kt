@@ -46,7 +46,7 @@ private fun Content(viewModel: RecordsViewModel) {
     when (val state = viewModel.state.collectAsState(RecordsState.Loading).value) {
         RecordsState.Loading -> LoadingScreen()
         is RecordsState.Error -> ErrorScreen(state, viewModel)
-        is RecordsState.ShowResult -> ShowResultScreen(state)
+        is RecordsState.ShowResult -> ShowResultScreen(state, viewModel)
     }
 }
 
@@ -120,12 +120,12 @@ private fun ErrorScreen(state: RecordsState.Error, viewModel: RecordsViewModel) 
 }
 
 @Composable
-private fun ShowResultScreen(state: RecordsState.ShowResult) {
-    RecordsList(records = state.records)
+private fun ShowResultScreen(state: RecordsState.ShowResult, viewModel: RecordsViewModel) {
+    RecordsList(state.records, viewModel)
 }
 
 @Composable
-private fun RecordsList(records: List<RecordUiModel>) {
+private fun RecordsList(records: List<RecordUiModel>, viewModel: RecordsViewModel) {
     val context = AmbientContext.current
     val playerCache = remember {
         PlayerCache(context)
@@ -133,13 +133,17 @@ private fun RecordsList(records: List<RecordUiModel>) {
 
     LazyColumn {
         items(records) { record ->
-            RecordCard(record = record, playerCache)
+            RecordCard(record = record, playerCache, viewModel)
         }
     }
 }
 
 @Composable
-private fun RecordCard(record: RecordUiModel, playerCache: PlayerCache) {
+private fun RecordCard(
+    record: RecordUiModel,
+    playerCache: PlayerCache,
+    viewModel: RecordsViewModel
+) {
     Card(
         shape = RectangleShape,
         elevation = 2.dp,
@@ -176,7 +180,7 @@ private fun RecordCard(record: RecordUiModel, playerCache: PlayerCache) {
 
             Divider(modifier = Modifier.padding(8.dp, 0.dp))
             Row {
-                IconButton(onClick = { /*TODO*/ }) {
+                IconButton(onClick = { viewModel.setKeepForever(record.id, !record.keepForever) }) {
                     val icon = if (record.keepForever) R.drawable.ic_star_filled
                     else R.drawable.ic_star
                     Icon(vectorResource(id = icon))

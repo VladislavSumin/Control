@@ -56,4 +56,8 @@ class RecordsViewModel(
             forceUpdate.emit(Unit)
         }
     }
+
+    fun setKeepForever(recordId: Long, keepForever: Boolean) {
+
+    }
 }
