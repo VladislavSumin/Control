@@ -41,7 +41,8 @@ class RecordsViewModel(
                         id = record.id,
                         name = record.name,
                         cameraName = camera?.name,
-                        date = dateFormatter.format(Date(record.timestamp))
+                        date = dateFormatter.format(Date(record.timestamp)),
+                        keepForever = record.keepForever
                     )
                 }
             state.emit(RecordsState.ShowResult(records))

@@ -177,7 +177,9 @@ private fun RecordCard(record: RecordUiModel, playerCache: PlayerCache) {
             Divider(modifier = Modifier.padding(8.dp, 0.dp))
             Row {
                 IconButton(onClick = { /*TODO*/ }) {
-                    Icon(vectorResource(id = R.drawable.ic_save))
+                    val icon = if (record.keepForever) R.drawable.ic_star_filled
+                    else R.drawable.ic_star
+                    Icon(vectorResource(id = icon))
 
                 }
                 Spacer(modifier = Modifier.weight(1f))

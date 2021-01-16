@@ -5,4 +5,5 @@ data class RecordUiModel(
     val name: String?,
     val cameraName: String?,
     val date: String,
+    val keepForever: Boolean,
 )
