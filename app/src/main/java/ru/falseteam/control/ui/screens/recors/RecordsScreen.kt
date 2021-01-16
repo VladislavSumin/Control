@@ -26,18 +26,54 @@ import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.exoplayer2.upstream.DataSource
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.Util
+import com.google.android.material.datepicker.MaterialDatePicker
 import ru.falseteam.control.R
-import ru.falseteam.control.api.dto.CameraRecordDTO
 import ru.falseteam.control.di.kodeinViewModel
 import ru.falseteam.control.ui.PrimaryButton
 import ru.falseteam.control.ui.red900
 
 @Composable
 fun RecordsScreen(navController: NavController, viewModel: RecordsViewModel = kodeinViewModel()) {
+    val scaffoldState = rememberScaffoldState()
+    Scaffold(
+        scaffoldState = scaffoldState,
+        topBar = { TopBar(scaffoldState = scaffoldState) },
+        drawerContent = { FilterContent() },
+    ) { Content(viewModel) }
+}
+
+@Composable
+private fun Content(viewModel: RecordsViewModel) {
     when (val state = viewModel.state.collectAsState(RecordsState.Loading).value) {
         RecordsState.Loading -> LoadingScreen()
         is RecordsState.Error -> ErrorScreen(state)
         is RecordsState.ShowResult -> ShowResultScreen(state)
+    }
+}
+
+@Composable
+private fun TopBar(scaffoldState: ScaffoldState) {
+    TopAppBar {
+        Spacer(modifier = Modifier.weight(1f))
+        IconButton(onClick = { scaffoldState.drawerState.open() }) {
+            Icon(vectorResource(id = R.drawable.ic_filter))
+        }
+    }
+}
+
+@Composable
+private fun FilterContent() {
+    Column(modifier = Modifier.padding(16.dp)) {
+        Row {
+            Text(text = "Только сохраненные", modifier = Modifier.weight(1f))
+            Checkbox(checked = false, onCheckedChange = { /*TODO*/ })
+        }
+
+        Row {
+            Text(text = "Только c именем", modifier = Modifier.weight(1f))
+            Checkbox(checked = false, onCheckedChange = { /*TODO*/ })
+        }
+
     }
 }
 
