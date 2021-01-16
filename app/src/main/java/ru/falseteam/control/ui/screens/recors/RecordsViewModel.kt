@@ -24,9 +24,7 @@ class RecordsViewModel(
     init {
         viewModelScope.launch {
             launch { forceUpdate.emit(Unit) }
-            println("b")
             forceUpdate.collectLatest {
-                println("a")
                 request()
             }
         }
@@ -54,7 +52,6 @@ class RecordsViewModel(
 
     fun forceUpdate() {
         viewModelScope.launch {
-            println("")
             forceUpdate.emit(Unit)
         }
     }
