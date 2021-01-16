@@ -14,4 +14,7 @@ class RecordsInteractorImpl(
     override fun observeAll(): Flow<List<CameraRecordDTO>> = camsRecordRSub.observeAll()
     override suspend fun getAll(): List<CameraRecordDTO> =
         recordsApi.getAll(serversInteractor.getPrimaryServer())
+
+    override suspend fun setKeepForever(id: Long, keepForever: Boolean) =
+        recordsApi.setKeepForever(serversInteractor.getPrimaryServer(), id, keepForever)
 }

@@ -58,6 +58,8 @@ class RecordsViewModel(
     }
 
     fun setKeepForever(recordId: Long, keepForever: Boolean) {
-
+        viewModelScope.launch {
+            recordsInteractor.setKeepForever(recordId, keepForever)
+        }
     }
 }
