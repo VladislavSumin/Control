@@ -14,6 +14,8 @@ import ru.falseteam.control.domain.cams.CamsInteractor
 import ru.falseteam.control.domain.cams.CamsInteractorImpl
 import ru.falseteam.control.domain.records.RecordsInteractor
 import ru.falseteam.control.domain.records.RecordsInteractorImpl
+import ru.falseteam.control.domain.servers.ServersInteractor
+import ru.falseteam.control.domain.servers.ServersInteractorImpl
 import ru.falseteam.control.domain.themes.ThemesInteractor
 import ru.falseteam.control.domain.themes.ThemesInteractorImpl
 import ru.falseteam.control.ui.screens.addcamera.AddCameraViewModel
@@ -24,9 +26,12 @@ import ru.falseteam.rsub.connector.ktorwebsocket.client.RSubConnectorKtorWebSock
 
 val Kodein = DI.lazy {
     // Domain
-    bind<CamsInteractor>() with singleton { CamsInteractorImpl(instance(), instance(), instance()) }
+    bind<CamsInteractor>() with singleton {
+        CamsInteractorImpl(instance(), instance(), instance(), instance())
+    }
     bind<RecordsInteractor>() with singleton { RecordsInteractorImpl(instance()) }
     bind<ThemesInteractor>() with singleton { ThemesInteractorImpl() }
+    bind<ServersInteractor>() with singleton { ServersInteractorImpl() }
 
     // Api
     bind<CamsApi>() with singleton { CamsApiImpl(instance()) }

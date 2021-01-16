@@ -8,13 +8,14 @@ import io.ktor.http.cio.websocket.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import ru.falseteam.control.api.dto.CameraDTO
+import ru.falseteam.control.domain.servers.ServerInfo
 
 private const val HOSTNAME = "10.0.0.56:8080"
 private const val ADDRESS = "http://$HOSTNAME"
 
 class CamsApiImpl(private val httpClient: HttpClient) : CamsApi {
-    override suspend fun addCamera(cameraDTO: CameraDTO) {
-        httpClient.put<Unit>("$ADDRESS/api/v1/cams") {
+    override suspend fun addCamera(server: ServerInfo, cameraDTO: CameraDTO) {
+        httpClient.put<Unit>("${server.url}/api/v1/cams") {
             contentType(ContentType.Application.Json)
             body = cameraDTO
         }
