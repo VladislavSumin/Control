@@ -12,6 +12,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.AmbientContext
 import androidx.compose.ui.res.vectorResource
@@ -181,10 +182,11 @@ private fun RecordCard(
             Divider(modifier = Modifier.padding(8.dp, 0.dp))
             Row {
                 IconButton(onClick = { viewModel.setKeepForever(record.id, !record.keepForever) }) {
-                    val icon = if (record.keepForever) R.drawable.ic_star_filled
-                    else R.drawable.ic_star
-                    Icon(vectorResource(id = icon))
-
+                    if (record.keepForever) Icon(
+                        vectorResource(id = R.drawable.ic_star_filled),
+                        tint = Color.Unspecified
+                    )
+                    else Icon(vectorResource(id = R.drawable.ic_star))
                 }
                 Spacer(modifier = Modifier.weight(1f))
                 IconButton(onClick = { /*TODO*/ }) {
