@@ -7,6 +7,8 @@ import io.ktor.client.features.websocket.*
 import org.kodein.di.*
 import ru.falseteam.control.api.CamsApi
 import ru.falseteam.control.api.CamsApiImpl
+import ru.falseteam.control.api.RecordsApi
+import ru.falseteam.control.api.RecordsApiImpl
 import ru.falseteam.control.api.rsub.CamsRSub
 import ru.falseteam.control.api.rsub.CamsRecordRSub
 import ru.falseteam.control.api.rsub.CamsStatusRSub
@@ -29,12 +31,15 @@ val Kodein = DI.lazy {
     bind<CamsInteractor>() with singleton {
         CamsInteractorImpl(instance(), instance(), instance(), instance())
     }
-    bind<RecordsInteractor>() with singleton { RecordsInteractorImpl(instance()) }
+    bind<RecordsInteractor>() with singleton {
+        RecordsInteractorImpl(instance(), instance(), instance())
+    }
     bind<ThemesInteractor>() with singleton { ThemesInteractorImpl() }
     bind<ServersInteractor>() with singleton { ServersInteractorImpl() }
 
     // Api
     bind<CamsApi>() with singleton { CamsApiImpl(instance()) }
+    bind<RecordsApi>() with singleton { RecordsApiImpl(instance()) }
 
     // ViewModel
     bind<ViewModelProvider.Factory>() with singleton { DiViewModelFactory(directDI) }

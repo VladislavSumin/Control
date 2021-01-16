@@ -33,19 +33,33 @@ import ru.falseteam.control.ui.red900
 
 @Composable
 fun RecordsScreen(navController: NavController, viewModel: RecordsViewModel = kodeinViewModel()) {
-    val records = viewModel.records.collectAsState(initial = null).value
-    if (records != null) {
-        RecordsList(records = records)
-    } else {
-        //TODO make global function like this
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight()
-        ) {
-            CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-        }
+    when (val state = viewModel.state.collectAsState(RecordsState.Loading).value) {
+        RecordsState.Loading -> LoadingScreen()
+        RecordsState.Error -> ErrorScreen()
+        is RecordsState.ShowResult -> ShowResultScreen(state)
     }
+}
+
+@Composable
+private fun LoadingScreen() {
+    //TODO make global function like this
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight()
+    ) {
+        CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+    }
+}
+
+@Composable
+private fun ErrorScreen() {
+
+}
+
+@Composable
+private fun ShowResultScreen(state: RecordsState.ShowResult) {
+    RecordsList(records = state.records)
 }
 
 @Composable
