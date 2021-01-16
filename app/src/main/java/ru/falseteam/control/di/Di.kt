@@ -45,7 +45,7 @@ val Kodein = DI.lazy {
     bind<ViewModelProvider.Factory>() with singleton { DiViewModelFactory(directDI) }
     bindViewModel<AddCameraViewModel>() with provider { AddCameraViewModel(instance()) }
     bindViewModel<CamsViewModel>() with provider { CamsViewModel(instance()) }
-    bindViewModel<RecordsViewModel>() with provider { RecordsViewModel(instance()) }
+    bindViewModel<RecordsViewModel>() with provider { RecordsViewModel(instance(), instance()) }
 
     // rSub
     bind<HttpClient>() with singleton {

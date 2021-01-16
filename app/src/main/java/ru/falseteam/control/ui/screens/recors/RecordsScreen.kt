@@ -161,8 +161,19 @@ private fun RecordCard(record: RecordUiModel, playerCache: PlayerCache) {
                     Icon(vectorResource(id = R.drawable.ic_edit))
                 }
             }
+
             VideoRecord(record.id, playerCache)
-            Text(text = record.id.toString())
+
+            Row(
+                modifier = Modifier.padding(16.dp, 8.dp)
+            ) {
+                Text(
+                    text = record.cameraName ?: "Unknown camera",
+                    modifier = Modifier.weight(1f)
+                )
+                Text(text = record.date)
+            }
+
             Divider(modifier = Modifier.padding(8.dp, 0.dp))
             Row {
                 IconButton(onClick = { /*TODO*/ }) {

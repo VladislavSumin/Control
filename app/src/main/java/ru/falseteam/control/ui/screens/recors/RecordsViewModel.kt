@@ -6,14 +6,20 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import ru.falseteam.control.domain.cams.CamsInteractor
 import ru.falseteam.control.domain.records.RecordsInteractor
+import java.text.SimpleDateFormat
+import java.util.*
 
 class RecordsViewModel(
-    private val recordsInteractor: RecordsInteractor
+    private val recordsInteractor: RecordsInteractor,
+    private val camsInteractor: CamsInteractor,
 ) : ViewModel() {
     val state = MutableStateFlow<RecordsState>(RecordsState.Loading)
 
     private val forceUpdate = MutableSharedFlow<Unit>(1)
+
+    private val dateFormatter = SimpleDateFormat("HH:mm dd.MM.yyyy", Locale.getDefault())
 
     init {
         viewModelScope.launch {
@@ -29,11 +35,15 @@ class RecordsViewModel(
     private suspend fun request() {
         state.emit(RecordsState.Loading)
         try {
+            val cams = camsInteractor.getAll()
             val records = recordsInteractor.getAll()
-                .map { camera ->
+                .map { record ->
+                    val camera = cams.find { it.id == record.cameraId }
                     RecordUiModel(
-                        id = camera.id,
-                        name = camera.name,
+                        id = record.id,
+                        name = record.name,
+                        cameraName = camera?.name,
+                        date = dateFormatter.format(Date(record.timestamp))
                     )
                 }
             state.emit(RecordsState.ShowResult(records))

@@ -15,6 +15,9 @@ class CamsInteractorImpl(
     private val serversInteractor: ServersInteractor,
 ) : CamsInteractor {
     override fun observeAll(): Flow<List<CameraDTO>> = camsRSub.observeAll()
+    override suspend fun getAll(): List<CameraDTO> =
+        camsApi.getAll(serversInteractor.getPrimaryServer())
+
     override fun observerStatus(): Flow<Map<Long, CameraStatusDTO>> = camsStatusRSub.observeAll()
 
     override suspend fun put(camera: CameraDTO) =
