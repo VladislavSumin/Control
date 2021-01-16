@@ -55,10 +55,16 @@ private fun Content(viewModel: RecordsViewModel) {
 private fun TopBar(scaffoldState: ScaffoldState, viewModel: RecordsViewModel) {
     TopAppBar {
         Spacer(modifier = Modifier.weight(1f))
-        IconButton(onClick = { scaffoldState.drawerState.open() }) {
+        IconButton(
+            modifier = Modifier.align(Alignment.CenterVertically),
+            onClick = { scaffoldState.drawerState.open() }
+        ) {
             Icon(vectorResource(id = R.drawable.ic_filter))
         }
-        IconButton(onClick = { viewModel.forceUpdate() }) {
+        IconButton(
+            modifier = Modifier.align(Alignment.CenterVertically),
+            onClick = { viewModel.forceUpdate() }
+        ) {
             Icon(vectorResource(id = R.drawable.ic_refresh))
         }
     }
