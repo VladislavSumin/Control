@@ -2,6 +2,11 @@ selectAll:
 SELECT *
 FROM camera;
 
+selectById:
+SELECT *
+FROM camera
+WHERE id = ?;
+
 insert:
 INSERT INTO camera(name, address, port)
 VALUES ?;

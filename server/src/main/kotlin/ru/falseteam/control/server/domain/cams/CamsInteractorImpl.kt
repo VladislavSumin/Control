@@ -25,6 +25,14 @@ class CamsInteractorImpl(
 
     override fun observeAll(): Flow<List<CameraDTO>> = allObservable
 
+    override suspend fun getAll(): List<CameraDTO> = withContext(Dispatchers.IO) {
+        cameraQueries.selectAll().executeAsList().map { it.toDTO() }
+    }
+
+    override suspend fun getById(id: Long): CameraDTO? = withContext(Dispatchers.IO) {
+        cameraQueries.selectById(id).executeAsOneOrNull()?.toDTO()
+    }
+
     override suspend fun insert(camera: CameraDTO) = withContext(Dispatchers.IO) {
         cameraQueries.insert(camera.toEntity())
     }
@@ -37,7 +45,6 @@ class CamsInteractorImpl(
             port = port.toLong()
         )
     }
-
 
     private fun Camera.toDTO(): CameraDTO {
         return CameraDTO(
