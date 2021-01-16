@@ -1,4 +1,4 @@
-package ru.falseteam.control
+package ru.falseteam.control.ui.screens
 
 import androidx.navigation.NavController
 import androidx.navigation.NavOptionsBuilder
@@ -12,6 +12,7 @@ sealed class Screen(val path: String) {
 
     object Cams : Screen("cams")
     object Records : Screen("records")
+    object Settings : Screen("settings")
     object AddCamera : Screen("add_camera")
 
     class Livestream(id: Long) : Screen("livestream/$id") {
