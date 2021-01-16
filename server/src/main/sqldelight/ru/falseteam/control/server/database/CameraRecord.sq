@@ -11,5 +11,10 @@ insert:
 INSERT INTO cameraRecord(cameraId, name, timestamp, fileSize, length, keepForever)
 VALUES ?;
 
+setKeepForever:
+UPDATE cameraRecord
+SET keepForever = ?
+WHERE id = ?;
+
 lastInsertRowId:
 SELECT last_insert_rowid();

@@ -22,6 +22,12 @@ class RecordsApi(
             call.respond(recordsInteractor.getAll())
         }
 
+        patch("/api/v1/records/keep_forever/{id}") {
+            val id = call.parameters["id"]!!.toLong()
+            val value = call.parameters["value"].toBoolean()
+            recordsInteractor.setKeepForever(id, value)
+        }
+
         get("/api/v1/records/{id}") {
             val id = call.parameters["id"]!!.toLong()
             val record = recordsInteractor.getById(id)

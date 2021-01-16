@@ -11,6 +11,8 @@ interface RecordsInteractor {
     suspend fun getAll(): List<CameraRecordDTO>
     suspend fun getById(id: Long): CameraRecordDTO?
 
+    suspend fun setKeepForever(id: Long, keepForever: Boolean)
+
     suspend fun saveNewRecord(cameraDTO: CameraDTO, timestamp: Long, record: Path)
     fun getRecord(id: Long): File
 }

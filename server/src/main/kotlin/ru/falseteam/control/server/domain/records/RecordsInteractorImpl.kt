@@ -44,6 +44,15 @@ class RecordsInteractorImpl(
         cameraRecordQueries.selectById(id).executeAsOneOrNull()?.toDTO()
     }
 
+    //TODO throw exception if no records changed
+    override suspend fun setKeepForever(id: Long, keepForever: Boolean) =
+        withContext(Dispatchers.IO) {
+            cameraRecordQueries.setKeepForever(
+                keepForever = keepForever.toLong(),
+                id = id
+            )
+        }
+
     override suspend fun saveNewRecord(cameraDTO: CameraDTO, timestamp: Long, record: Path): Unit =
         withContext(Dispatchers.IO) {
             val duration = (videoEncodeInteractor.getDuration(record) * 1000).toLong()
