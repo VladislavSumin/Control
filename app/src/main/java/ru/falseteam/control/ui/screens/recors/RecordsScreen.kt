@@ -38,7 +38,7 @@ fun RecordsScreen(navController: NavController, viewModel: RecordsViewModel = ko
     Scaffold(
         scaffoldState = scaffoldState,
         topBar = { TopBar(scaffoldState, viewModel) },
-        drawerContent = { FilterContent() },
+        drawerContent = { FilterContent(viewModel) },
     ) { Content(viewModel) }
 }
 
@@ -71,16 +71,24 @@ private fun TopBar(scaffoldState: ScaffoldState, viewModel: RecordsViewModel) {
 }
 
 @Composable
-private fun FilterContent() {
+private fun FilterContent(viewModel: RecordsViewModel) {
+    val state = viewModel.filterState.collectAsState().value
     Column(modifier = Modifier.padding(16.dp)) {
         Row {
             Text(text = "Только сохраненные", modifier = Modifier.weight(1f))
-            Checkbox(checked = false, onCheckedChange = { /*TODO*/ })
+            Checkbox(
+                checked = state.isOnlySaved,
+                onCheckedChange = { viewModel.updateFilterModel(state.copy(isOnlySaved = !state.isOnlySaved)) }
+            )
         }
 
         Row {
             Text(text = "Только c именем", modifier = Modifier.weight(1f))
-            Checkbox(checked = false, onCheckedChange = { /*TODO*/ })
+            Checkbox(
+                checked = state.isOnlyNamed,
+                onCheckedChange = { viewModel.updateFilterModel(state.copy(isOnlyNamed = !state.isOnlyNamed)) }
+            )
+
         }
 
     }

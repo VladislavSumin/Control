@@ -16,6 +16,7 @@ class RecordsViewModel(
     private val camsInteractor: CamsInteractor,
 ) : ViewModel() {
     val state = MutableStateFlow<RecordsState>(RecordsState.Loading)
+    val filterState = MutableStateFlow(RecordFilterUiModel())
 
     private val forceUpdate = MutableSharedFlow<Unit>(1)
 
@@ -60,6 +61,12 @@ class RecordsViewModel(
     fun setKeepForever(recordId: Long, keepForever: Boolean) {
         viewModelScope.launch {
             recordsInteractor.setKeepForever(recordId, keepForever)
+        }
+    }
+
+    fun updateFilterModel(filterUiModel: RecordFilterUiModel) {
+        viewModelScope.launch {
+            filterState.emit(filterUiModel)
         }
     }
 }
