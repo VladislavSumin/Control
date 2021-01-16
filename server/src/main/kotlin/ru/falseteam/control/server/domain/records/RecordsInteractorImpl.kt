@@ -14,6 +14,8 @@ import ru.falseteam.control.api.dto.CameraRecordDTO
 import ru.falseteam.control.server.database.CameraRecord
 import ru.falseteam.control.server.database.CameraRecordQueries
 import ru.falseteam.control.server.domain.videoencoder.VideoEncodeInteractor
+import ru.falseteam.control.server.utils.toBoolean
+import ru.falseteam.control.server.utils.toLong
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Path
@@ -50,7 +52,8 @@ class RecordsInteractorImpl(
                 name = null,
                 timestamp = timestamp,
                 fileSize = record.toFile().length(),
-                length = duration
+                length = duration,
+                keepForever = false,
             )
 
             val id = insert(cameraRecordDto)
@@ -78,6 +81,7 @@ class RecordsInteractorImpl(
             timestamp = timestamp,
             fileSize = fileSize,
             length = length,
+            keepForever = keepForever.toLong()
         )
     }
 
@@ -90,6 +94,7 @@ class RecordsInteractorImpl(
             timestamp = timestamp,
             fileSize = fileSize,
             length = length,
+            keepForever = keepForever.toBoolean()
         )
     }
 }

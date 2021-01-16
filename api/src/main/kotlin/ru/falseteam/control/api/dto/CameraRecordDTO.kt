@@ -9,5 +9,6 @@ data class CameraRecordDTO(
     val name: String?,
     val timestamp: Long,
     val fileSize: Long,
-    val length: Long
+    val length: Long,
+    val keepForever: Boolean
 )

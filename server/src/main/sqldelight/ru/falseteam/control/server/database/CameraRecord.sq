@@ -8,7 +8,7 @@ FROM cameraRecord
 WHERE id = ?;
 
 insert:
-INSERT INTO cameraRecord(cameraId, name, timestamp, fileSize, length)
+INSERT INTO cameraRecord(cameraId, name, timestamp, fileSize, length, keepForever)
 VALUES ?;
 
 lastInsertRowId:
