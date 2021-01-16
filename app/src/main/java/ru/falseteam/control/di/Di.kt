@@ -14,6 +14,8 @@ import ru.falseteam.control.domain.cams.CamsInteractor
 import ru.falseteam.control.domain.cams.CamsInteractorImpl
 import ru.falseteam.control.domain.records.RecordsInteractor
 import ru.falseteam.control.domain.records.RecordsInteractorImpl
+import ru.falseteam.control.domain.themes.ThemesInteractor
+import ru.falseteam.control.domain.themes.ThemesInteractorImpl
 import ru.falseteam.control.ui.screens.addcamera.AddCameraViewModel
 import ru.falseteam.control.ui.screens.cams.CamsViewModel
 import ru.falseteam.control.ui.screens.recors.RecordsViewModel
@@ -24,6 +26,7 @@ val Kodein = DI.lazy {
     // Domain
     bind<CamsInteractor>() with singleton { CamsInteractorImpl(instance(), instance(), instance()) }
     bind<RecordsInteractor>() with singleton { RecordsInteractorImpl(instance()) }
+    bind<ThemesInteractor>() with singleton { ThemesInteractorImpl() }
 
     // Api
     bind<CamsApi>() with singleton { CamsApiImpl(instance()) }

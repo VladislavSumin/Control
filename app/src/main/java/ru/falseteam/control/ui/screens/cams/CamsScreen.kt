@@ -14,9 +14,9 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.navigate
 import ru.falseteam.control.R
-import ru.falseteam.control.Screen
 import ru.falseteam.control.di.kodeinViewModel
-import ru.falseteam.control.navigate
+import ru.falseteam.control.ui.screens.Screen
+import ru.falseteam.control.ui.screens.navigate
 
 @Composable
 fun CamsScreen(navController: NavController, viewModel: CamsViewModel = kodeinViewModel()) {
