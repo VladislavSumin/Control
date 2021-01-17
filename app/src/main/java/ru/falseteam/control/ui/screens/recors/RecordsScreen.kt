@@ -195,7 +195,7 @@ private fun RecordCard(
 
             Divider(modifier = Modifier.padding(8.dp, 0.dp))
             Row {
-                IconButton(onClick = { viewModel.setKeepForever(record.id, !record.keepForever) }) {
+                IconButton(onClick = { viewModel.setKeepForever(record) }) {
                     if (record.keepForever) Icon(
                         vectorResource(id = R.drawable.ic_star_filled),
                         tint = Color.Unspecified

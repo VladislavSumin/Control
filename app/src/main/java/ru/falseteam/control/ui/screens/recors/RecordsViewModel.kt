@@ -2,10 +2,8 @@ package ru.falseteam.control.ui.screens.recors
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import ru.falseteam.control.domain.cams.CamsInteractor
 import ru.falseteam.control.domain.records.RecordsInteractor
@@ -20,47 +18,66 @@ class RecordsViewModel(
     val filterState = MutableStateFlow(RecordFilterUiModel())
 
     private val forceUpdate = MutableSharedFlow<Unit>(1)
+    private val recordUpdateEvent = MutableSharedFlow<RecordUiModel>()
 
     private val dateFormatter = SimpleDateFormat("HH:mm dd.MM.yyyy", Locale.getDefault())
 
     init {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.Default) {
             launch { forceUpdate.emit(Unit) }
 
             combine(
                 filterState,
                 forceUpdate,
             ) { filterState, _ -> filterState }
-                .collectLatest {
-                    request(it)
-
+                .flatMapLatest(this@RecordsViewModel::request)
+                .flatMapLatest(this@RecordsViewModel::applyUpdateEvents)
+                .collect {
+                    state.emit(it)
                 }
         }
     }
 
-    private suspend fun request(recordFilterUiModel: RecordFilterUiModel) {
-        state.emit(RecordsState.Loading)
-        try {
-            val cams = camsInteractor.getAll()
-            val records = recordsInteractor.getFiltered(
-                onlyKeepForever = recordFilterUiModel.isOnlySaved,
-                onlyNamed = recordFilterUiModel.isOnlyNamed,
-            )
-                .map { record ->
-                    val camera = cams.find { it.id == record.cameraId }
-                    RecordUiModel(
-                        id = record.id,
-                        name = record.name,
-                        cameraName = camera?.name,
-                        date = dateFormatter.format(Date(record.timestamp)),
-                        keepForever = record.keepForever
-                    )
+    private suspend fun applyUpdateEvents(state: RecordsState): Flow<RecordsState> {
+        return when (state) {
+            is RecordsState.ShowResult -> {
+                recordUpdateEvent.scan(state.records) { oldRecords, newModel ->
+                    val records = oldRecords.toMutableList() // we need always create new list
+                    val position = records.indexOfFirst { it.id == newModel.id }
+                    if (position >= 0) records[position] = newModel
+                    records
                 }
-            state.emit(RecordsState.ShowResult(records))
-        } catch (e: Exception) {
-            state.emit(RecordsState.Error(e.message ?: "No error message"))
+                    .map { RecordsState.ShowResult(it) }
+                    .onStart { emit(state) }
+            }
+            else -> flowOf(state)
         }
     }
+
+    private suspend fun request(recordFilterUiModel: RecordFilterUiModel): Flow<RecordsState> =
+        flow {
+            emit(RecordsState.Loading)
+            try {
+                val cams = camsInteractor.getAll()
+                val records = recordsInteractor.getFiltered(
+                    onlyKeepForever = recordFilterUiModel.isOnlySaved,
+                    onlyNamed = recordFilterUiModel.isOnlyNamed,
+                )
+                    .map { record ->
+                        val camera = cams.find { it.id == record.cameraId }
+                        RecordUiModel(
+                            id = record.id,
+                            name = record.name,
+                            cameraName = camera?.name,
+                            date = dateFormatter.format(Date(record.timestamp)),
+                            keepForever = record.keepForever
+                        )
+                    }
+                emit(RecordsState.ShowResult(records))
+            } catch (e: Exception) {
+                emit(RecordsState.Error(e.message ?: "No error message"))
+            }
+        }
 
     fun forceUpdate() {
         viewModelScope.launch {
@@ -68,9 +85,11 @@ class RecordsViewModel(
         }
     }
 
-    fun setKeepForever(recordId: Long, keepForever: Boolean) {
+    fun setKeepForever(recordUiModel: RecordUiModel) {
         viewModelScope.launch {
-            recordsInteractor.setKeepForever(recordId, keepForever)
+            recordsInteractor.setKeepForever(recordUiModel.id, !recordUiModel.keepForever)
+            val newRecordState = recordUiModel.copy(keepForever = !recordUiModel.keepForever)
+            recordUpdateEvent.emit(newRecordState)
         }
     }
 
