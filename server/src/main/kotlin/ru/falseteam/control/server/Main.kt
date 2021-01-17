@@ -25,6 +25,9 @@ fun main(args: Array<String>) {
     val log = LoggerFactory.getLogger("control.main")
     log.info("Starting server")
 
+    //TODO add debug flag
+    System.setProperty("kotlinx.coroutines.debug", if (true) "on" else "off")
+
     val apis: List<Api> by Kodein.allInstances()
     val rSubServer: RSubServer by Kodein.instance()
     val camsConnectionInteractor: CamsConnectionInteractor by Kodein.instance()
