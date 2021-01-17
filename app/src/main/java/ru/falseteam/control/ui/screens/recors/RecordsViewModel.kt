@@ -18,7 +18,7 @@ class RecordsViewModel(
     val filterState = MutableStateFlow(RecordFilterUiModel())
 
     private val forceUpdate = MutableSharedFlow<Unit>(1)
-    private val recordUpdateEvent = MutableSharedFlow<RecordUiModel>()
+    private val recordUpdateEvent = MutableSharedFlow<UpdateType>()
 
     private val dateFormatter = SimpleDateFormat("HH:mm dd.MM.yyyy", Locale.getDefault())
 
@@ -41,9 +41,18 @@ class RecordsViewModel(
     private suspend fun applyUpdateEvents(state: RecordsState): Flow<RecordsState> {
         return when (state) {
             is RecordsState.ShowResult -> {
-                recordUpdateEvent.scan(state.records.toMutableList()) { records, newModel ->
-                    val position = records.indexOfFirst { it.id == newModel.id }
-                    if (position >= 0) records[position] = newModel
+                recordUpdateEvent.scan(state.records.toMutableList()) { records, update ->
+                    when (update) {
+                        is UpdateType.Update -> {
+                            val record = update.recordUiModel
+                            val position = records.indexOfFirst { it.id == record.id }
+                            if (position >= 0) records[position] = record
+                        }
+                        is UpdateType.Delete -> {
+                            val position = records.indexOfFirst { it.id == update.id }
+                            if (position >= 0) records.removeAt(position)
+                        }
+                    }
                     records
                 }
                     .map { RecordsState.ShowResult(it) }
@@ -88,13 +97,14 @@ class RecordsViewModel(
         viewModelScope.launch {
             recordsInteractor.setKeepForever(recordUiModel.id, !recordUiModel.keepForever)
             val newRecordState = recordUiModel.copy(keepForever = !recordUiModel.keepForever)
-            recordUpdateEvent.emit(newRecordState)
+            recordUpdateEvent.emit(UpdateType.Update(newRecordState))
         }
     }
 
     fun deleteRecord(id: Long) {
         viewModelScope.launch {
             recordsInteractor.delete(id)
+            recordUpdateEvent.emit(UpdateType.Delete(id))
         }
     }
 
@@ -102,5 +112,10 @@ class RecordsViewModel(
         viewModelScope.launch {
             filterState.emit(filterUiModel)
         }
+    }
+
+    private sealed class UpdateType {
+        data class Update(val recordUiModel: RecordUiModel) : UpdateType()
+        data class Delete(val id: Long) : UpdateType()
     }
 }
