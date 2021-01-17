@@ -5,6 +5,8 @@ import io.ktor.client.*
 import io.ktor.client.features.json.*
 import io.ktor.client.features.websocket.*
 import org.kodein.di.*
+import org.kodein.di.android.x.androidXModule
+import ru.falseteam.control.App
 import ru.falseteam.control.api.CamsApi
 import ru.falseteam.control.api.CamsApiImpl
 import ru.falseteam.control.api.RecordsApi
@@ -20,6 +22,8 @@ import ru.falseteam.control.domain.servers.ServersInteractor
 import ru.falseteam.control.domain.servers.ServersInteractorImpl
 import ru.falseteam.control.domain.themes.ThemesInteractor
 import ru.falseteam.control.domain.themes.ThemesInteractorImpl
+import ru.falseteam.control.repository.themes.ThemesRepository
+import ru.falseteam.control.repository.themes.ThemesRepositoryImpl
 import ru.falseteam.control.ui.screens.addcamera.AddCameraViewModel
 import ru.falseteam.control.ui.screens.cams.CamsViewModel
 import ru.falseteam.control.ui.screens.recors.RecordsViewModel
@@ -27,6 +31,11 @@ import ru.falseteam.rsub.client.RSubClient
 import ru.falseteam.rsub.connector.ktorwebsocket.client.RSubConnectorKtorWebSocket
 
 val Kodein = DI.lazy {
+    import(androidXModule(App.instace))
+
+    // Repository
+    bind<ThemesRepository>() with singleton { ThemesRepositoryImpl(instance()) }
+
     // Domain
     bind<CamsInteractor>() with singleton {
         CamsInteractorImpl(instance(), instance(), instance(), instance())
@@ -34,7 +43,7 @@ val Kodein = DI.lazy {
     bind<RecordsInteractor>() with singleton {
         RecordsInteractorImpl(instance(), instance(), instance())
     }
-    bind<ThemesInteractor>() with singleton { ThemesInteractorImpl() }
+    bind<ThemesInteractor>() with singleton { ThemesInteractorImpl(instance()) }
     bind<ServersInteractor>() with singleton { ServersInteractorImpl() }
 
     // Api
