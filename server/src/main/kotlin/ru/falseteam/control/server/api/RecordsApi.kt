@@ -36,7 +36,7 @@ class RecordsApi(
             val id = call.parameters["id"]!!.toLong()
             val value = call.parameters["value"].toBoolean()
             recordsInteractor.setKeepForever(id, value)
-            call.response.status(HttpStatusCode.OK)
+            call.respond(HttpStatusCode.OK)
         }
 
         get("/api/v1/records/{id}") {
