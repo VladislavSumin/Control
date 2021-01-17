@@ -27,3 +27,15 @@ suspend inline fun <reified T> HttpClient.patch(
     path = path,
     block = block
 )
+
+suspend inline fun <reified T> HttpClient.delete(
+    server: ServerInfo,
+    path: String,
+    block: HttpRequestBuilder.() -> Unit = {}
+): T = delete(
+    scheme = server.schema,
+    host = server.hostname,
+    port = server.port,
+    path = path,
+    block = block
+)

@@ -55,6 +55,11 @@ class RecordsInteractorImpl(
         cameraRecordQueries.selectById(id).executeAsOneOrNull()?.toDTO()
     }
 
+    override suspend fun delete(id: Long) = withContext(Dispatchers.IO) {
+        getRecord(id).delete()
+        cameraRecordQueries.deleteById(id)
+    }
+
     //TODO throw exception if no records changed
     override suspend fun setKeepForever(id: Long, keepForever: Boolean) =
         withContext(Dispatchers.IO) {

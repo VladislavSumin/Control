@@ -25,6 +25,9 @@ class RecordsInteractorImpl(
             onlyNamed
         )
 
+    override suspend fun delete(id: Long) =
+        recordsApi.delete(serversInteractor.getPrimaryServer(), id)
+
     override suspend fun setKeepForever(id: Long, keepForever: Boolean) =
         recordsApi.setKeepForever(serversInteractor.getPrimaryServer(), id, keepForever)
 }

@@ -16,5 +16,9 @@ UPDATE cameraRecord
 SET keepForever = ?
 WHERE id = ?;
 
+deleteById:
+DELETE FROM cameraRecord
+WHERE id = ?;
+
 lastInsertRowId:
 SELECT last_insert_rowid();

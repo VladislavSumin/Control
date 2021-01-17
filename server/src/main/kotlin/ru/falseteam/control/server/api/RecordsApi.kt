@@ -45,5 +45,11 @@ class RecordsApi(
             if (record != null) call.respond(record)
             else call.respond(HttpStatusCode.NotFound)
         }
+
+        delete("/api/v1/records/{id}") {
+            val id = call.parameters["id"]!!.toLong()
+            recordsInteractor.delete(id)
+            call.respond(HttpStatusCode.OK)
+        }
     }
 }

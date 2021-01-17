@@ -203,7 +203,7 @@ private fun RecordCard(
                     else Icon(vectorResource(id = R.drawable.ic_star))
                 }
                 Spacer(modifier = Modifier.weight(1f))
-                IconButton(onClick = { /*TODO*/ }) {
+                IconButton(onClick = { viewModel.deleteRecord(record.id) }) {
                     Icon(vectorResource(id = R.drawable.ic_delete), tint = red900)
                 }
             }

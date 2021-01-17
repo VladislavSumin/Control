@@ -11,5 +11,7 @@ interface RecordsInteractor {
         onlyNamed: Boolean = false,
     ): List<CameraRecordDTO>
 
+    suspend fun delete(id:Long)
+
     suspend fun setKeepForever(id: Long, keepForever: Boolean)
 }

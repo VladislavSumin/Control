@@ -92,6 +92,12 @@ class RecordsViewModel(
         }
     }
 
+    fun deleteRecord(id: Long) {
+        viewModelScope.launch {
+            recordsInteractor.delete(id)
+        }
+    }
+
     fun updateFilterModel(filterUiModel: RecordFilterUiModel) {
         viewModelScope.launch {
             filterState.emit(filterUiModel)

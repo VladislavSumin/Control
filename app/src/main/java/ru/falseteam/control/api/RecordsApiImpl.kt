@@ -20,6 +20,9 @@ class RecordsApiImpl(
         parameter("only_named", onlyNamed)
     }
 
+    override suspend fun delete(serverInfo: ServerInfo, id: Long) =
+        httpClient.delete<Unit>(serverInfo, "/api/v1/records/$id")
+
     override suspend fun setKeepForever(serverInfo: ServerInfo, id: Long, keepForever: Boolean) =
         httpClient.patch<Unit>(serverInfo, "/api/v1/records/keep_forever/$id") {
             parameter("value", keepForever)
