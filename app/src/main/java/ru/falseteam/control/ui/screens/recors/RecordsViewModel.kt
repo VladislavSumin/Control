@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import ru.falseteam.control.domain.cams.CamsInteractor
 import ru.falseteam.control.domain.records.RecordsInteractor
@@ -25,17 +26,26 @@ class RecordsViewModel(
     init {
         viewModelScope.launch {
             launch { forceUpdate.emit(Unit) }
-            forceUpdate.collectLatest {
-                request()
-            }
+
+            combine(
+                filterState,
+                forceUpdate,
+            ) { filterState, _ -> filterState }
+                .collectLatest {
+                    request(it)
+
+                }
         }
     }
 
-    private suspend fun request() {
+    private suspend fun request(recordFilterUiModel: RecordFilterUiModel) {
         state.emit(RecordsState.Loading)
         try {
             val cams = camsInteractor.getAll()
-            val records = recordsInteractor.getAll()
+            val records = recordsInteractor.getFiltered(
+                onlyKeepForever = recordFilterUiModel.isOnlySaved,
+                onlyNamed = recordFilterUiModel.isOnlyNamed,
+            )
                 .map { record ->
                     val camera = cams.find { it.id == record.cameraId }
                     RecordUiModel(

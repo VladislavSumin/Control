@@ -7,11 +7,13 @@ import ru.falseteam.control.domain.servers.ServerInfo
 suspend inline fun <reified T> HttpClient.get(
     server: ServerInfo,
     path: String,
+    block: HttpRequestBuilder.() -> Unit = {}
 ): T = get(
     scheme = server.schema,
     host = server.hostname,
     port = server.port,
     path = path,
+    block = block
 )
 
 suspend inline fun <reified T> HttpClient.patch(

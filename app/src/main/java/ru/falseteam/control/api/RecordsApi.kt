@@ -5,5 +5,11 @@ import ru.falseteam.control.domain.servers.ServerInfo
 
 interface RecordsApi {
     suspend fun getAll(serverInfo: ServerInfo): List<CameraRecordDTO>
+    suspend fun getFiltered(
+        serverInfo: ServerInfo,
+        onlyKeepForever: Boolean = false,
+        onlyNamed: Boolean = false,
+    ): List<CameraRecordDTO>
+
     suspend fun setKeepForever(serverInfo: ServerInfo, id: Long, keepForever: Boolean)
 }

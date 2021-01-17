@@ -15,6 +15,16 @@ class RecordsInteractorImpl(
     override suspend fun getAll(): List<CameraRecordDTO> =
         recordsApi.getAll(serversInteractor.getPrimaryServer())
 
+    override suspend fun getFiltered(
+        onlyKeepForever: Boolean,
+        onlyNamed: Boolean
+    ): List<CameraRecordDTO> =
+        recordsApi.getFiltered(
+            serversInteractor.getPrimaryServer(),
+            onlyKeepForever,
+            onlyNamed
+        )
+
     override suspend fun setKeepForever(id: Long, keepForever: Boolean) =
         recordsApi.setKeepForever(serversInteractor.getPrimaryServer(), id, keepForever)
 }
