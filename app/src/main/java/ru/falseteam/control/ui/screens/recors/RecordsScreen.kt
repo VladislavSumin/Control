@@ -44,7 +44,7 @@ fun RecordsScreen(navController: NavController, viewModel: RecordsViewModel = ko
 
 @Composable
 private fun Content(viewModel: RecordsViewModel) {
-    when (val state = viewModel.state.collectAsState(RecordsState.Loading).value) {
+    when (val state = viewModel.state.collectAsState().value) {
         RecordsState.Loading -> LoadingScreen()
         is RecordsState.Error -> ErrorScreen(state, viewModel)
         is RecordsState.ShowResult -> ShowResultScreen(state, viewModel)

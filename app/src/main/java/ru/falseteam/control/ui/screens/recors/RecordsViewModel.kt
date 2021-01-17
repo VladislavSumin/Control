@@ -41,9 +41,7 @@ class RecordsViewModel(
     private suspend fun applyUpdateEvents(state: RecordsState): Flow<RecordsState> {
         return when (state) {
             is RecordsState.ShowResult -> {
-                recordUpdateEvent.scan(state.records) { oldRecords, newModel ->
-                    val records =
-                        oldRecords.toMutableList() // we need always create new list //TODO fix
+                recordUpdateEvent.scan(state.records.toMutableList()) { records, newModel ->
                     val position = records.indexOfFirst { it.id == newModel.id }
                     if (position >= 0) records[position] = newModel
                     records
