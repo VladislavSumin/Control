@@ -19,7 +19,17 @@ class RecordsApi(
         }
 
         get("/api/v1/records") {
-            call.respond(recordsInteractor.getAll())
+            if (call.parameters.isEmpty()) {
+                call.respond(recordsInteractor.getAll())
+            } else {
+                val onlyKeepForever = call.parameters["only_keep_forever"]?.toBoolean() ?: false
+                val onlyNamed = call.parameters["only_named"]?.toBoolean() ?: false
+                call.respond(
+                    recordsInteractor.getFiltered(
+                        onlyKeepForever, onlyNamed
+                    )
+                )
+            }
         }
 
         patch("/api/v1/records/keep_forever/{id}") {

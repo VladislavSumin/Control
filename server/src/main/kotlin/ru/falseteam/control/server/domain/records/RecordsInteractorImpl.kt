@@ -40,6 +40,17 @@ class RecordsInteractorImpl(
         cameraRecordQueries.selectAll().executeAsList().map { it.toDTO() }
     }
 
+    //TODO make custom sql request
+    override suspend fun getFiltered(
+        onlyKeepForever: Boolean,
+        onlyNamed: Boolean
+    ): List<CameraRecordDTO> {
+        return getAll().asSequence()
+            .filter { !onlyKeepForever || it.keepForever }
+            .filter { !onlyNamed || (it.name != null && it.name!!.isNotEmpty()) }
+            .toList()
+    }
+
     override suspend fun getById(id: Long): CameraRecordDTO? = withContext(Dispatchers.IO) {
         cameraRecordQueries.selectById(id).executeAsOneOrNull()?.toDTO()
     }
