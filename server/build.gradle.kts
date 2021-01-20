@@ -1,16 +1,21 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import ru.falseteam.config.Configuration.Dependencies
 
 plugins {
+    application
     kotlin("jvm")
     kotlin("plugin.serialization") version ru.falseteam.config.Configuration.Versions.kotlin
     id("com.squareup.sqldelight")
+    id("com.github.johnrengelman.shadow")
 }
 
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
 }
+
+project.setProperty("mainClassName", "ru.falseteam.control.server.MainKt")
 
 group = "ru.falseteam.control.server"
 version = "0.1.0"
@@ -53,4 +58,9 @@ tasks.withType<KotlinCompile> {
         freeCompilerArgs = listOf("-Xjsr305=strict")
         jvmTarget = "1.8"
     }
+}
+
+tasks.withType<ShadowJar> {
+    archiveBaseName.set("control")
+    archiveClassifier.set("")
 }
