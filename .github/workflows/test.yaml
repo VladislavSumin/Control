@@ -27,4 +27,4 @@ jobs:
           java-version: 15
 
       - name: Build with Gradle
-        run: ./Control/gradlew assemble
+        run: cd Control && ./gradlew assemble
