@@ -28,7 +28,7 @@ jobs:
 
       - name: Build with Gradle
         working-directory: ./Control
-        run: ./gradlew assemble
+        run: ./gradlew :app:assemble :server:shadowJar
 
       - name: Archive android client artifacts
         uses: actions/upload-artifact@v2
@@ -37,3 +37,10 @@ jobs:
           path: |
             Control/app/build/outputs
             Control/app/build/reports
+
+      - name: Archive server artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: server
+          path: |
+            Control/server/build/libs
