@@ -28,7 +28,11 @@ jobs:
 
       - name: Build with Gradle
         working-directory: ./Control
-        run: ./gradlew :app:assemble :server:shadowJar
+        run: >-
+          ./gradlew
+          -PpIsBuildAgent=true
+          :app:assemble :server:shadowJar
+
 
       - name: Archive android client artifacts
         uses: actions/upload-artifact@v2
