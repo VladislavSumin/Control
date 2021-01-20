@@ -10,7 +10,14 @@ jobs:
     runs-on: ubuntu-latest
     name: Test job
     steps:
-      - uses: actions/checkout@v2
+      - name: Clone Control
+        uses: actions/checkout@v2
+
+      - name: Clone rSub
+        uses: actions/checkout@v2
+        with:
+          repository: VladislavSumin/rSub
+
       - name: Setup Java
         uses: actions/setup-java@v1
         with:
