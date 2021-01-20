@@ -13,13 +13,13 @@ jobs:
       - name: Clone Control
         uses: actions/checkout@v2
         with:
-          path: $GITHUB_WORKSPACE/Control/
+          path: Control
 
       - name: Clone rSub
         uses: actions/checkout@v2
         with:
           repository: VladislavSumin/rSub
-          path: $GITHUB_WORKSPACE/rSub/
+          path: rSub
 
       - name: Setup Java
         uses: actions/setup-java@v1
@@ -27,4 +27,4 @@ jobs:
           java-version: 15
 
       - name: Build with Gradle
-        run: ./gradlew assemble
+        run: ./Control/gradlew assemble
