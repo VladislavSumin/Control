@@ -29,3 +29,12 @@ jobs:
       - name: Build with Gradle
         working-directory: ./Control
         run: ./gradlew assemble
+
+      - name: Archive android client artifacts
+        uses: actions/upload-artifact@v2
+        working-directory: ./Control/app/build
+        with:
+          name: android-client
+          path: |
+            outputs
+            reports
