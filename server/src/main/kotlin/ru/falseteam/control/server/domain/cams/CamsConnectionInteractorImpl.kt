@@ -48,6 +48,8 @@ class CamsConnectionInteractorImpl(
                     list.toMutableMap()
                 }
         }
+            .shareIn(GlobalScope, SharingStarted.WhileSubscribed(replayExpirationMillis = 0), 1)
+
 
     override suspend fun processConnections() = coroutineScope {
         log.debug("Start process camera connection")
