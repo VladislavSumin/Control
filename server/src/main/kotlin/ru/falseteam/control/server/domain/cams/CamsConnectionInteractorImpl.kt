@@ -145,8 +145,7 @@ class CamsConnectionInteractorImpl(
         log.debug("Start recording from ${camera.name}")
         val currentTimeMillis = System.currentTimeMillis()
         val name = "${camera.id}_$currentTimeMillis"
-        val file = File("data/tmp/$name.h264")
-        file.parentFile.mkdirs()
+        val file = recordsInteractor.getRecordsTmpPath().resolve("$name.h264").toFile()
         file.createNewFile()
         val stream = file.outputStream()
         try {
