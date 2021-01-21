@@ -15,14 +15,7 @@
         <Logger name="io.netty" level="INFO" additivity="false">
             <AppenderRef ref="Console"/>
         </Logger>
-        <Logger name="io.r2dbc" level="INFO" additivity="false">
-            <AppenderRef ref="Console"/>
-        </Logger>
-
-        <Logger name="graphql" level="INFO" additivity="false">
-            <AppenderRef ref="Console"/>
-        </Logger>
-        <Logger name="notprivacysafe.graphql" level="INFO" additivity="false">
+        <Logger name="net.bramp.ffmpeg" level="INFO" additivity="false">
             <AppenderRef ref="Console"/>
         </Logger>
     </Loggers>
