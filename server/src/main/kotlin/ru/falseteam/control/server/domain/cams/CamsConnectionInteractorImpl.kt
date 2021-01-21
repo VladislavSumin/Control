@@ -2,8 +2,6 @@ package ru.falseteam.control.server.domain.cams
 
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.channels.ClosedSendChannelException
-import kotlinx.coroutines.channels.SendChannel
 import kotlinx.coroutines.flow.*
 import org.slf4j.LoggerFactory
 import ru.falseteam.control.api.dto.CameraDTO
@@ -17,30 +15,25 @@ import java.io.File
 
 //TODO зарефачить это г.
 class CamsConnectionInteractorImpl(
-    private val camsInteractor: CamsInteractor,
+    camsInteractor: CamsInteractor,
     private val videoEncodeInteractor: VideoEncodeInteractor,
     private val recordsInteractor: RecordsInteractor,
 ) : CamsConnectionInteractor {
     private val log = LoggerFactory.getLogger("controls.cams")
-
-    private val cameraStatusMap: MutableMap<Long, CameraStatusDTO> = HashMap()
-    private val cameraStatusState: MutableStateFlow<Map<Long, CameraStatusDTO>> =
-        MutableStateFlow(emptyMap())
 
     private val cameraConnectionsObservable: Flow<Map<CameraDTO, CameraConnection>> =
         camsInteractor.observeAll()
             .map { cams -> cams.associateWith { CameraConnection(it.address, it.port) } }
             .shareIn(GlobalScope, SharingStarted.WhileSubscribed(replayExpirationMillis = 0), 1)
 
-    private val test =
+    private val cameraStatusObservable =
         cameraConnectionsObservable.flatMapLatest { cams ->
             channelFlow {
-                val status: MutableMap<Long, CameraStatusDTO> = mutableMapOf()
-                send(status.toMap())
-
                 val channel = Channel<Pair<Long, CameraStatusDTO>>()
 
                 launch {
+                    val status: MutableMap<Long, CameraStatusDTO> = mutableMapOf()
+                    send(status.toMap())
                     for ((id, state) in channel) {
                         status[id] = state
                         send(status.toMap())
@@ -50,13 +43,14 @@ class CamsConnectionInteractorImpl(
                 cams.forEach { (camera, cameraConnection) ->
                     launch {
                         cameraConnection.observeConnectionStatus().collect {
-                            val status = when (it) {
+                            val state = when (it) {
+                                //TODO fix states
                                 CameraConnectionStatus.CONNECTED -> CameraStatusDTO.Connected
                                 CameraConnectionStatus.CONNECTING -> CameraStatusDTO.Connecting
                                 CameraConnectionStatus.DISCONNECTED,
                                 CameraConnectionStatus.ERROR -> CameraStatusDTO.Disconnected
                             }
-                            channel.send(camera.id to status)
+                            channel.send(camera.id to state)
                         }
                     }
                 }
@@ -68,8 +62,7 @@ class CamsConnectionInteractorImpl(
         try {
             cameraConnectionsObservable.collectLatest {
                 coroutineScope {
-                    val statusChannel = setupStatusChannel(this)
-                    processCams(it, statusChannel)
+                    processCams(it)
                 }
             }
         } finally {
@@ -77,7 +70,7 @@ class CamsConnectionInteractorImpl(
         }
     }
 
-    override fun observeStatus(): Flow<Map<Long, CameraStatusDTO>> = test
+    override fun observeStatus(): Flow<Map<Long, CameraStatusDTO>> = cameraStatusObservable
 
     override suspend fun observeVideoStream(id: Long): Flow<ByteArray> =
         cameraConnectionsObservable.map { cams ->
@@ -86,33 +79,12 @@ class CamsConnectionInteractorImpl(
             it.videoObservable
         }
 
-    private suspend fun setupStatusChannel(scope: CoroutineScope): SendChannel<Pair<Long, CameraStatusDTO?>> {
-        val channel = Channel<Pair<Long, CameraStatusDTO?>>()
-        scope.launch {
-            try {
-                for (pair in channel) {
-                    if (pair.second == null) cameraStatusMap.remove(pair.first)
-                    else cameraStatusMap[pair.first] = pair.second!!
-                    cameraStatusState.emit(cameraStatusMap.toMap())
-                }
-            } finally {
-                withContext(NonCancellable) {
-                    channel.close()
-                    cameraStatusMap.clear()
-                    cameraStatusState.emit(emptyMap())
-                }
-            }
-        }
-        return channel
-    }
-
     private suspend fun processCams(
         cams: Map<CameraDTO, CameraConnection>,
-        statusChannel: SendChannel<Pair<Long, CameraStatusDTO?>>
     ) = coroutineScope {
         try {
             log.debug("Start process cams: ${cams.keys.joinToString { it.name }}")
-            cams.forEach { launch { processCamera(it.key, it.value, statusChannel) } }
+            cams.forEach { launch { processCamera(it.key, it.value) } }
         } finally {
             log.debug("Stopped process cams")
         }
@@ -121,20 +93,10 @@ class CamsConnectionInteractorImpl(
     private suspend fun processCamera(
         camera: CameraDTO,
         cameraConnection: CameraConnection,
-        statusChannel: SendChannel<Pair<Long, CameraStatusDTO?>>
     ) {
         try {
             log.trace("Start process camera ${camera.name}")
             cameraConnection.connectionObservable
-                .onEach {
-                    val status = when (it) {
-                        is CameraConnectionState.Connecting -> CameraStatusDTO.Connecting
-                        is CameraConnectionState.Connected -> CameraStatusDTO.Connected
-                        is CameraConnectionState.Disconnected -> CameraStatusDTO.Disconnected
-                        else -> throw Exception("Unknown connection state: $it")
-                    }
-                    statusChannel.send(camera.id to status)
-                }
                 .collectLatest {
                     if (it is CameraConnectionState.Connected) {
                         processMovement(camera, cameraConnection, it)
@@ -143,7 +105,6 @@ class CamsConnectionInteractorImpl(
 
         } finally {
             withContext(NonCancellable) {
-                statusChannel.sendSuppressClosed(camera.id to null)
                 log.trace("Stopped process camera ${camera.name}")
             }
         }
@@ -202,14 +163,6 @@ class CamsConnectionInteractorImpl(
             )
             file.delete()
             recordsInteractor.saveNewRecord(camera, timestamp, output)
-        }
-    }
-
-    private suspend fun <T> SendChannel<T>.sendSuppressClosed(element: T) {
-        try {
-            send(element)
-        } catch (e: ClosedSendChannelException) {
-            // ignore
         }
     }
 }
