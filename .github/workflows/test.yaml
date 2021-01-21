@@ -31,7 +31,7 @@ jobs:
         run: >-
           ./gradlew
           -PpIsBuildAgent=true
-          :app:assemble :server:shadowJar
+          :app:assemble :server:shadowJar :dependencyUpdates
 
 
       - name: Archive android client artifacts
