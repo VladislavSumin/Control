@@ -4,6 +4,7 @@ import io.ktor.network.selector.*
 import io.ktor.network.sockets.*
 import io.ktor.utils.io.*
 import kotlinx.coroutines.*
+import kotlinx.coroutines.channels.consumesAll
 import kotlinx.coroutines.channels.ticker
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.sync.Mutex
@@ -22,10 +23,14 @@ import java.util.concurrent.CancellationException
 open class AbstractCameraConnection(
     private val address: String,
     private val port: Int,
+    private val reconnectInterval: Long = 5000
 ) {
     protected val log: Logger = LoggerFactory.getLogger("cams.connection")
 
     private val writeLock = Mutex()
+    private val connectionStatus = MutableStateFlow(CameraConnectionStatus.DISCONNECTED)
+
+    fun observeConnectionStatus(): Flow<CameraConnectionStatus> = connectionStatus
 
     protected open val connectionObservable = channelFlow {
         while (true) {
@@ -64,10 +69,20 @@ open class AbstractCameraConnection(
                     log.warn("Error when closing connection with $address:$port", e)
                 }
             }
-            delay(5000)
+            delay(reconnectInterval)
             log.trace("Reconnecting to $address:$port")
         }
     }
+        .onEach {
+            val status = when (it) {
+                CameraConnectionState.Connecting -> CameraConnectionStatus.CONNECTING
+                is CameraConnectionState.AbstractConnected -> CameraConnectionStatus.CONNECTED
+                is CameraConnectionState.Disconnected -> CameraConnectionStatus.ERROR
+                is CameraConnectionState.Connected -> throw RuntimeException("Unexpected state: $it")
+            }
+            connectionStatus.emit(status)
+        }
+        .onCompletion { connectionStatus.emit(CameraConnectionStatus.DISCONNECTED) }
 
     //TODO research maybe ping not need if auth return AliveInterval = 0
     private suspend fun ping(write: ByteWriteChannel, sessionId: Int) {

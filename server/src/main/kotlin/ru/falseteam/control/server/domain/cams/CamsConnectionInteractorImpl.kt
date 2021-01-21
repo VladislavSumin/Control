@@ -10,6 +10,7 @@ import ru.falseteam.control.api.dto.CameraDTO
 import ru.falseteam.control.api.dto.CameraStatusDTO
 import ru.falseteam.control.camsconnection.CameraConnection
 import ru.falseteam.control.camsconnection.CameraConnectionState
+import ru.falseteam.control.camsconnection.CameraConnectionStatus
 import ru.falseteam.control.server.domain.records.RecordsInteractor
 import ru.falseteam.control.server.domain.videoencoder.VideoEncodeInteractor
 import java.io.File
@@ -31,6 +32,37 @@ class CamsConnectionInteractorImpl(
             .map { cams -> cams.associateWith { CameraConnection(it.address, it.port) } }
             .shareIn(GlobalScope, SharingStarted.WhileSubscribed(replayExpirationMillis = 0), 1)
 
+    private val test =
+        cameraConnectionsObservable.flatMapLatest { cams ->
+            channelFlow {
+                val status: MutableMap<Long, CameraStatusDTO> = mutableMapOf()
+                send(status.toMap())
+
+                val channel = Channel<Pair<Long, CameraStatusDTO>>()
+
+                launch {
+                    for ((id, state) in channel) {
+                        status[id] = state
+                        send(status.toMap())
+                    }
+                }
+
+                cams.forEach { (camera, cameraConnection) ->
+                    launch {
+                        cameraConnection.observeConnectionStatus().collect {
+                            val status = when (it) {
+                                CameraConnectionStatus.CONNECTED -> CameraStatusDTO.Connected
+                                CameraConnectionStatus.CONNECTING -> CameraStatusDTO.Connecting
+                                CameraConnectionStatus.DISCONNECTED,
+                                CameraConnectionStatus.ERROR -> CameraStatusDTO.Disconnected
+                            }
+                            channel.send(camera.id to status)
+                        }
+                    }
+                }
+            }
+        }
+
     override suspend fun processConnections() = coroutineScope {
         log.debug("Start process camera connection")
         try {
@@ -45,7 +77,7 @@ class CamsConnectionInteractorImpl(
         }
     }
 
-    override fun observeStatus(): Flow<Map<Long, CameraStatusDTO>> = cameraStatusState
+    override fun observeStatus(): Flow<Map<Long, CameraStatusDTO>> = test
 
     override suspend fun observeVideoStream(id: Long): Flow<ByteArray> =
         cameraConnectionsObservable.map { cams ->
