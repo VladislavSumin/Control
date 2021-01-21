@@ -48,7 +48,7 @@ tasks.named("dependencyUpdates", DependencyUpdatesTask::class.java) {
     if (pIsBuildAgent.toBoolean()) {
         this.outputFormatter = closureOf<Result> {
             outdated.dependencies.forEach {
-                println("::warning::Library outdated: ${it.group}:${it.name} [${it.version} -> ${it.available.milestone}]}")
+                println("::warning::Library outdated: ${it.group}:${it.name} [${it.version} -> ${it.available.milestone}]")
             }
         }
     }
