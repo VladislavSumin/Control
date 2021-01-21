@@ -31,5 +31,6 @@ object Configuration {
         const val log4jSlf4jImpl = "org.apache.logging.log4j:log4j-slf4j-impl:2.9.0"
         const val slf4j = "org.slf4j:slf4j-api:1.7.30"
         const val logbackAndroid = "com.github.tony19:logback-android:2.0.0"
+        const val setting = "com.russhwolf:multiplatform-settings:0.7"
     }
 }

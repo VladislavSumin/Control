@@ -41,6 +41,7 @@ dependencies {
         implementation(ktorSerialization)
 
         implementation(kodein)
+        implementation(setting)
 
         implementation(log4j2Api)
         implementation(log4j2Core)

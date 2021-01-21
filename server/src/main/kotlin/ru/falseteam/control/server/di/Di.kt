@@ -19,6 +19,8 @@ import ru.falseteam.control.server.domain.records.RecordsInteractor
 import ru.falseteam.control.server.domain.records.RecordsInteractorImpl
 import ru.falseteam.control.server.domain.videoencoder.VideoEncodeInteractor
 import ru.falseteam.control.server.domain.videoencoder.VideoEncodeInteractorImpl
+import ru.falseteam.control.server.repository.ServerConfigurationRepository
+import ru.falseteam.control.server.repository.ServerConfigurationRepositoryImpl
 import ru.falseteam.control.server.rsub.CamsRSubImpl
 import ru.falseteam.control.server.rsub.CamsRecordRSubImpl
 import ru.falseteam.control.server.rsub.CamsStatusRSubImpl
@@ -26,6 +28,9 @@ import ru.falseteam.rsub.server.RSubServer
 import java.nio.file.Path
 
 val Kodein = DI {
+    // Repository
+    bind<ServerConfigurationRepository>() with singleton { ServerConfigurationRepositoryImpl() }
+
     // Database
     bind<SqlDriver>() with singleton { JdbcSqliteDriver("jdbc:sqlite:data/database.sqlite") }
     bind<Database>() with singleton {
@@ -43,7 +48,9 @@ val Kodein = DI {
     bind<CamsConnectionInteractor>() with singleton {
         CamsConnectionInteractorImpl(instance(), instance(), instance())
     }
-    bind<RecordsInteractor>() with singleton { RecordsInteractorImpl(instance(), instance()) }
+    bind<RecordsInteractor>() with singleton {
+        RecordsInteractorImpl(instance(), instance(), instance())
+    }
     bind<VideoEncodeInteractor>() with singleton { VideoEncodeInteractorImpl() }
 
     // Api

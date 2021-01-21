@@ -14,6 +14,7 @@ import ru.falseteam.control.api.dto.CameraRecordDTO
 import ru.falseteam.control.server.database.CameraRecord
 import ru.falseteam.control.server.database.CameraRecordQueries
 import ru.falseteam.control.server.domain.videoencoder.VideoEncodeInteractor
+import ru.falseteam.control.server.repository.ServerConfigurationRepository
 import ru.falseteam.control.server.utils.toBoolean
 import ru.falseteam.control.server.utils.toLong
 import java.io.File
@@ -23,6 +24,7 @@ import java.nio.file.Path
 class RecordsInteractorImpl(
     private val cameraRecordQueries: CameraRecordQueries,
     private val videoEncodeInteractor: VideoEncodeInteractor,
+    private val serverConfigurationRepository: ServerConfigurationRepository,
 ) : RecordsInteractor {
     private val allObservable = cameraRecordQueries.selectAll()
         .asFlow()
@@ -82,14 +84,17 @@ class RecordsInteractorImpl(
             )
 
             val id = insert(cameraRecordDto)
-            val recordLocation = Path.of("data/record/$id.mp4")
+            val recordLocation = getRecordsPath().resolve("$id.mp4")
             Files.createDirectories(recordLocation.parent)
             Files.move(record, recordLocation)
         }
 
     override fun getRecord(id: Long): File {
-        return File("data/record/$id.mp4")
+        return getRecordsPath().resolve("$id.mp4").toFile()
     }
+
+    override fun getRecordsTmpPath(): Path = Path.of(serverConfigurationRepository.recordsTmpPath)
+    private fun getRecordsPath(): Path = Path.of(serverConfigurationRepository.recordsPath)
 
     private suspend fun insert(cameraRecord: CameraRecordDTO): Long = withContext(Dispatchers.IO) {
         cameraRecordQueries.transactionWithResult {
@@ -109,7 +114,6 @@ class RecordsInteractorImpl(
             keepForever = keepForever.toLong()
         )
     }
-
 
     private fun CameraRecord.toDTO(): CameraRecordDTO {
         return CameraRecordDTO(

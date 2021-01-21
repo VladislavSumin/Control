@@ -55,6 +55,8 @@ dependencies {
         implementation(ktorClient)
         implementation(ktorClientSerialization)
         implementation(logbackAndroid)
+        implementation(setting)
+
     }
 
     implementation("androidx.core:core-ktx:1.3.2")
@@ -64,7 +66,6 @@ dependencies {
     implementation("androidx.compose.material:material:1.0.0-alpha10")
     implementation("androidx.compose.ui:ui-tooling:1.0.0-alpha10")
     implementation("androidx.navigation:navigation-compose:1.0.0-alpha05")
-    implementation("com.russhwolf:multiplatform-settings:0.7")
     implementation("com.google.android.exoplayer:exoplayer:2.12.2")
     testImplementation("junit:junit:4.13.1")
     androidTestImplementation("androidx.test.ext:junit:1.1.2")
