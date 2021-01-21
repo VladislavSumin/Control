@@ -6,6 +6,7 @@ object Configuration {
         const val ktor = "1.5.0"
         const val log4j2 = "2.14.0"
         const val kodein = "7.1.0"
+        const val sqldelight = "1.4.4"
     }
 
     object Dependencies {
@@ -29,9 +30,16 @@ object Configuration {
         object Logging {
             const val log4j2Api = "org.apache.logging.log4j:log4j-api:${Versions.log4j2}"
             const val log4j2Core = "org.apache.logging.log4j:log4j-core:${Versions.log4j2}"
-            const val log4jSlf4jImpl = "org.apache.logging.log4j:log4j-slf4j-impl:${Versions.log4j2}"
+            const val log4jSlf4j = "org.apache.logging.log4j:log4j-slf4j-impl:${Versions.log4j2}"
             const val slf4j = "org.slf4j:slf4j-api:1.7.30"
             const val logbackAndroid = "com.github.tony19:logback-android:2.0.0"
+        }
+
+        object Sqldelight {
+            const val plugin = "com.squareup.sqldelight:gradle-plugin:${Versions.sqldelight}"
+            const val sqliteDriver = "com.squareup.sqldelight:sqlite-driver:${Versions.sqldelight}"
+            const val coroutineExt =
+                "com.squareup.sqldelight:coroutines-extensions-jvm:${Versions.sqldelight}"
         }
 
         const val setting = "com.russhwolf:multiplatform-settings:0.7"

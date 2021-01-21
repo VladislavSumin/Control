@@ -46,12 +46,13 @@ dependencies {
     with(Dependencies.Logging) {
         implementation(log4j2Api)
         implementation(log4j2Core)
-        implementation(log4jSlf4jImpl)
+        implementation(log4jSlf4j)
         implementation(slf4j)
     }
-
-    implementation("com.squareup.sqldelight:sqlite-driver:1.4.3")
-    implementation("com.squareup.sqldelight:coroutines-extensions-jvm:1.4.3")
+    with(Dependencies.Sqldelight){
+        implementation(sqliteDriver)
+        implementation(coroutineExt)
+    }
 
     implementation("net.bramp.ffmpeg:ffmpeg:0.6.2")
 }
