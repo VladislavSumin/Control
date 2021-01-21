@@ -4,7 +4,7 @@ object Configuration {
     object Versions {
         const val kotlin = "1.4.21"
         const val ktor = "1.5.0"
-        const val log4j2 = "2.13.3"
+        const val log4j2 = "2.14.0"
         const val kodein = "7.1.0"
     }
 
@@ -26,11 +26,14 @@ object Configuration {
         const val kodein = "org.kodein.di:kodein-di:${Versions.kodein}"
         const val kodeinAndroidX = "org.kodein.di:kodein-di-framework-android-x:${Versions.kodein}"
 
-        const val log4j2Api = "org.apache.logging.log4j:log4j-api:${Versions.log4j2}"
-        const val log4j2Core = "org.apache.logging.log4j:log4j-core:${Versions.log4j2}"
-        const val log4jSlf4jImpl = "org.apache.logging.log4j:log4j-slf4j-impl:2.9.0"
-        const val slf4j = "org.slf4j:slf4j-api:1.7.30"
-        const val logbackAndroid = "com.github.tony19:logback-android:2.0.0"
+        object Logging {
+            const val log4j2Api = "org.apache.logging.log4j:log4j-api:${Versions.log4j2}"
+            const val log4j2Core = "org.apache.logging.log4j:log4j-core:${Versions.log4j2}"
+            const val log4jSlf4jImpl = "org.apache.logging.log4j:log4j-slf4j-impl:${Versions.log4j2}"
+            const val slf4j = "org.slf4j:slf4j-api:1.7.30"
+            const val logbackAndroid = "com.github.tony19:logback-android:2.0.0"
+        }
+
         const val setting = "com.russhwolf:multiplatform-settings:0.7"
     }
 }

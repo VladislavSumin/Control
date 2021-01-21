@@ -24,6 +24,9 @@ dependencies {
     }
     with(Dependencies) {
         implementation(ktorNetwork)
+    }
+
+    with(Dependencies.Logging) {
         implementation(slf4j)
     }
 }
