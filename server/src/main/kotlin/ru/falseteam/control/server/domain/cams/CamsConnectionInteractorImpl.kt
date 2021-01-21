@@ -1,7 +1,6 @@
 package ru.falseteam.control.server.domain.cams
 
 import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import org.slf4j.LoggerFactory
 import ru.falseteam.control.api.dto.CameraDTO
@@ -29,17 +28,6 @@ class CamsConnectionInteractorImpl(
     private val cameraStatusObservable =
         cameraConnectionsObservable.flatMapLatest { cams ->
             channelFlow {
-                val channel = Channel<Pair<Long, CameraStatusDTO>>()
-
-                launch {
-                    val status: MutableMap<Long, CameraStatusDTO> = mutableMapOf()
-                    send(status.toMap())
-                    for ((id, state) in channel) {
-                        status[id] = state
-                        send(status.toMap())
-                    }
-                }
-
                 cams.forEach { (camera, cameraConnection) ->
                     launch {
                         cameraConnection.observeConnectionStatus().collect {
@@ -50,11 +38,15 @@ class CamsConnectionInteractorImpl(
                                 CameraConnectionStatus.DISCONNECTED,
                                 CameraConnectionStatus.ERROR -> CameraStatusDTO.Disconnected
                             }
-                            channel.send(camera.id to state)
+                            send(camera.id to state)
                         }
                     }
                 }
             }
+                .scan(mutableMapOf<Long, CameraStatusDTO>()) { list, (id, state) ->
+                    list[id] = state
+                    list.toMutableMap()
+                }
         }
 
     override suspend fun processConnections() = coroutineScope {
