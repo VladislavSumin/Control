@@ -36,6 +36,11 @@ class RecordsInteractorImpl(
             replay = 1
         )
 
+    init {
+        getRecordsPath().toFile().mkdirs()
+        getRecordsTmpPath().toFile().mkdirs()
+    }
+
     override fun observeAll(): Flow<List<CameraRecordDTO>> = allObservable
 
     override suspend fun getAll(): List<CameraRecordDTO> = withContext(Dispatchers.IO) {
@@ -85,7 +90,6 @@ class RecordsInteractorImpl(
 
             val id = insert(cameraRecordDto)
             val recordLocation = getRecordsPath().resolve("$id.mp4")
-            Files.createDirectories(recordLocation.parent)
             Files.move(record, recordLocation)
         }
 
