@@ -4,16 +4,32 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.savedinstancestate.savedInstanceState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import ru.falseteam.control.di.kodeinViewModel
 import ru.falseteam.control.ui.PrimaryAccentButton
+import ru.falseteam.control.ui.screens.Screen
+import ru.falseteam.control.ui.screens.main.AmbientNavigation
+import ru.falseteam.control.ui.screens.navigate
 
 @Composable
 fun AddServerScreen(viewModel: AddServerViewModel = kodeinViewModel()) {
-    val (url, setUrl) = savedInstanceState { "" }
+    when (viewModel.state.collectAsState().value) {
+        AddServerState.Input -> InputState(viewModel = viewModel)
+        AddServerState.Success -> {
+            AmbientNavigation.current.navigate(Screen.Cams) {
+                popUpTo = 0
+                launchSingleTop = true
+            }
+        }
+    }
+}
 
+@Composable
+private fun InputState(viewModel: AddServerViewModel) {
+    val (url, setUrl) = savedInstanceState { "" }
     Column(
         Modifier
             .fillMaxWidth()

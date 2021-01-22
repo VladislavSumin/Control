@@ -20,6 +20,10 @@ class ServersInteractorImpl(
         }
     }
 
+    override fun isPrimaryServerSet(): Boolean {
+        return primaryServerState.value != null
+    }
+
     override suspend fun getPrimaryServer(): ServerInfo = primaryServerState.first()!!
 
     override suspend fun setPrimaryServerUrl(url: URL) {

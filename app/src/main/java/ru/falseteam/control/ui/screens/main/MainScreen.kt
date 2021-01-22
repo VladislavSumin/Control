@@ -79,7 +79,7 @@ private fun Navigation(navController: NavController, navItems: List<NavItem>) {
                     selected = currentRoute == navItem.screen.path,
                     onClick = {
                         navController.navigate(navItem.screen) {
-                            popUpTo = navController.graph.startDestination
+                            popUpTo = 0 // navController.graph.startDestination
                             launchSingleTop = true
                         }
                     }
