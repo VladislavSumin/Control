@@ -6,7 +6,7 @@ import androidx.navigation.compose.navigate
 
 sealed class Screen(val path: String) {
     companion object {
-        val DefaultScreen: Screen = AddServer
+        val DefaultScreen: Screen = Cams
     }
 
     object Cams : Screen("cams")

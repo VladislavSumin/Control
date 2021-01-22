@@ -8,5 +8,5 @@ import ru.falseteam.control.repository.Repository
 class ServerRepositoryImpl(context: Context) :
     BaseRepository(context, Repository.Servers), ServersRepository {
 
-    override var defaultServer: String by settings.string("default_server")
+    override var defaultServer: String by settings.string("default_server", "http://10.0.0.56:8080")
 }

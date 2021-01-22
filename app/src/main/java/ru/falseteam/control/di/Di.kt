@@ -48,7 +48,7 @@ val Kodein = DI.lazy {
         RecordsInteractorImpl(instance(), instance(), instance())
     }
     bind<ThemesInteractor>() with singleton { ThemesInteractorImpl(instance()) }
-    bind<ServersInteractor>() with singleton { ServersInteractorImpl() }
+    bind<ServersInteractor>() with singleton { ServersInteractorImpl(instance()) }
 
     // Api
     bind<CamsApi>() with singleton { CamsApiImpl(instance()) }
