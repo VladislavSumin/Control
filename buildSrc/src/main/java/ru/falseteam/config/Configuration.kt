@@ -5,7 +5,7 @@ object Configuration {
         const val kotlin = "1.4.21-2"
         const val ktor = "1.5.0"
         const val log4j2 = "2.14.0"
-        const val kodein = "7.1.0"
+        const val kodein = "7.2.0"
         const val sqldelight = "1.4.4"
     }
 
