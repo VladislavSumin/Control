@@ -25,9 +25,10 @@ fun CamsScreen(viewModel: CamsViewModel = kodeinViewModel()) {
     val camsState = viewModel.camsUi
         .collectAsState(initial = null)
 
+    val navigation = AmbientNavigation.current
     Scaffold(
         floatingActionButton = {
-            FloatingActionButton(onClick = { AmbientNavigation.current.navigate(Screen.AddCamera) }) {
+            FloatingActionButton(onClick = { navigation.navigate(Screen.AddCamera) }) {
                 Image(vectorResource(id = R.drawable.ic_add))
             }
         },
@@ -49,10 +50,11 @@ fun CamsScreen(viewModel: CamsViewModel = kodeinViewModel()) {
 
 @Composable
 private fun CameraCard(camera: CameraUiModel) {
+    val navigation = AmbientNavigation.current
     Card(
         modifier = Modifier
             .padding(8.dp, 6.dp)
-            .clickable(onClick = { AmbientNavigation.current.navigate(Screen.Livestream(camera.id)) })
+            .clickable(onClick = { navigation.navigate(Screen.Livestream(camera.id)) })
     ) {
         Column(
             Modifier
