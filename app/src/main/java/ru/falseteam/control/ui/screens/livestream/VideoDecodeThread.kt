@@ -9,7 +9,6 @@ import kotlinx.coroutines.flow.collect
 import ru.falseteam.control.domain.cams.CamsInteractor
 import java.nio.ByteBuffer
 
-
 class VideoDecodeThread {
 
     companion object {
@@ -20,7 +19,6 @@ class VideoDecodeThread {
     private lateinit var camsInteractor: CamsInteractor
     private lateinit var surface: Surface
     private lateinit var job: Job
-
 
     private var isStop = false
 
@@ -48,7 +46,7 @@ class VideoDecodeThread {
                     readDecodedFrame()
                 }
             } catch (e: Exception) {
-                //TODO add error check
+                // TODO add error check
             } finally {
                 decoder.stop()
                 decoder.release()
@@ -95,7 +93,6 @@ class VideoDecodeThread {
             processInput(input)
         }
 
-
         private fun findFirstNalu(input: ByteArray) {
             while (input.size > emitterIndex) {
                 val currentByte = input[emitterIndex]
@@ -122,7 +119,7 @@ class VideoDecodeThread {
                         bufferIndex,
                         0,
                         receiverBuffer.position() - zerosCount - 2,
-                        0, //TODO
+                        0, // TODO
                         0
                     )
                     naluFind = false

@@ -28,7 +28,7 @@ class VideoEncodeInteractorImpl : VideoEncodeInteractor {
             .setVerbosity(FFmpegBuilder.Verbosity.QUIET)
             .setInput(input.toAbsolutePath().toString())
             .addOutput(output.toAbsolutePath().toString())
-            //.setVideoFrameRate(24, 1)
+            // .setVideoFrameRate(24, 1)
             .addExtraArgs("-c", "copy")
             .done()
 

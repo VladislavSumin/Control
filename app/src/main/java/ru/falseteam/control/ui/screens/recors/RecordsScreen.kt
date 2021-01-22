@@ -8,7 +8,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -88,15 +87,13 @@ private fun FilterContent(viewModel: RecordsViewModel) {
                 checked = state.isOnlyNamed,
                 onCheckedChange = { viewModel.updateFilterModel(state.copy(isOnlyNamed = !state.isOnlyNamed)) }
             )
-
         }
-
     }
 }
 
 @Composable
 private fun LoadingScreen() {
-    //TODO make global function like this
+    // TODO make global function like this
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -211,7 +208,6 @@ private fun RecordCard(
     }
 }
 
-
 @Composable
 private fun VideoRecord(uri: Uri, playerCache: PlayerCache) {
     Surface {
@@ -261,7 +257,8 @@ private class PlayerCache(
 
 private class MyPlayer @JvmOverloads constructor(
     context: Context,
-    attrs: AttributeSet? = null, defStyleAttr: Int = 0
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
 ) : PlayerView(context, attrs, defStyleAttr) {
     var cache: PlayerCache? = null
 

@@ -114,7 +114,7 @@ internal data class Msg(
         sb.append("Message ID: ").append(messageId).append('\n')
         sb.append("Data Length: 0x").append("%08X".format(dataLength)).append('\n')
         sb.append("Data: ")
-        if (data[0] == '{'.toByte()) sb.append(getDataAsString())//TODO change
+        if (data[0] == '{'.toByte()) sb.append(getDataAsString()) // TODO change
         else sb.append("<binary data>")
         return sb.toString()
     }

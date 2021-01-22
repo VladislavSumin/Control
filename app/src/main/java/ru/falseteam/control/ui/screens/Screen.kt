@@ -9,7 +9,6 @@ sealed class Screen(val path: String) {
         val DefaultScreen: Screen = Cams
     }
 
-
     object Cams : Screen("cams")
     object Records : Screen("records")
     object Settings : Screen("settings")

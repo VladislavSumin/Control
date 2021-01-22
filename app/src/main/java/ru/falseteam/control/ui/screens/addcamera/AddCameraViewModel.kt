@@ -6,7 +6,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import ru.falseteam.control.api.dto.CameraDTO
 import ru.falseteam.control.domain.cams.CamsInteractor
-import ru.falseteam.control.ui.screens.addcamera.AddCameraState
 
 class AddCameraViewModel(
     private val camsInteractor: CamsInteractor,

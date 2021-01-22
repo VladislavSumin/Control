@@ -26,7 +26,7 @@ fun SettingsScreen(navController: NavController) {
                 modifier = Modifier.weight(1f),
                 text = "Темная тема"
             )
-            //TODO add ViewModel
+            // TODO add ViewModel
             val themes = remember { Kodein.direct.instance<ThemesInteractor>() }
             val isDarkTheme by themes.observeIsDarkTheme().collectAsState(initial = null)
             if (isDarkTheme != null) {
@@ -36,5 +36,4 @@ fun SettingsScreen(navController: NavController) {
             }
         }
     }
-
 }

@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
-//TODO remove data classes
+// TODO remove data classes
 internal object CommandRepository {
     private val json = Json {
         encodeDefaults = true
@@ -101,7 +101,6 @@ internal object CommandRepository {
     data class AlarmStartData(
         val SessionID: String
     )
-
 
     private fun compile(commandCode: CommandCode, sessionID: Int, data: String) =
         newInstance(commandCode, data.toByteArray(), sessionID)

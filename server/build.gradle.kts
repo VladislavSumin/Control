@@ -49,7 +49,7 @@ dependencies {
         implementation(log4jSlf4j)
         implementation(slf4j)
     }
-    with(Dependencies.Sqldelight){
+    with(Dependencies.Sqldelight) {
         implementation(sqliteDriver)
         implementation(coroutineExt)
     }

@@ -17,7 +17,7 @@ buildscript {
 
 plugins {
     id("com.github.ben-manes.versions") version "0.36.0"
-    id("io.gitlab.arturbosch.detekt") version "1.15.0"
+    id("io.gitlab.arturbosch.detekt") version "1.14.2"
 }
 
 allprojects {
@@ -58,7 +58,7 @@ tasks.named("dependencyUpdates", DependencyUpdatesTask::class.java) {
 detekt {
     failFast = false // fail build on any finding
     buildUponDefaultConfig = true // preconfigure defaults
-    // autoCorrect = true
+     autoCorrect = true
     ignoreFailures = false
     parallel = false
 
@@ -68,8 +68,8 @@ detekt {
         xml.enabled = true // checkstyle like format mainly for integrations like Jenkins
         txt.enabled =
             true // similar to the console output, contains issue signature to manually edit baseline files
-        sarif.enabled =
-            true // SARIF integration (https://sarifweb.azurewebsites.net/) for integrations with Github
+//        sarif.enabled =
+//            true // SARIF integration (https://sarifweb.azurewebsites.net/) for integrations with Github
     }
 }
 
@@ -85,5 +85,5 @@ tasks {
 }
 
 dependencies {
-    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.15.0")
+    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.14.2")
 }

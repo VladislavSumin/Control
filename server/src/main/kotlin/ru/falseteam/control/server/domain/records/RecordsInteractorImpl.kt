@@ -47,7 +47,7 @@ class RecordsInteractorImpl(
         cameraRecordQueries.selectAll().executeAsList().map { it.toDTO() }
     }
 
-    //TODO make custom sql request
+    // TODO make custom sql request
     override suspend fun getFiltered(
         onlyKeepForever: Boolean,
         onlyNamed: Boolean
@@ -67,7 +67,7 @@ class RecordsInteractorImpl(
         cameraRecordQueries.deleteById(id)
     }
 
-    //TODO throw exception if no records changed
+    // TODO throw exception if no records changed
     override suspend fun setKeepForever(id: Long, keepForever: Boolean) =
         withContext(Dispatchers.IO) {
             cameraRecordQueries.setKeepForever(

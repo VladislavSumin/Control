@@ -14,7 +14,6 @@ java {
 group = "ru.falseteam.control.cams-connection"
 version = "0.1.0"
 
-
 dependencies {
     with(Dependencies.Kotlin) {
         implementation(stdLibJdk8)

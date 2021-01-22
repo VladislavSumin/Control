@@ -4,7 +4,6 @@ import android.content.Context
 import com.russhwolf.settings.AndroidSettings
 import com.russhwolf.settings.Settings
 import com.russhwolf.settings.boolean
-import com.russhwolf.settings.string
 import ru.falseteam.control.repository.RepositoryConstants
 
 private const val PREFERENCE_NAME = RepositoryConstants.themes
@@ -18,5 +17,4 @@ class ThemesRepositoryImpl(context: Context) : ThemesRepository {
 
     override var isDarkThemeEnabled: Boolean
             by settings.boolean(KEY_IS_DARK_THEME_ENABLED, false)
-
 }

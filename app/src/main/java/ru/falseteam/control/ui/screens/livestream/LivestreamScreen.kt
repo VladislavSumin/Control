@@ -33,7 +33,6 @@ fun LivestreamScreen(id: Long) {
                 .padding(1.dp),
             viewBlock = { surfaceView }
         ) {
-
         }
     }
 }
@@ -53,5 +52,4 @@ private class SurfaceCallback(
     override fun surfaceDestroyed(holder: SurfaceHolder) {
         videoDecode.close()
     }
-
 }

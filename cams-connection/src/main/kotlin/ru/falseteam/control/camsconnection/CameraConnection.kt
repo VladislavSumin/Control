@@ -19,7 +19,6 @@ class CameraConnection(private val address: String, private val port: Int) :
 
     public val videoObservable: Flow<ByteArray> = cameraVideoConnection.observeVideoStream
 
-
     private fun setupMovementEvent(
         state: CameraConnectionState.AbstractConnected,
     ) = state.receive

@@ -4,7 +4,6 @@ import io.ktor.network.selector.*
 import io.ktor.network.sockets.*
 import io.ktor.utils.io.*
 import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.consumesAll
 import kotlinx.coroutines.channels.ticker
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.sync.Mutex
@@ -84,7 +83,7 @@ open class AbstractCameraConnection(
         }
         .onCompletion { connectionStatus.emit(CameraConnectionStatus.DISCONNECTED) }
 
-    //TODO research maybe ping not need if auth return AliveInterval = 0
+    // TODO research maybe ping not need if auth return AliveInterval = 0
     private suspend fun ping(write: ByteWriteChannel, sessionId: Int) {
         ticker(10000, 2000).receiveAsFlow().collect {
             // log.trace("Ping $address:$port")
@@ -110,7 +109,7 @@ open class AbstractCameraConnection(
         val msg = CommandRepository.auth()
         write.write(msg)
         val response = read.readMsg()
-        //FIXME add response code parsing, to check wrong auth()
+        // FIXME add response code parsing, to check wrong auth()
         if (response.messageId != CommandCode.LOGIN_RSP) throw IOException("Auth failed")
         return response.sessionId
     }

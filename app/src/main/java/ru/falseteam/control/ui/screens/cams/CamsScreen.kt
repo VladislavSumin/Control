@@ -96,7 +96,7 @@ private fun IsCameraConnectedText(isConnected: Boolean) {
 
 @Composable
 private fun CamsList(navController: NavController, cams: List<CameraUiModel>) {
-    //TODO replace with recycler
+    // TODO replace with recycler
     ScrollableColumn {
         cams.forEach { CameraCard(navController = navController, camera = it) }
     }

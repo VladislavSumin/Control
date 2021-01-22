@@ -12,7 +12,7 @@ import ru.falseteam.control.server.domain.records.RecordsInteractor
 import ru.falseteam.control.server.domain.videoencoder.VideoEncodeInteractor
 import java.io.File
 
-//TODO зарефачить это г.
+// TODO зарефачить это г.
 class CamsConnectionInteractorImpl(
     camsInteractor: CamsInteractor,
     private val videoEncodeInteractor: VideoEncodeInteractor,
@@ -32,7 +32,7 @@ class CamsConnectionInteractorImpl(
                     launch {
                         cameraConnection.observeConnectionStatus().collect {
                             val state = when (it) {
-                                //TODO fix states
+                                // TODO fix states
                                 CameraConnectionStatus.CONNECTED -> CameraStatusDTO.Connected
                                 CameraConnectionStatus.CONNECTING -> CameraStatusDTO.Connecting
                                 CameraConnectionStatus.DISCONNECTED,
@@ -49,7 +49,6 @@ class CamsConnectionInteractorImpl(
                 }
         }
             .shareIn(GlobalScope, SharingStarted.WhileSubscribed(replayExpirationMillis = 0), 1)
-
 
     override suspend fun processConnections() = coroutineScope {
         log.debug("Start process camera connection")
@@ -96,7 +95,6 @@ class CamsConnectionInteractorImpl(
                         processMovement(camera, cameraConnection, it)
                     }
                 }
-
         } finally {
             withContext(NonCancellable) {
                 log.trace("Stopped process camera ${camera.name}")

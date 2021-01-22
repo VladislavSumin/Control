@@ -1,6 +1,6 @@
 package ru.falseteam.control.ui.screens.recors
 
-//TODO add no records exists state!
+// TODO add no records exists state!
 sealed class RecordsState {
     object Loading : RecordsState()
     data class Error(val error: String) : RecordsState()
@@ -15,5 +15,4 @@ sealed class RecordsState {
             return super.hashCode()
         }
     }
-
 }

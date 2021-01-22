@@ -2,7 +2,6 @@ plugins {
     id("com.android.application")
     kotlin("android")
     kotlin("plugin.serialization") version ru.falseteam.config.Configuration.Versions.kotlin
-
 }
 
 android {
@@ -55,10 +54,9 @@ dependencies {
         implementation(ktorClient)
         implementation(ktorClientSerialization)
         implementation(setting)
-
     }
 
-    with(ru.falseteam.config.Configuration.Dependencies.Logging){
+    with(ru.falseteam.config.Configuration.Dependencies.Logging) {
         implementation(logbackAndroid)
     }
 
