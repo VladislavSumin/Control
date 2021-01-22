@@ -10,8 +10,6 @@ import kotlinx.coroutines.flow.flow
 import ru.falseteam.control.api.dto.CameraDTO
 import ru.falseteam.control.domain.servers.ServerInfo
 
-private const val HOSTNAME = "10.0.0.56:8080"
-
 class CamsApiImpl(private val httpClient: HttpClient) : CamsApi {
     override suspend fun getAll(server: ServerInfo): List<CameraDTO> =
         httpClient.get(server, "/api/v1/cams")
@@ -23,8 +21,11 @@ class CamsApiImpl(private val httpClient: HttpClient) : CamsApi {
         }
     }
 
-    override fun getVideoStream(id: Long): Flow<ByteArray> = flow {
-        httpClient.webSocket(host = HOSTNAME, path = "/api/v1/cams/stream/$id") {
+    override fun getVideoStream(server: ServerInfo, id: Long): Flow<ByteArray> = flow {
+        httpClient.webSocket(
+            host = "${server.hostname}:${server.port}",
+            path = "/api/v1/cams/stream/$id"
+        ) {
             for (frame in incoming) {
                 emit((frame as Frame.Binary).data)
             }

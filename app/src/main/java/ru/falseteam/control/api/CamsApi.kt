@@ -7,5 +7,5 @@ import ru.falseteam.control.domain.servers.ServerInfo
 interface CamsApi {
     suspend fun getAll(server: ServerInfo): List<CameraDTO>
     suspend fun addCamera(server: ServerInfo, cameraDTO: CameraDTO)
-    fun getVideoStream(id: Long): Flow<ByteArray>
+    fun getVideoStream(server: ServerInfo, id: Long): Flow<ByteArray>
 }

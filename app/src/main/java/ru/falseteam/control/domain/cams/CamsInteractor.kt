@@ -9,5 +9,5 @@ interface CamsInteractor {
     suspend fun getAll(): List<CameraDTO>
     fun observerStatus(): Flow<Map<Long, CameraStatusDTO>>
     suspend fun put(camera: CameraDTO)
-    fun observeVideoStream(id: Long): Flow<ByteArray>
+    suspend fun observeVideoStream(id: Long): Flow<ByteArray>
 }

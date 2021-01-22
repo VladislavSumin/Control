@@ -23,5 +23,6 @@ class CamsInteractorImpl(
     override suspend fun put(camera: CameraDTO) =
         camsApi.addCamera(serversInteractor.getPrimaryServer(), camera)
 
-    override fun observeVideoStream(id: Long): Flow<ByteArray> = camsApi.getVideoStream(id)
+    override suspend fun observeVideoStream(id: Long): Flow<ByteArray> =
+        camsApi.getVideoStream(serversInteractor.getPrimaryServer(), id)
 }
