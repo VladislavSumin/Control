@@ -2,7 +2,7 @@ package ru.falseteam.config
 
 object Configuration {
     object Versions {
-        const val kotlin = "1.4.21"
+        const val kotlin = "1.4.21-2"
         const val ktor = "1.5.0"
         const val log4j2 = "2.14.0"
         const val kodein = "7.1.0"
@@ -11,6 +11,7 @@ object Configuration {
 
     object Dependencies {
         object Kotlin {
+            const val plugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlin}"
             const val stdLibJdk8 = "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${Versions.kotlin}"
             const val reflect = "org.jetbrains.kotlin:kotlin-reflect:${Versions.kotlin}"
             const val coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2"

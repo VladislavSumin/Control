@@ -1,3 +1,5 @@
+import ru.falseteam.config.Configuration
+
 plugins {
     id("com.android.application")
     kotlin("android")
@@ -48,7 +50,7 @@ dependencies {
     implementation(project(":api"))
     implementation("ru.falseteam.rsub:rsub-ktor-websocket-connector-client")
 
-    with(ru.falseteam.config.Configuration.Dependencies) {
+    with(Configuration.Dependencies) {
         implementation(kodein)
         implementation(kodeinAndroidX)
         implementation(ktorClient)
@@ -56,7 +58,7 @@ dependencies {
         implementation(setting)
     }
 
-    with(ru.falseteam.config.Configuration.Dependencies.Logging) {
+    with(Configuration.Dependencies.Logging) {
         implementation(logbackAndroid)
     }
 
