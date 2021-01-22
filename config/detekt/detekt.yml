@@ -1,12 +1,19 @@
 # Default config location
 # https://github.com/detekt/detekt/blob/master/detekt-core/src/main/resources/default-detekt-config.yml
 
+complexity:
+  LongParameterList:
+    active: false
+  LongMethod:
+    active: false
+  TooManyFunctions:
+    active: false
+
 formatting:
   FinalNewline:
     active: false
   NoWildcardImports:
     active: false
-
 
 style:
   NewLineAtEndOfFile:
