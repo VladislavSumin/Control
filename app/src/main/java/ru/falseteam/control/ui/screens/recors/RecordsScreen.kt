@@ -18,7 +18,6 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.util.Pools
-import androidx.navigation.NavController
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
@@ -32,7 +31,7 @@ import ru.falseteam.control.ui.PrimaryButton
 import ru.falseteam.control.ui.red900
 
 @Composable
-fun RecordsScreen(navController: NavController, viewModel: RecordsViewModel = kodeinViewModel()) {
+fun RecordsScreen(viewModel: RecordsViewModel = kodeinViewModel()) {
     val scaffoldState = rememberScaffoldState()
     Scaffold(
         scaffoldState = scaffoldState,

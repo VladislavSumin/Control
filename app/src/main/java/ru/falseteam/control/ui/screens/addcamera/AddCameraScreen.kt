@@ -10,7 +10,6 @@ import androidx.compose.runtime.savedinstancestate.savedInstanceState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import ru.falseteam.control.api.dto.CameraDTO
 import ru.falseteam.control.di.kodeinViewModel
 import ru.falseteam.control.ui.PrimaryAccentButton

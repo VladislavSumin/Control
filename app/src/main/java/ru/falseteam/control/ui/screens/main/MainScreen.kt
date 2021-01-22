@@ -11,7 +11,6 @@ import androidx.compose.runtime.Providers
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.staticAmbientOf
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.AmbientContext
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -54,9 +53,9 @@ fun MainScreen() {
 @Composable
 private fun MainContent(navController: NavHostController) {
     NavHost(navController = navController, startDestination = Screen.DefaultScreen.path) {
-        composable(Screen.Cams.path) { CamsScreen(navController) }
-        composable(Screen.Records.path) { RecordsScreen(navController) }
-        composable(Screen.Settings.path) { SettingsScreen(navController) }
+        composable(Screen.Cams.path) { CamsScreen() }
+        composable(Screen.Records.path) { RecordsScreen() }
+        composable(Screen.Settings.path) { SettingsScreen() }
         composable(Screen.AddCamera.path) { AddCameraScreen() }
         composable(Screen.AddServer.path) { AddServerScreen() }
         composable(

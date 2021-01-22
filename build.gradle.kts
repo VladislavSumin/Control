@@ -61,9 +61,7 @@ tasks.named("dependencyUpdates", DependencyUpdatesTask::class.java) {
 detekt {
     failFast = false // fail build on any finding
     buildUponDefaultConfig = true // preconfigure defaults
-    autoCorrect = true
     ignoreFailures = false
-    parallel = false
 
     config = files("$projectDir/config/detekt/detekt.yml")
     reports {
@@ -79,6 +77,7 @@ detekt {
 tasks {
     withType<io.gitlab.arturbosch.detekt.Detekt> {
         this.jvmTarget = "1.8"
+        autoCorrect = true
 
         setSource(files(rootDir))
         include("**/*.kt")

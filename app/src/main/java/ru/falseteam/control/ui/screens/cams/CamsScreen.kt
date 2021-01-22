@@ -11,30 +11,30 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import ru.falseteam.control.BuildConfig
 import ru.falseteam.control.R
 import ru.falseteam.control.di.kodeinViewModel
 import ru.falseteam.control.ui.green900
 import ru.falseteam.control.ui.red900
 import ru.falseteam.control.ui.screens.Screen
+import ru.falseteam.control.ui.screens.main.AmbientNavigation
 import ru.falseteam.control.ui.screens.navigate
 
 @Composable
-fun CamsScreen(navController: NavController, viewModel: CamsViewModel = kodeinViewModel()) {
+fun CamsScreen(viewModel: CamsViewModel = kodeinViewModel()) {
     val camsState = viewModel.camsUi
         .collectAsState(initial = null)
 
     Scaffold(
         floatingActionButton = {
-            FloatingActionButton(onClick = { navController.navigate(Screen.AddCamera) }) {
+            FloatingActionButton(onClick = { AmbientNavigation.current.navigate(Screen.AddCamera) }) {
                 Image(vectorResource(id = R.drawable.ic_add))
             }
         },
     ) {
         val cams = camsState.value
         if (cams != null) {
-            CamsList(navController, cams)
+            CamsList(cams)
         } else {
             Box(
                 modifier = Modifier
@@ -48,11 +48,11 @@ fun CamsScreen(navController: NavController, viewModel: CamsViewModel = kodeinVi
 }
 
 @Composable
-private fun CameraCard(navController: NavController, camera: CameraUiModel) {
+private fun CameraCard(camera: CameraUiModel) {
     Card(
         modifier = Modifier
             .padding(8.dp, 6.dp)
-            .clickable(onClick = { navController.navigate(Screen.Livestream(camera.id)) })
+            .clickable(onClick = { AmbientNavigation.current.navigate(Screen.Livestream(camera.id)) })
     ) {
         Column(
             Modifier
@@ -95,9 +95,9 @@ private fun IsCameraConnectedText(isConnected: Boolean) {
 }
 
 @Composable
-private fun CamsList(navController: NavController, cams: List<CameraUiModel>) {
+private fun CamsList(cams: List<CameraUiModel>) {
     // TODO replace with recycler
     ScrollableColumn {
-        cams.forEach { CameraCard(navController = navController, camera = it) }
+        cams.forEach { CameraCard(camera = it) }
     }
 }
