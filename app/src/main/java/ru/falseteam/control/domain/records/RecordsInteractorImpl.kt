@@ -1,5 +1,6 @@
 package ru.falseteam.control.domain.records
 
+import android.net.Uri
 import kotlinx.coroutines.flow.Flow
 import ru.falseteam.control.api.RecordsApi
 import ru.falseteam.control.api.dto.CameraRecordDTO
@@ -30,4 +31,9 @@ class RecordsInteractorImpl(
 
     override suspend fun setKeepForever(id: Long, keepForever: Boolean) =
         recordsApi.setKeepForever(serversInteractor.getPrimaryServer(), id, keepForever)
+
+    override suspend fun getRecordUri(id: Long): Uri {
+        val server = serversInteractor.getPrimaryServer()
+        return Uri.parse("${server.url}/api/v1/records/video/$id")
+    }
 }

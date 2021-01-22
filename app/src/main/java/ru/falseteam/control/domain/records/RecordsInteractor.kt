@@ -1,5 +1,6 @@
 package ru.falseteam.control.domain.records
 
+import android.net.Uri
 import kotlinx.coroutines.flow.Flow
 import ru.falseteam.control.api.dto.CameraRecordDTO
 
@@ -11,7 +12,9 @@ interface RecordsInteractor {
         onlyNamed: Boolean = false,
     ): List<CameraRecordDTO>
 
-    suspend fun delete(id:Long)
+    suspend fun delete(id: Long)
 
     suspend fun setKeepForever(id: Long, keepForever: Boolean)
+
+    suspend fun getRecordUri(id: Long): Uri
 }

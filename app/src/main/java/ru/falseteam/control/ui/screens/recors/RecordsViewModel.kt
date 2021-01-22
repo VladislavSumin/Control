@@ -1,5 +1,6 @@
 package ru.falseteam.control.ui.screens.recors
 
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
@@ -78,7 +79,8 @@ class RecordsViewModel(
                             name = record.name,
                             cameraName = camera?.name,
                             date = dateFormatter.format(Date(record.timestamp)),
-                            keepForever = record.keepForever
+                            keepForever = record.keepForever,
+                            uri = recordsInteractor.getRecordUri(record.id)
                         )
                     }
                 emit(RecordsState.ShowResult(records))

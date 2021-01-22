@@ -181,7 +181,7 @@ private fun RecordCard(
                 }
             }
 
-            VideoRecord(record.id, playerCache)
+            VideoRecord(record.uri, playerCache)
 
             Row(
                 modifier = Modifier.padding(16.dp, 8.dp)
@@ -211,10 +211,10 @@ private fun RecordCard(
     }
 }
 
+
 @Composable
-private fun VideoRecord(id: Long, playerCache: PlayerCache) {
+private fun VideoRecord(uri: Uri, playerCache: PlayerCache) {
     Surface {
-        val (oldId, setOldId) = remember { mutableStateOf(-1L) }
         val player = remember {
             playerCache.acquire()
         }
@@ -225,13 +225,10 @@ private fun VideoRecord(id: Long, playerCache: PlayerCache) {
             viewBlock = {
                 player
             }) {
-            if (oldId != id) {
-                setOldId(id)
-                it.player?.apply {
-                    this as SimpleExoPlayer
-                    setMediaSource(playerCache.createMedia(id))
-                    prepare()
-                }
+            it.player?.apply {
+                this as SimpleExoPlayer
+                setMediaSource(playerCache.createMedia(uri))
+                prepare()
             }
         }
     }
@@ -250,8 +247,7 @@ private class PlayerCache(
         ProgressiveMediaSource.Factory(dataSourceFactory)
     }
 
-    fun createMedia(id: Long): ProgressiveMediaSource {
-        val uri = Uri.parse("http://10.0.0.56:8080/api/v1/records/video/$id")
+    fun createMedia(uri: Uri): ProgressiveMediaSource {
         val mediaItem = MediaItem.Builder().setUri(uri).build()
         return mediaFactory.createMediaSource(mediaItem)
     }
