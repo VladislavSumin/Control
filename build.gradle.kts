@@ -17,6 +17,7 @@ buildscript {
 
 plugins {
     id("com.github.ben-manes.versions") version "0.36.0"
+    id("io.gitlab.arturbosch.detekt") version "1.15.0"
 }
 
 allprojects {
@@ -51,5 +52,33 @@ tasks.named("dependencyUpdates", DependencyUpdatesTask::class.java) {
                 println("::warning::Library outdated: ${it.group}:${it.name} [${it.version} -> ${it.available.milestone}]")
             }
         }
+    }
+}
+
+detekt {
+    failFast = true // fail build on any finding
+    buildUponDefaultConfig = true // preconfigure defaults
+
+    this.input
+//    config = files("$projectDir/config/detekt.yml") // point to your custom config defining rules to run, overwriting default behavior
+//    baseline = file("$projectDir/config/baseline.xml") // a way of suppressing issues before introducing detekt
+//
+    reports {
+        html.enabled = true // observe findings in your browser with structure and code snippets
+        xml.enabled = true // checkstyle like format mainly for integrations like Jenkins
+        txt.enabled = true // similar to the console output, contains issue signature to manually edit baseline files
+        sarif.enabled = true // SARIF integration (https://sarifweb.azurewebsites.net/) for integrations with Github
+    }
+}
+
+tasks {
+    withType<io.gitlab.arturbosch.detekt.Detekt> {
+        this.jvmTarget = "1.8"
+
+        setSource(files(rootDir))
+        include("**/*.kt")
+        include("**/*.kts")
+        exclude("**/build/**")
+//        exclude("**/resources/**")
     }
 }

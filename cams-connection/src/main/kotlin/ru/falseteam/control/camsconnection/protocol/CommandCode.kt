@@ -5,6 +5,7 @@ import java.lang.Exception
 /**
  * Command code list
  */
+@SuppressWarnings("MagicNumber")
 internal enum class CommandCode(val code: Int) {
     NULL(0),
 
