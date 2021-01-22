@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModelProvider
 import io.ktor.client.*
 import io.ktor.client.features.json.*
 import io.ktor.client.features.websocket.*
+import kotlinx.coroutines.runBlocking
 import org.kodein.di.*
 import org.kodein.di.android.x.androidXModule
 import ru.falseteam.control.App
@@ -69,12 +70,16 @@ val Kodein = DI.lazy {
         }
     }
     bind<RSubClient>() with singleton {
-        RSubClient(
-            RSubConnectorKtorWebSocket(
-                instance(),
-                host = "10.0.0.56"
+        val serversInteractor = instance<ServersInteractor>()
+        //TODO rewrite to factory
+        runBlocking {
+            RSubClient(
+                RSubConnectorKtorWebSocket(
+                    instance(),
+                    host = serversInteractor.getPrimaryServer().host
+                )
             )
-        )
+        }
     }
     bind<CamsRSub>() with singleton { instance<RSubClient>().getProxy(CamsRSub::class) }
     bind<CamsStatusRSub>() with singleton { instance<RSubClient>().getProxy(CamsStatusRSub::class) }
