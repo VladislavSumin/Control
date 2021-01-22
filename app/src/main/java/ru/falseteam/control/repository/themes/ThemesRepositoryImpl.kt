@@ -1,20 +1,13 @@
 package ru.falseteam.control.repository.themes
 
 import android.content.Context
-import com.russhwolf.settings.AndroidSettings
-import com.russhwolf.settings.Settings
 import com.russhwolf.settings.boolean
-import ru.falseteam.control.repository.RepositoryConstants
+import ru.falseteam.control.repository.BaseRepository
+import ru.falseteam.control.repository.Repository
 
-private const val PREFERENCE_NAME = RepositoryConstants.themes
-
-private const val KEY_IS_DARK_THEME_ENABLED = "is_dark_theme_enabled"
-
-class ThemesRepositoryImpl(context: Context) : ThemesRepository {
-    private val settings: Settings = AndroidSettings(
-        context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE)
-    )
+class ThemesRepositoryImpl(context: Context) :
+    BaseRepository(context, Repository.Themes), ThemesRepository {
 
     override var isDarkThemeEnabled: Boolean
-            by settings.boolean(KEY_IS_DARK_THEME_ENABLED, false)
+            by settings.boolean("is_dark_theme_enabled", false)
 }

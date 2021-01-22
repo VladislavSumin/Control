@@ -22,9 +22,12 @@ import ru.falseteam.control.domain.servers.ServersInteractor
 import ru.falseteam.control.domain.servers.ServersInteractorImpl
 import ru.falseteam.control.domain.themes.ThemesInteractor
 import ru.falseteam.control.domain.themes.ThemesInteractorImpl
+import ru.falseteam.control.repository.servers.ServerRepositoryImpl
+import ru.falseteam.control.repository.servers.ServersRepository
 import ru.falseteam.control.repository.themes.ThemesRepository
 import ru.falseteam.control.repository.themes.ThemesRepositoryImpl
 import ru.falseteam.control.ui.screens.addcamera.AddCameraViewModel
+import ru.falseteam.control.ui.screens.addserver.AddServerViewModel
 import ru.falseteam.control.ui.screens.cams.CamsViewModel
 import ru.falseteam.control.ui.screens.recors.RecordsViewModel
 import ru.falseteam.rsub.client.RSubClient
@@ -35,6 +38,7 @@ val Kodein = DI.lazy {
 
     // Repository
     bind<ThemesRepository>() with singleton { ThemesRepositoryImpl(instance()) }
+    bind<ServersRepository>() with singleton { ServerRepositoryImpl(instance()) }
 
     // Domain
     bind<CamsInteractor>() with singleton {
@@ -55,6 +59,7 @@ val Kodein = DI.lazy {
     bindViewModel<AddCameraViewModel>() with provider { AddCameraViewModel(instance()) }
     bindViewModel<CamsViewModel>() with provider { CamsViewModel(instance()) }
     bindViewModel<RecordsViewModel>() with provider { RecordsViewModel(instance(), instance()) }
+    bindViewModel<AddServerViewModel>() with provider { AddServerViewModel(instance()) }
 
     // rSub
     bind<HttpClient>() with singleton {
