@@ -4,7 +4,14 @@
 formatting:
   FinalNewline:
     active: false
+  NoWildcardImports:
+    active: false
+
 
 style:
   NewLineAtEndOfFile:
+    active: false
+  WildcardImport:
+    active: false
+  MagicNumber:
     active: false

@@ -49,7 +49,10 @@ tasks.named("dependencyUpdates", DependencyUpdatesTask::class.java) {
     if (pIsBuildAgent.toBoolean()) {
         this.outputFormatter = closureOf<Result> {
             outdated.dependencies.forEach {
-                println("::warning::Library outdated: ${it.group}:${it.name} [${it.version} -> ${it.available.milestone}]")
+                println(
+                    "::warning::Library outdated: " +
+                            "${it.group}:${it.name} [${it.version} -> ${it.available.milestone}]"
+                )
             }
         }
     }
@@ -58,7 +61,7 @@ tasks.named("dependencyUpdates", DependencyUpdatesTask::class.java) {
 detekt {
     failFast = false // fail build on any finding
     buildUponDefaultConfig = true // preconfigure defaults
-     autoCorrect = true
+    autoCorrect = true
     ignoreFailures = false
     parallel = false
 

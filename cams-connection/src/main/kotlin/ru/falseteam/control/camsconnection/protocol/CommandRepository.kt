@@ -5,6 +5,7 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 // TODO remove data classes
+@Suppress("ConstructorParameterNaming")
 internal object CommandRepository {
     private val json = Json {
         encodeDefaults = true

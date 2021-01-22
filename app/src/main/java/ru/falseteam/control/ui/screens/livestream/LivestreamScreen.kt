@@ -42,6 +42,7 @@ private class SurfaceCallback(
     private val videoDecode: VideoDecodeThread,
 ) : SurfaceHolder.Callback {
     override fun surfaceCreated(holder: SurfaceHolder) {
+        // no action
     }
 
     override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
