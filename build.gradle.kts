@@ -56,18 +56,20 @@ tasks.named("dependencyUpdates", DependencyUpdatesTask::class.java) {
 }
 
 detekt {
-    failFast = true // fail build on any finding
+    failFast = false // fail build on any finding
     buildUponDefaultConfig = true // preconfigure defaults
+    // autoCorrect = true
+    ignoreFailures = false
+    parallel = false
 
-    this.input
-//    config = files("$projectDir/config/detekt.yml") // point to your custom config defining rules to run, overwriting default behavior
-//    baseline = file("$projectDir/config/baseline.xml") // a way of suppressing issues before introducing detekt
-//
+    config = files("$projectDir/config/detekt/detekt.yml")
     reports {
         html.enabled = true // observe findings in your browser with structure and code snippets
         xml.enabled = true // checkstyle like format mainly for integrations like Jenkins
-        txt.enabled = true // similar to the console output, contains issue signature to manually edit baseline files
-        sarif.enabled = true // SARIF integration (https://sarifweb.azurewebsites.net/) for integrations with Github
+        txt.enabled =
+            true // similar to the console output, contains issue signature to manually edit baseline files
+        sarif.enabled =
+            true // SARIF integration (https://sarifweb.azurewebsites.net/) for integrations with Github
     }
 }
 
@@ -79,6 +81,9 @@ tasks {
         include("**/*.kt")
         include("**/*.kts")
         exclude("**/build/**")
-//        exclude("**/resources/**")
     }
+}
+
+dependencies {
+    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.15.0")
 }
