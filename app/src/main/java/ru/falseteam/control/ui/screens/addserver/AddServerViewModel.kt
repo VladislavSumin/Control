@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import ru.falseteam.control.domain.servers.ServersInteractor
-import java.net.URI
 import java.net.URL
 
 class AddServerViewModel(
@@ -12,7 +11,7 @@ class AddServerViewModel(
 ) : ViewModel() {
     fun onClickEnter(url: String) {
         viewModelScope.launch {
-            serversInteractor.setPrimaryServerUrl(URI(url))
+            serversInteractor.setPrimaryServerUrl(URL(url))
         }
     }
 }

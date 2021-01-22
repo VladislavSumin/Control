@@ -9,8 +9,8 @@ suspend inline fun <reified T> HttpClient.get(
     path: String,
     block: HttpRequestBuilder.() -> Unit = {}
 ): T = get(
-    scheme = server.schema,
-    host = server.hostname,
+    scheme = server.scheme,
+    host = server.host,
     port = server.port,
     path = path,
     block = block
@@ -21,8 +21,8 @@ suspend inline fun <reified T> HttpClient.patch(
     path: String,
     block: HttpRequestBuilder.() -> Unit = {}
 ): T = patch(
-    scheme = server.schema,
-    host = server.hostname,
+    scheme = server.scheme,
+    host = server.host,
     port = server.port,
     path = path,
     block = block
@@ -33,8 +33,8 @@ suspend inline fun <reified T> HttpClient.delete(
     path: String,
     block: HttpRequestBuilder.() -> Unit = {}
 ): T = delete(
-    scheme = server.schema,
-    host = server.hostname,
+    scheme = server.scheme,
+    host = server.host,
     port = server.port,
     path = path,
     block = block

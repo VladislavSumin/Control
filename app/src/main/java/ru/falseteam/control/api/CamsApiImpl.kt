@@ -23,7 +23,7 @@ class CamsApiImpl(private val httpClient: HttpClient) : CamsApi {
 
     override fun getVideoStream(server: ServerInfo, id: Long): Flow<ByteArray> = flow {
         httpClient.webSocket(
-            host = "${server.hostname}:${server.port}",
+            host = "${server.host}:${server.port}",
             path = "/api/v1/cams/stream/$id"
         ) {
             for (frame in incoming) {
