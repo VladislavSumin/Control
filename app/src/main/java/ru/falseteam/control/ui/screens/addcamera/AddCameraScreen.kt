@@ -14,10 +14,10 @@ import androidx.navigation.NavController
 import ru.falseteam.control.api.dto.CameraDTO
 import ru.falseteam.control.di.kodeinViewModel
 import ru.falseteam.control.ui.PrimaryAccentButton
+import ru.falseteam.control.ui.screens.main.AmbientNavigation
 
 @Composable
 fun AddCameraScreen(
-    navController: NavController,
     viewModel: AddCameraViewModel = kodeinViewModel()
 ) {
     val state = viewModel.state.collectAsState().value
@@ -28,7 +28,7 @@ fun AddCameraScreen(
     val (port, setPort) = savedInstanceState { "" }
 
     if (state is AddCameraState.Success) {
-        navController.popBackStack()
+        AmbientNavigation.current.popBackStack()
         return
     }
 

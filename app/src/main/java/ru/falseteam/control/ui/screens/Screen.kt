@@ -13,6 +13,7 @@ sealed class Screen(val path: String) {
     object Records : Screen("records")
     object Settings : Screen("settings")
     object AddCamera : Screen("add_camera")
+    object AddServer : Screen("add_server")
 
     class Livestream(id: Long) : Screen("livestream/$id") {
         companion object {
