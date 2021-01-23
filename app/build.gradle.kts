@@ -5,6 +5,7 @@ plugins {
     kotlin("android")
     kotlin("plugin.serialization") version ru.falseteam.config.Configuration.Versions.kotlin
 }
+val pIsBuildAgent: String by project
 
 android {
     compileSdkVersion(30)
@@ -28,19 +29,16 @@ android {
             keyPassword = "Qwerty12"
         }
 
-//        if (pUseUploadSignature.toBoolean()) {
-//            val pUploadSignaturePath: String by project
-//            val pUploadSignaturePassword: String by project
-//            val pUploadSignatureKeyName: String by project
-//            val pUploadSignatureKeyPassword: String by project
-//
-//            create("upload") {
-//                storeFile = file(pUploadSignaturePath)
-//                storePassword = pUploadSignaturePassword
-//                keyAlias = pUploadSignatureKeyName
-//                keyPassword = pUploadSignatureKeyPassword
-//            }
-//        }
+        if (pIsBuildAgent.toBoolean()) {
+            val pReleaseKeystorePassword: String by project
+
+            create("release") {
+                storeFile = file("../secrets/false-release.jks")
+                storePassword = pReleaseKeystorePassword
+                keyAlias = "release"
+                keyPassword = pReleaseKeystorePassword
+            }
+        }
     }
 
     buildTypes {
@@ -53,7 +51,9 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            signingConfig = signingConfigs.getByName("shared")
+            signingConfig = signingConfigs.getByName(
+                if (pIsBuildAgent.toBoolean()) "release" else "shared"
+            )
         }
     }
     compileOptions {
