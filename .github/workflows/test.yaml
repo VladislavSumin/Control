@@ -28,6 +28,8 @@ jobs:
 
       - name: Build with Gradle
         working-directory: ./Control
+        env:
+          RELEASE_KEYSTORE_PASSWORD: ${{ RELEASE_KEYSTORE_PASSWORD }}
         run: >-
           ./gradlew
           -PpIsBuildAgent=true
