@@ -33,7 +33,7 @@ jobs:
         run: >-
           ./gradlew
           -PpIsBuildAgent=true
-          -PpBuildNumber=${{ env.GITHUB_RUN_NUMBER }}
+          -PpBuildNumber=${{ github.run_number }}
           :app:assemble :server:shadowJar :dependencyUpdates
 
 
