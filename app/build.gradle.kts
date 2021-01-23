@@ -20,13 +20,40 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        create("shared") {
+            storeFile = file("../secrets/false-debug.jks")
+            storePassword = "Qwerty12"
+            keyAlias = "debug"
+            keyPassword = "Qwerty12"
+        }
+
+//        if (pUseUploadSignature.toBoolean()) {
+//            val pUploadSignaturePath: String by project
+//            val pUploadSignaturePassword: String by project
+//            val pUploadSignatureKeyName: String by project
+//            val pUploadSignatureKeyPassword: String by project
+//
+//            create("upload") {
+//                storeFile = file(pUploadSignaturePath)
+//                storePassword = pUploadSignaturePassword
+//                keyAlias = pUploadSignatureKeyName
+//                keyPassword = pUploadSignatureKeyPassword
+//            }
+//        }
+    }
+
     buildTypes {
+        debug {
+            signingConfig = signingConfigs.getByName("shared")
+        }
         release {
             minifyEnabled(false)
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("shared")
         }
     }
     compileOptions {
