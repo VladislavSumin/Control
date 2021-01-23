@@ -1,3 +1,4 @@
+import com.android.build.gradle.internal.api.BaseVariantOutputImpl
 import ru.falseteam.config.Configuration
 
 plugins {
@@ -5,7 +6,10 @@ plugins {
     kotlin("android")
     kotlin("plugin.serialization") version ru.falseteam.config.Configuration.Versions.kotlin
 }
+
 val pIsBuildAgent: String by project
+val pBaseVersionName: String by project
+val pBuildNumber: String by project
 
 android {
     compileSdkVersion(30)
@@ -15,8 +19,8 @@ android {
         applicationId = "ru.falseteam.control"
         minSdkVersion(26)
         targetSdkVersion(30)
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = pBuildNumber.toInt()
+        versionName = "$pBaseVersionName.$pBuildNumber"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -70,6 +74,14 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = "1.0.0-alpha10"
         kotlinCompilerVersion = "1.4.21"
+    }
+}
+
+// Change apk name
+android.applicationVariants.all variant@{
+    outputs.all {
+        this as BaseVariantOutputImpl
+        outputFileName = "Control-${android.defaultConfig.versionName}-${this@variant.name}.apk"
     }
 }
 
