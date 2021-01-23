@@ -30,7 +30,7 @@ android {
         }
 
         if (pIsBuildAgent.toBoolean()) {
-            val pReleaseKeystorePassword: String by project
+            val pReleaseKeystorePassword = System.getenv()["RELEASE_KEYSTORE_PASSWORD"]
 
             create("release") {
                 storeFile = file("../secrets/false-release.jks")
