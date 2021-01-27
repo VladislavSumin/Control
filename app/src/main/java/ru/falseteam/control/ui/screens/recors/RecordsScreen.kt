@@ -3,6 +3,7 @@ package ru.falseteam.control.ui.screens.recors
 import android.content.Context
 import android.net.Uri
 import android.util.AttributeSet
+import android.widget.CalendarView
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
@@ -29,6 +30,7 @@ import ru.falseteam.control.R
 import ru.falseteam.control.di.kodeinViewModel
 import ru.falseteam.control.ui.PrimaryButton
 import ru.falseteam.control.ui.red900
+import java.util.*
 
 @Composable
 fun RecordsScreen(viewModel: RecordsViewModel = kodeinViewModel()) {
@@ -72,6 +74,8 @@ private fun TopBar(scaffoldState: ScaffoldState, viewModel: RecordsViewModel) {
 private fun FilterContent(viewModel: RecordsViewModel) {
     val state = viewModel.filterState.collectAsState().value
     Column(modifier = Modifier.padding(16.dp)) {
+        CalendarFilter(viewModel)
+
         Row {
             Text(text = "Только сохраненные", modifier = Modifier.weight(1f))
             Checkbox(
@@ -87,6 +91,21 @@ private fun FilterContent(viewModel: RecordsViewModel) {
                 onCheckedChange = { viewModel.updateFilterModel(state.copy(isOnlyNamed = !state.isOnlyNamed)) }
             )
         }
+    }
+}
+
+@Composable
+private fun CalendarFilter(viewModel: RecordsViewModel) {
+    Surface {
+        val context = AmbientContext.current
+        val calendar = remember {
+            CalendarView(context).apply {
+                setOnDateChangeListener { _, year, month, dayOfMonth ->
+                    //TODO
+                }
+            }
+        }
+        AndroidView(viewBlock = { calendar })
     }
 }
 
