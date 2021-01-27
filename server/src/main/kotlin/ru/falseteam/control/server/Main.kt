@@ -13,11 +13,13 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.apache.logging.log4j.LogManager
 import org.kodein.di.allInstances
+import org.kodein.di.direct
 import org.kodein.di.instance
 import org.slf4j.LoggerFactory
 import ru.falseteam.control.server.api.Api
 import ru.falseteam.control.server.di.Kodein
 import ru.falseteam.control.server.domain.cams.CamsConnectionInteractor
+import ru.falseteam.control.server.repository.ServerConfigurationRepository
 import ru.falseteam.rsub.connector.ktorwebsocket.server.rSubWebSocket
 import ru.falseteam.rsub.server.RSubServer
 
@@ -28,11 +30,12 @@ fun main(args: Array<String>) {
     // TODO add debug flag
     System.setProperty("kotlinx.coroutines.debug", if (true) "on" else "off")
 
+    val port = Kodein.direct.instance<ServerConfigurationRepository>().port
     val apis: List<Api> by Kodein.allInstances()
     val rSubServer: RSubServer by Kodein.instance()
     val camsConnectionInteractor: CamsConnectionInteractor by Kodein.instance()
 
-    val server = embeddedServer(Netty, 8080) {
+    val server = embeddedServer(Netty, port) {
         install(ContentNegotiation) { json() }
         install(WebSockets)
         install(PartialContent)
