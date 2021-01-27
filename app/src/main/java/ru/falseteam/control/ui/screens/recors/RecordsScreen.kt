@@ -30,6 +30,7 @@ import ru.falseteam.control.R
 import ru.falseteam.control.di.kodeinViewModel
 import ru.falseteam.control.ui.PrimaryButton
 import ru.falseteam.control.ui.red900
+import java.time.LocalDate
 import java.util.*
 
 @Composable
@@ -74,7 +75,7 @@ private fun TopBar(scaffoldState: ScaffoldState, viewModel: RecordsViewModel) {
 private fun FilterContent(viewModel: RecordsViewModel) {
     val state = viewModel.filterState.collectAsState().value
     Column(modifier = Modifier.padding(16.dp)) {
-        CalendarFilter(viewModel)
+        CalendarFilter(state, viewModel)
 
         Row {
             Text(text = "Только сохраненные", modifier = Modifier.weight(1f))
@@ -95,13 +96,15 @@ private fun FilterContent(viewModel: RecordsViewModel) {
 }
 
 @Composable
-private fun CalendarFilter(viewModel: RecordsViewModel) {
+private fun CalendarFilter(state: RecordFilterUiModel, viewModel: RecordsViewModel) {
     Surface {
         val context = AmbientContext.current
         val calendar = remember {
             CalendarView(context).apply {
                 setOnDateChangeListener { _, year, month, dayOfMonth ->
-                    //TODO
+                    val date = LocalDate.of(year, month + 1, dayOfMonth)
+                    val newState = state.copy(date = date)
+                    viewModel.updateFilterModel(newState)
                 }
             }
         }
