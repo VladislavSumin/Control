@@ -14,10 +14,16 @@ class RecordsApiImpl(
     override suspend fun getFiltered(
         serverInfo: ServerInfo,
         onlyKeepForever: Boolean,
-        onlyNamed: Boolean
+        onlyNamed: Boolean,
+        startTime: Long?,
+        endTime: Long?,
+        reverse: Boolean
     ): List<CameraRecordDTO> = httpClient.get(serverInfo, "/api/v1/records") {
         parameter("only_keep_forever", onlyKeepForever)
         parameter("only_named", onlyNamed)
+        if (startTime != null) parameter("start_time", startTime)
+        if (endTime != null) parameter("start_time", endTime)
+        parameter("reverse", reverse)
     }
 
     override suspend fun delete(serverInfo: ServerInfo, id: Long) =
