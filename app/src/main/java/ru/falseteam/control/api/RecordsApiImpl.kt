@@ -22,7 +22,7 @@ class RecordsApiImpl(
         parameter("only_keep_forever", onlyKeepForever)
         parameter("only_named", onlyNamed)
         if (startTime != null) parameter("start_time", startTime)
-        if (endTime != null) parameter("start_time", endTime)
+        if (endTime != null) parameter("end_time", endTime)
         parameter("reverse", reverse)
     }
 

@@ -9,6 +9,8 @@ import ru.falseteam.control.domain.cams.CamsInteractor
 import ru.falseteam.control.domain.records.RecordsInteractor
 import java.text.SimpleDateFormat
 import java.time.LocalDate
+import java.time.ZoneId
+import java.time.ZoneOffset
 import java.util.*
 
 class RecordsViewModel(
@@ -71,6 +73,14 @@ class RecordsViewModel(
                 val records = recordsInteractor.getFiltered(
                     onlyKeepForever = recordFilterUiModel.isOnlySaved,
                     onlyNamed = recordFilterUiModel.isOnlyNamed,
+                    startTime = recordFilterUiModel.date
+                        .atStartOfDay(ZoneId.systemDefault())
+                        .toEpochSecond() * 1000,
+                    endTime = recordFilterUiModel.date
+                        .plusDays(1)
+                        .atStartOfDay(ZoneId.systemDefault())
+                        .toEpochSecond() * 1000,
+                    reverse = true,
                 )
                     .map { record ->
                         val camera = cams.find { it.id == record.cameraId }

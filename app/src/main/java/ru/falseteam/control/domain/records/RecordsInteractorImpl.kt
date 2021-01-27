@@ -18,12 +18,18 @@ class RecordsInteractorImpl(
 
     override suspend fun getFiltered(
         onlyKeepForever: Boolean,
-        onlyNamed: Boolean
+        onlyNamed: Boolean,
+        startTime: Long?,
+        endTime: Long?,
+        reverse: Boolean
     ): List<CameraRecordDTO> =
         recordsApi.getFiltered(
             serversInteractor.getPrimaryServer(),
             onlyKeepForever,
-            onlyNamed
+            onlyNamed,
+            startTime,
+            endTime,
+            reverse
         )
 
     override suspend fun delete(id: Long) =
