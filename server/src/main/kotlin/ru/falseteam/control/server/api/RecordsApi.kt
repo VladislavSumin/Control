@@ -24,9 +24,12 @@ class RecordsApi(
             } else {
                 val onlyKeepForever = call.parameters["only_keep_forever"]?.toBoolean() ?: false
                 val onlyNamed = call.parameters["only_named"]?.toBoolean() ?: false
+                val startTime = call.parameters["start_time"]?.toLong()
+                val endTime = call.parameters["end_time"]?.toLong()
+                val reverse = call.parameters["reverse"]?.toBoolean() ?: false
                 call.respond(
                     recordsInteractor.getFiltered(
-                        onlyKeepForever, onlyNamed
+                        onlyKeepForever, onlyNamed, startTime, endTime, reverse
                     )
                 )
             }

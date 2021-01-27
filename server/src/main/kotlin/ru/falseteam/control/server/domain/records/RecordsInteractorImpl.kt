@@ -50,12 +50,18 @@ class RecordsInteractorImpl(
     // TODO make custom sql request
     override suspend fun getFiltered(
         onlyKeepForever: Boolean,
-        onlyNamed: Boolean
+        onlyNamed: Boolean,
+        startTime: Long?,
+        endTime: Long?,
+        reverse: Boolean
     ): List<CameraRecordDTO> {
         return getAll().asSequence()
             .filter { !onlyKeepForever || it.keepForever }
             .filter { !onlyNamed || (it.name != null && it.name!!.isNotEmpty()) }
+            .filter { startTime == null || startTime < it.timestamp }
+            .filter { endTime == null || endTime >= it.timestamp }
             .toList()
+            .let { if (reverse) it.reversed() else it }
     }
 
     override suspend fun getById(id: Long): CameraRecordDTO? = withContext(Dispatchers.IO) {

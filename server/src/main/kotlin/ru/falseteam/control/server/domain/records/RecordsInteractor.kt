@@ -12,6 +12,9 @@ interface RecordsInteractor {
     suspend fun getFiltered(
         onlyKeepForever: Boolean = false,
         onlyNamed: Boolean = false,
+        startTime: Long? = null,
+        endTime: Long? = null,
+        reverse: Boolean = false,
     ): List<CameraRecordDTO>
 
     suspend fun delete(id: Long)
