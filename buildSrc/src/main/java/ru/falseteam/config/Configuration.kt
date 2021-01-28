@@ -2,7 +2,7 @@ package ru.falseteam.config
 
 object Configuration {
     object Versions {
-        const val kotlin = "1.4.21-2"
+        const val kotlin = "1.4.21"
         const val ktor = "1.5.0"
         const val log4j2 = "2.14.0"
         const val kodein = "7.2.0"
