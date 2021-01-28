@@ -70,13 +70,14 @@ val Kodein = DI.lazy {
         }
     }
     bind<RSubClient>() with singleton {
-        val serversInteractor = instance<ServersInteractor>()
         //TODO rewrite to factory
         runBlocking {
+            val server = instance<ServersInteractor>().getPrimaryServer()
             RSubClient(
                 RSubConnectorKtorWebSocket(
                     instance(),
-                    host = serversInteractor.getPrimaryServer().host
+                    host = server.host,
+                    port = server.port,
                 )
             )
         }
