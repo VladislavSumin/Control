@@ -42,6 +42,7 @@ dependencies {
 
         implementation(kodein)
         implementation(setting)
+        implementation(sentry)
     }
     with(Dependencies.Logging) {
         implementation(log4j2Api)

@@ -24,7 +24,8 @@ class App : Application(), DIAware {
         super.onCreate()
         instace = this
 
-        //TODO move to separate file when add agreements
+        // TODO move to separate file when add agreements
+        // TODO enable only for release build
         SentryAndroid.init(this) { options ->
             options.dsn =
                 "https://2ae3234221634ad9946c044617848430@o512687.ingest.sentry.io/5613349"

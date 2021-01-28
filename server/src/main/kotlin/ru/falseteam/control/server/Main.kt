@@ -7,6 +7,7 @@ import io.ktor.serialization.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import io.ktor.websocket.*
+import io.sentry.Sentry
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.launch
@@ -26,6 +27,12 @@ import ru.falseteam.rsub.server.RSubServer
 fun main(args: Array<String>) {
     val log = LoggerFactory.getLogger("control.main")
     log.info("Starting server")
+
+    // TODO move to separate class when add agreements
+    // TODO enable only for release builds
+    Sentry.init {
+        it.dsn = "https://0f84ed22e45a48dc984fe16c30eaa058@o512687.ingest.sentry.io/5613399"
+    }
 
     // TODO add debug flag
     System.setProperty("kotlinx.coroutines.debug", if (true) "on" else "off")
