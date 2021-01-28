@@ -28,6 +28,8 @@ object Configuration {
         const val kodein = "org.kodein.di:kodein-di:${Versions.kodein}"
         const val kodeinAndroidX = "org.kodein.di:kodein-di-framework-android-x:${Versions.kodein}"
 
+        const val sentryAndroid = "io.sentry:sentry-android:3.1.0"
+
         object Logging {
             const val log4j2Api = "org.apache.logging.log4j:log4j-api:${Versions.log4j2}"
             const val log4j2Core = "org.apache.logging.log4j:log4j-core:${Versions.log4j2}"

@@ -2,6 +2,7 @@ package ru.falseteam.control
 
 import android.app.Application
 import android.content.Context
+import io.sentry.android.core.SentryAndroid
 import org.kodein.di.DI
 import org.kodein.di.DIAware
 import ru.falseteam.control.di.Kodein
@@ -22,5 +23,11 @@ class App : Application(), DIAware {
     override fun onCreate() {
         super.onCreate()
         instace = this
+
+        //TODO move to separate file when add agreements
+        SentryAndroid.init(this) { options ->
+            options.dsn =
+                "https://2ae3234221634ad9946c044617848430@o512687.ingest.sentry.io/5613349"
+        }
     }
 }

@@ -94,6 +94,7 @@ dependencies {
         implementation(ktorClient)
         implementation(ktorClientSerialization)
         implementation(setting)
+        implementation(sentryAndroid)
     }
 
     with(Configuration.Dependencies.Logging) {
