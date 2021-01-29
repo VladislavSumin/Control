@@ -17,6 +17,8 @@ import ru.falseteam.control.server.domain.cams.CamsInteractor
 import ru.falseteam.control.server.domain.cams.CamsInteractorImpl
 import ru.falseteam.control.server.domain.configuration.ConfigurationInteractor
 import ru.falseteam.control.server.domain.configuration.ConfigurationInteractorImpl
+import ru.falseteam.control.server.domain.debug.DebugInteractor
+import ru.falseteam.control.server.domain.debug.DebugInteractorImpl
 import ru.falseteam.control.server.domain.records.RecordsInteractor
 import ru.falseteam.control.server.domain.records.RecordsInteractorImpl
 import ru.falseteam.control.server.domain.videoencoder.VideoEncodeInteractor
@@ -55,6 +57,7 @@ val Kodein = DI {
     }
     bind<VideoEncodeInteractor>() with singleton { VideoEncodeInteractorImpl() }
     bind<ConfigurationInteractor>() with singleton { ConfigurationInteractorImpl(instance()) }
+    bind<DebugInteractor>() with singleton { DebugInteractorImpl(instance()) }
 
     // Api
     bind<CamsApi>() with singleton { CamsApi(instance(), instance()) }

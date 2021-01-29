@@ -21,6 +21,7 @@ import ru.falseteam.control.server.api.Api
 import ru.falseteam.control.server.di.Kodein
 import ru.falseteam.control.server.domain.cams.CamsConnectionInteractor
 import ru.falseteam.control.server.domain.configuration.ConfigurationInteractor
+import ru.falseteam.control.server.domain.debug.DebugInteractor
 import ru.falseteam.control.server.repository.ServerConfigurationRepository
 import ru.falseteam.rsub.connector.ktorwebsocket.server.rSubWebSocket
 import ru.falseteam.rsub.server.RSubServer
@@ -31,8 +32,9 @@ fun main(args: Array<String>) {
     log.info("Server version: ${BuildConfig.version}")
 
     val configuration = Kodein.direct.instance<ConfigurationInteractor>()
-
-    log.info("Server debug: ${configuration.isDebug}")
+    val debugger = Kodein.direct.instance<DebugInteractor>()
+    debugger.configure()
+    GlobalScope.launch { debugger.run() }
 
     if (!configuration.isDebug) {
         log.info("Start Sentry")
@@ -40,8 +42,6 @@ fun main(args: Array<String>) {
             it.dsn = "https://0f84ed22e45a48dc984fe16c30eaa058@o512687.ingest.sentry.io/5613399"
         }
     }
-
-    System.setProperty("kotlinx.coroutines.debug", if (configuration.isDebug) "on" else "off")
 
     val port = Kodein.direct.instance<ServerConfigurationRepository>().port
     val apis: List<Api> by Kodein.allInstances()

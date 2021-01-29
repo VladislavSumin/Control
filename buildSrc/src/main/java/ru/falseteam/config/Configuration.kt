@@ -9,6 +9,7 @@ object Configuration {
         const val sqldelight = "1.4.4"
         const val sentry = "4.0.0"
         const val compose = "1.0.0-alpha11"
+        const val coroutines = "1.4.2"
     }
 
     object Dependencies {
@@ -16,7 +17,10 @@ object Configuration {
             const val plugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlin}"
             const val stdLibJdk8 = "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${Versions.kotlin}"
             const val reflect = "org.jetbrains.kotlin:kotlin-reflect:${Versions.kotlin}"
-            const val coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2"
+            const val coroutines =
+                "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.coroutines}"
+            const val coroutinesDebug =
+                "org.jetbrains.kotlinx:kotlinx-coroutines-debug:${Versions.coroutines}"
             const val serialization = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.0.1"
         }
 

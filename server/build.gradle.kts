@@ -47,6 +47,7 @@ dependencies {
     with(Dependencies.Kotlin) {
         implementation(stdLibJdk8)
         implementation(reflect)
+        implementation(coroutinesDebug)
     }
     with(Dependencies) {
         implementation(ktorServer)
