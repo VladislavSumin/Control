@@ -17,7 +17,6 @@ import org.slf4j.LoggerFactory
 import ru.falseteam.control.server.api.Api
 import ru.falseteam.control.server.di.Kodein
 import ru.falseteam.control.server.domain.cams.CamsConnectionInteractor
-import ru.falseteam.control.server.domain.configuration.ConfigurationInteractor
 import ru.falseteam.control.server.domain.debug.DebugInteractor
 import ru.falseteam.control.server.repository.ServerConfigurationRepository
 import ru.falseteam.rsub.connector.ktorwebsocket.server.rSubWebSocket
@@ -28,12 +27,12 @@ fun main(args: Array<String>) {
     log.info("Starting server")
     log.info("Server version: ${BuildConfig.version}")
 
-    val configuration = Kodein.direct.instance<ConfigurationInteractor>()
     val debugger = Kodein.direct.instance<DebugInteractor>()
     debugger.configure()
     GlobalScope.launch { debugger.run() }
 
-    if (!configuration.isDebug) {
+    // don`t check properties, only build config
+    if (!BuildConfig.DEBUG) {
         log.info("Start Sentry")
         Sentry.init {
             it.dsn = "https://0f84ed22e45a48dc984fe16c30eaa058@o512687.ingest.sentry.io/5613399"
@@ -56,6 +55,7 @@ fun main(args: Array<String>) {
         }
     }
 
+    // TODO coroutine naming
     val rootJob = GlobalScope.launch(CoroutineName("cams_connection_interactor")) {
         launch { camsConnectionInteractor.processConnections() }
     }
