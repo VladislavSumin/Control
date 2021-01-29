@@ -8,6 +8,7 @@ plugins {
     kotlin("plugin.serialization") version ru.falseteam.config.Configuration.Versions.kotlin
     id("com.squareup.sqldelight")
     id("com.github.johnrengelman.shadow")
+    id("com.github.gmazzo.buildconfig")
 }
 
 java {
@@ -17,13 +18,25 @@ java {
 
 project.setProperty("mainClassName", "ru.falseteam.control.server.MainKt")
 
+val pIsBuildAgent: String by project
+val pBaseVersionName: String by project
+val pBuildNumber: String by project
+
 group = "ru.falseteam.control.server"
-version = "0.1.0"
+version = "$pBaseVersionName.$pBuildNumber"
 
 sqldelight {
     database("Database") {
         packageName = "ru.falseteam.control.server.database"
     }
+}
+
+buildConfig {
+    className = "BuildConfig"
+    packageName = "ru.falseteam.control.server"
+    buildConfigField("String", "version", "\"$version\"")
+    buildConfigField("int", "buildNumber", pBuildNumber)
+    buildConfigField("boolean", "DEBUG", pIsBuildAgent.toBoolean().not().toString())
 }
 
 dependencies {

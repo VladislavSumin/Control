@@ -12,6 +12,7 @@ buildscript {
         classpath(ru.falseteam.config.Configuration.Dependencies.Kotlin.plugin)
         classpath(ru.falseteam.config.Configuration.Dependencies.Sqldelight.plugin)
         classpath("com.github.jengelman.gradle.plugins:shadow:6.1.0")
+        classpath("com.github.gmazzo:gradle-buildconfig-plugin:2.0.2")
     }
 }
 
