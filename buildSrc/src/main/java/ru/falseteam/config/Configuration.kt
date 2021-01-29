@@ -7,6 +7,8 @@ object Configuration {
         const val log4j2 = "2.14.0"
         const val kodein = "7.2.0"
         const val sqldelight = "1.4.4"
+        const val sentry = "4.0.0"
+        const val compose = "1.0.0-alpha10"
     }
 
     object Dependencies {
@@ -28,8 +30,10 @@ object Configuration {
         const val kodein = "org.kodein.di:kodein-di:${Versions.kodein}"
         const val kodeinAndroidX = "org.kodein.di:kodein-di-framework-android-x:${Versions.kodein}"
 
-        const val sentryAndroid = "io.sentry:sentry-android:3.1.0"
-        const val sentry = "io.sentry:sentry:4.0.0"
+        const val sentryAndroid = "io.sentry:sentry-android:${Versions.sentry}"
+        const val sentry = "io.sentry:sentry:${Versions.sentry}"
+
+        const val exoplayer = "com.google.android.exoplayer:exoplayer:2.12.3"
 
         object Logging {
             const val log4j2Api = "org.apache.logging.log4j:log4j-api:${Versions.log4j2}"
@@ -44,6 +48,13 @@ object Configuration {
             const val sqliteDriver = "com.squareup.sqldelight:sqlite-driver:${Versions.sqldelight}"
             const val coroutineExt =
                 "com.squareup.sqldelight:coroutines-extensions-jvm:${Versions.sqldelight}"
+        }
+
+        object Compose {
+            const val ui = "androidx.compose.ui:ui:${Versions.compose}"
+            const val material = "androidx.compose.material:material:${Versions.compose}"
+            const val uiTooling = "androidx.compose.ui:ui-tooling:${Versions.compose}"
+            const val navigation = "androidx.navigation:navigation-compose:1.0.0-alpha05"
         }
 
         const val setting = "com.russhwolf:multiplatform-settings:0.7"
