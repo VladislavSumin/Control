@@ -15,6 +15,8 @@ import ru.falseteam.control.api.RecordsApiImpl
 import ru.falseteam.control.api.rsub.CamsRSub
 import ru.falseteam.control.api.rsub.CamsRecordRSub
 import ru.falseteam.control.api.rsub.CamsStatusRSub
+import ru.falseteam.control.domain.analytic.AnalyticInteractor
+import ru.falseteam.control.domain.analytic.AnalyticInteractorImpl
 import ru.falseteam.control.domain.cams.CamsInteractor
 import ru.falseteam.control.domain.cams.CamsInteractorImpl
 import ru.falseteam.control.domain.records.RecordsInteractor
@@ -42,6 +44,7 @@ val Kodein = DI.lazy {
     bind<ServersRepository>() with singleton { ServerRepositoryImpl(instance()) }
 
     // Domain
+    bind<AnalyticInteractor>() with singleton { AnalyticInteractorImpl(instance()) }
     bind<CamsInteractor>() with singleton {
         CamsInteractorImpl(instance(), instance(), instance(), instance())
     }
@@ -70,7 +73,7 @@ val Kodein = DI.lazy {
         }
     }
     bind<RSubClient>() with singleton {
-        //TODO rewrite to factory
+        // TODO rewrite to factory
         runBlocking {
             val server = instance<ServersInteractor>().getPrimaryServer()
             RSubClient(

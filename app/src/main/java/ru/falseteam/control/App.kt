@@ -2,10 +2,15 @@ package ru.falseteam.control
 
 import android.app.Application
 import android.content.Context
-import io.sentry.android.core.SentryAndroid
+import android.util.Log
 import org.kodein.di.DI
 import org.kodein.di.DIAware
+import org.kodein.di.direct
+import org.kodein.di.instance
 import ru.falseteam.control.di.Kodein
+import ru.falseteam.control.domain.analytic.AnalyticInteractor
+
+private const val TAG = "App"
 
 class App : Application(), DIAware {
     companion object {
@@ -16,19 +21,16 @@ class App : Application(), DIAware {
     override val di: DI by Kodein
 
     override fun attachBaseContext(base: Context?) {
+        Log.i(TAG, "attachBaseContext()")
         System.setProperty("kotlinx.coroutines.debug", if (BuildConfig.DEBUG) "on" else "off")
         super.attachBaseContext(base)
     }
 
     override fun onCreate() {
         super.onCreate()
+        Log.i(TAG, "onCreate()")
         instace = this
 
-        // TODO move to separate file when add agreements
-        // TODO enable only for release build
-        SentryAndroid.init(this) { options ->
-            options.dsn =
-                "https://2ae3234221634ad9946c044617848430@o512687.ingest.sentry.io/5613349"
-        }
+        direct.instance<AnalyticInteractor>().init()
     }
 }

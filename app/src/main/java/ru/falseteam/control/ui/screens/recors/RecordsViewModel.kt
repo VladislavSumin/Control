@@ -8,9 +8,7 @@ import kotlinx.coroutines.launch
 import ru.falseteam.control.domain.cams.CamsInteractor
 import ru.falseteam.control.domain.records.RecordsInteractor
 import java.text.SimpleDateFormat
-import java.time.LocalDate
 import java.time.ZoneId
-import java.time.ZoneOffset
 import java.util.*
 
 class RecordsViewModel(
