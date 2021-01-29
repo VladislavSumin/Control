@@ -17,4 +17,5 @@ class ServerConfigurationRepositoryImpl : ServerConfigurationRepository {
     override val recordsTmpPath: String by settings.string("recordsTmpPath", "data/recordsTmp")
     override val port: Int by settings.int("port", 8080)
     override val debug: Boolean? by settings.nullableBoolean("debug")
+    override val fullDebug: Boolean by settings.boolean("fullDebug", false)
 }
