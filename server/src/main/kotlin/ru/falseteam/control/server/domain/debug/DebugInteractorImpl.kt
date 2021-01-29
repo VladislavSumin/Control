@@ -23,8 +23,8 @@ class DebugInteractorImpl(
     }
 
     override suspend fun run() = withContext(CoroutineName("debugger_dumper")) {
+        delay(10_000)
         while (true) {
-            delay(10_000)
             val coroutines = DebugProbes.dumpCoroutinesInfo()
             val suspended = coroutines.count { it.state == State.SUSPENDED }
             val running = coroutines.count { it.state == State.RUNNING }
@@ -36,6 +36,7 @@ class DebugInteractorImpl(
                 "\n\t", prefix = "Coroutines dump: \n\t"
             )
             log.trace(dump)
+            delay(600_000)
         }
     }
 }

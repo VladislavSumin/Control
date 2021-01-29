@@ -8,10 +8,7 @@ import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import io.ktor.websocket.*
 import io.sentry.Sentry
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.cancelAndJoin
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.*
 import org.apache.logging.log4j.LogManager
 import org.kodein.di.allInstances
 import org.kodein.di.direct
@@ -59,12 +56,12 @@ fun main(args: Array<String>) {
         }
     }
 
-    val rootJob = GlobalScope.launch {
+    val rootJob = GlobalScope.launch(CoroutineName("cams_connection_interactor")) {
         launch { camsConnectionInteractor.processConnections() }
     }
 
     server.addShutdownHook {
-        runBlocking {
+        runBlocking(CoroutineName("server_shutdown")) {
             log.info("Shutdown hook received")
             rootJob.cancelAndJoin()
             log.info("Server stopped")

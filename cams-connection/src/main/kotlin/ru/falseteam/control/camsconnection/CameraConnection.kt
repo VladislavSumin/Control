@@ -1,7 +1,9 @@
 package ru.falseteam.control.camsconnection
 
+import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.plus
 import ru.falseteam.control.camsconnection.protocol.CommandCode
 import ru.falseteam.control.camsconnection.protocol.CommandRepository
 
@@ -15,9 +17,13 @@ class CameraConnection(private val address: String, private val port: Int) :
                 CameraConnectionState.Connected(setupMovementEvent(it))
             } else it
         }
-            .shareIn(GlobalScope, SharingStarted.WhileSubscribed(replayExpirationMillis = 0), 1)
+            .shareIn(
+                GlobalScope + CoroutineName("camera_connection_${address}_$port"),
+                SharingStarted.WhileSubscribed(replayExpirationMillis = 0),
+                1
+            )
 
-    public val videoObservable: Flow<ByteArray> = cameraVideoConnection.observeVideoStream
+    val videoObservable: Flow<ByteArray> = cameraVideoConnection.observeVideoStream
 
     private fun setupMovementEvent(
         state: CameraConnectionState.AbstractConnected,
@@ -28,5 +34,9 @@ class CameraConnection(private val address: String, private val port: Int) :
             log.debug("Requesting movement event from $address:$port")
             state.send(CommandRepository.alarmStart(state.sessionId))
         }
-        .shareIn(state.connectionScope, SharingStarted.Lazily)
+        .shareIn(
+            state.connectionScope +
+                    CoroutineName("camera_connection_${address}_${port}_movement_event"),
+            SharingStarted.Lazily
+        )
 }

@@ -1,7 +1,9 @@
 package ru.falseteam.control.camsconnection
 
+import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.plus
 import ru.falseteam.control.camsconnection.protocol.CommandCode
 import ru.falseteam.control.camsconnection.protocol.CommandRepository
 
@@ -19,7 +21,10 @@ internal class CameraVideoConnection(private val address: String, private val po
         }
             .map { it as CameraConnectionState.AbstractConnected }
             .flatMapLatest { setupVideoEvent(it) }
-            .shareIn(GlobalScope, SharingStarted.WhileSubscribed(replayExpirationMillis = 0))
+            .shareIn(
+                GlobalScope + CoroutineName("camera_video_connection_${address}_$port"),
+                SharingStarted.WhileSubscribed(replayExpirationMillis = 0)
+            )
 
     private fun setupVideoEvent(
         state: CameraConnectionState.AbstractConnected,
