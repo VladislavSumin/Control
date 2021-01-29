@@ -2,13 +2,13 @@ package ru.falseteam.config
 
 object Configuration {
     object Versions {
-        const val kotlin = "1.4.21"
+        const val kotlin = "1.4.21-2"
         const val ktor = "1.5.1"
         const val log4j2 = "2.14.0"
         const val kodein = "7.2.0"
         const val sqldelight = "1.4.4"
         const val sentry = "4.0.0"
-        const val compose = "1.0.0-alpha10"
+        const val compose = "1.0.0-alpha11"
     }
 
     object Dependencies {
@@ -54,7 +54,7 @@ object Configuration {
             const val ui = "androidx.compose.ui:ui:${Versions.compose}"
             const val material = "androidx.compose.material:material:${Versions.compose}"
             const val uiTooling = "androidx.compose.ui:ui-tooling:${Versions.compose}"
-            const val navigation = "androidx.navigation:navigation-compose:1.0.0-alpha05"
+            const val navigation = "androidx.navigation:navigation-compose:1.0.0-alpha06"
         }
 
         const val setting = "com.russhwolf:multiplatform-settings:0.7"

@@ -74,7 +74,7 @@ private fun Navigation(navController: NavController, navItems: List<NavItem>) {
         BottomNavigation(backgroundColor = MaterialTheme.colors.surface, elevation = 12.dp) {
             navItems.forEach { navItem ->
                 BottomNavigationItem(
-                    icon = { Icon(vectorResource(id = navItem.icon)) },
+                    icon = { Icon(vectorResource(id = navItem.icon), null) },
                     label = { Text(navItem.name) },
                     selected = currentRoute == navItem.screen.path,
                     onClick = {

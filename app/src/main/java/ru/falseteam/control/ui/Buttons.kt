@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.CombinedModifier
 import androidx.compose.ui.Modifier
@@ -63,13 +64,17 @@ private fun ButtonInternal(
 
         // No change button colors to disabled if status in progress
         colors = object : ButtonColors {
-            val colors = ButtonDefaults.buttonColors()
+            private val colors = ButtonDefaults.buttonColors()
 
-            override fun backgroundColor(enabled: Boolean): Color =
-                colors.backgroundColor(enabledGlobal)
+            @Composable
+            override fun backgroundColor(enabled: Boolean): State<Color> {
+                return colors.backgroundColor(enabled = enabledGlobal)
+            }
 
-            override fun contentColor(enabled: Boolean) =
-                colors.contentColor(enabledGlobal)
+            @Composable
+            override fun contentColor(enabled: Boolean): State<Color> {
+                return colors.contentColor(enabled = enabledGlobal)
+            }
         }
 
     ) {

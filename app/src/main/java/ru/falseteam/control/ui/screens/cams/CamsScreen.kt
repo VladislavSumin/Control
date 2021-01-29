@@ -29,7 +29,7 @@ fun CamsScreen(viewModel: CamsViewModel = kodeinViewModel()) {
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(onClick = { navigation.navigate(Screen.AddCamera) }) {
-                Image(vectorResource(id = R.drawable.ic_add))
+                Image(vectorResource(id = R.drawable.ic_add), "add camera")
             }
         },
     ) {

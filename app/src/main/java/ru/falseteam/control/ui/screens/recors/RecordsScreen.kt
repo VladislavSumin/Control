@@ -6,6 +6,7 @@ import android.util.AttributeSet
 import android.widget.CalendarView
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -60,13 +61,13 @@ private fun TopBar(scaffoldState: ScaffoldState, viewModel: RecordsViewModel) {
             modifier = Modifier.align(Alignment.CenterVertically),
             onClick = { scaffoldState.drawerState.open() }
         ) {
-            Icon(vectorResource(id = R.drawable.ic_filter))
+            Icon(vectorResource(id = R.drawable.ic_filter), "filter")
         }
         IconButton(
             modifier = Modifier.align(Alignment.CenterVertically),
             onClick = { viewModel.forceUpdate() }
         ) {
-            Icon(vectorResource(id = R.drawable.ic_refresh))
+            Icon(vectorResource(id = R.drawable.ic_refresh), "refresh")
         }
     }
 }
@@ -195,7 +196,7 @@ private fun RecordCard(
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 IconButton(onClick = { /*TODO*/ }) {
-                    Icon(vectorResource(id = R.drawable.ic_edit))
+                    Icon(vectorResource(id = R.drawable.ic_edit), "rename")
                 }
             }
 
@@ -215,14 +216,14 @@ private fun RecordCard(
             Row {
                 IconButton(onClick = { viewModel.setKeepForever(record) }) {
                     if (record.keepForever) Icon(
-                        vectorResource(id = R.drawable.ic_star_filled),
+                        vectorResource(id = R.drawable.ic_star_filled), "start set",
                         tint = Color.Unspecified
                     )
-                    else Icon(vectorResource(id = R.drawable.ic_star))
+                    else Icon(vectorResource(id = R.drawable.ic_star), "start not set")
                 }
                 Spacer(modifier = Modifier.weight(1f))
                 IconButton(onClick = { viewModel.deleteRecord(record.id) }) {
-                    Icon(vectorResource(id = R.drawable.ic_delete), tint = red900)
+                    Icon(vectorResource(id = R.drawable.ic_delete), "delete", tint = red900)
                 }
             }
         }
