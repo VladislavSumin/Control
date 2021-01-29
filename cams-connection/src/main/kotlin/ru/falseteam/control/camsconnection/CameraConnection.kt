@@ -1,5 +1,6 @@
 package ru.falseteam.control.camsconnection
 
+import io.ktor.network.selector.*
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.*
@@ -7,9 +8,13 @@ import kotlinx.coroutines.plus
 import ru.falseteam.control.camsconnection.protocol.CommandCode
 import ru.falseteam.control.camsconnection.protocol.CommandRepository
 
-class CameraConnection(private val address: String, private val port: Int) :
-    AbstractCameraConnection(address, port) {
-    private val cameraVideoConnection by lazy { CameraVideoConnection(address, port) }
+class CameraConnection(
+    private val selector: SelectorManager,
+    private val address: String,
+    private val port: Int
+) :
+    AbstractCameraConnection(selector, address, port) {
+    private val cameraVideoConnection by lazy { CameraVideoConnection(selector, address, port) }
 
     public override val connectionObservable: Flow<CameraConnectionState>
         get() = super.connectionObservable.map {

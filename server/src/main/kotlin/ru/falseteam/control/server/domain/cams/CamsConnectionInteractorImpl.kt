@@ -1,5 +1,6 @@
 package ru.falseteam.control.server.domain.cams
 
+import io.ktor.network.selector.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import org.slf4j.LoggerFactory
@@ -19,10 +20,19 @@ class CamsConnectionInteractorImpl(
     private val recordsInteractor: RecordsInteractor,
 ) : CamsConnectionInteractor {
     private val log = LoggerFactory.getLogger("controls.cams")
+    private val selectorManager: SelectorManager = ActorSelectorManager(Dispatchers.IO)
 
     private val cameraConnectionsObservable: Flow<Map<CameraDTO, CameraConnection>> =
         camsInteractor.observeAll()
-            .map { cams -> cams.associateWith { CameraConnection(it.address, it.port) } }
+            .map { cams ->
+                cams.associateWith {
+                    CameraConnection(
+                        selectorManager,
+                        it.address,
+                        it.port
+                    )
+                }
+            }
             .shareIn(GlobalScope, SharingStarted.WhileSubscribed(replayExpirationMillis = 0), 1)
 
     private val cameraStatusObservable =

@@ -20,6 +20,7 @@ import java.nio.ByteOrder
 import java.util.concurrent.CancellationException
 
 open class AbstractCameraConnection(
+    private val selector: SelectorManager,
     private val address: String,
     private val port: Int,
     private val reconnectInterval: Long = 5000
@@ -116,7 +117,7 @@ open class AbstractCameraConnection(
 
     private suspend fun connect(): Socket {
         log.trace("Connecting to $address:$port")
-        val socket = aSocket(ActorSelectorManager(Dispatchers.IO))
+        val socket = aSocket(selector)
             .tcp()
             .connect(InetSocketAddress(address, port))
         log.trace("Connection with $address:$port established")
