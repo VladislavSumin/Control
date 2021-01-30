@@ -86,6 +86,7 @@ android.applicationVariants.all variant@{
 
 dependencies {
     implementation(project(":api"))
+    implementation(project(":uikit"))
     implementation("ru.falseteam.rsub:rsub-ktor-websocket-connector-client")
 
     with(Configuration.Dependencies) {
