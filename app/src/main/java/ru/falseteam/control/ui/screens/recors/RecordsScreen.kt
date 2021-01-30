@@ -30,6 +30,7 @@ import com.google.android.exoplayer2.util.Util
 import ru.falseteam.control.R
 import ru.falseteam.control.di.kodeinViewModel
 import ru.falseteam.uikit.elements.UiKitPrimaryButton
+import ru.falseteam.uikit.elements.UikitCheckBoxListItem
 import ru.falseteam.uikit.red900
 import java.time.LocalDate
 
@@ -74,24 +75,23 @@ private fun TopBar(scaffoldState: ScaffoldState, viewModel: RecordsViewModel) {
 @Composable
 private fun FilterContent(viewModel: RecordsViewModel) {
     val state = viewModel.filterState.collectAsState().value
-    Column(modifier = Modifier.padding(16.dp)) {
+    Column {
         CalendarFilter(state, viewModel)
+        Divider()
 
-        Row {
-            Text(text = "Только сохраненные", modifier = Modifier.weight(1f))
-            Checkbox(
-                checked = state.isOnlySaved,
-                onCheckedChange = { viewModel.updateFilterModel(state.copy(isOnlySaved = !state.isOnlySaved)) }
-            )
-        }
+        UikitCheckBoxListItem(
+            text = "Только сохраненные",
+            checked = state.isOnlySaved,
+            onCheckedChange = { viewModel.updateFilterModel(state.copy(isOnlySaved = !state.isOnlySaved)) }
+        )
+        Divider()
 
-        Row {
-            Text(text = "Только c именем", modifier = Modifier.weight(1f))
-            Checkbox(
-                checked = state.isOnlyNamed,
-                onCheckedChange = { viewModel.updateFilterModel(state.copy(isOnlyNamed = !state.isOnlyNamed)) }
-            )
-        }
+        UikitCheckBoxListItem(
+            text = "Только c именем",
+            checked = state.isOnlyNamed,
+            onCheckedChange = { viewModel.updateFilterModel(state.copy(isOnlyNamed = !state.isOnlyNamed)) }
+        )
+        Divider()
     }
 }
 
