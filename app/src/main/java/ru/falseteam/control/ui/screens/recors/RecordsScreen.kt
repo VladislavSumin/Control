@@ -19,6 +19,7 @@ import androidx.compose.ui.platform.AmbientContext
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.compose.ui.window.Dialog
 import androidx.core.util.Pools
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.SimpleExoPlayer
@@ -154,7 +155,41 @@ private fun ErrorScreen(state: RecordsState.Error, viewModel: RecordsViewModel) 
 
 @Composable
 private fun ShowResultScreen(state: RecordsState.ShowResult, viewModel: RecordsViewModel) {
+    // ChangeNameDialog()
     RecordsList(state.records, viewModel)
+}
+
+@Composable
+private fun ChangeNameDialog() {
+    Dialog(
+        onDismissRequest = { /*TODO*/ },
+    ) {
+        Surface(
+            shape = MaterialTheme.shapes.medium
+        ) {
+            Column(modifier = Modifier.padding(16.dp, 16.dp)) {
+                Text(text = "Имя записи", style = MaterialTheme.typography.h6)
+                Spacer(modifier = Modifier.height(16.dp))
+                TextField(
+                    value = "",
+                    onValueChange = { /*TODO*/ },
+                    modifier = Modifier.fillMaxWidth(),
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                Row(
+                    horizontalArrangement = Arrangement.End,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    OutlinedButton(onClick = { /*TODO*/ }) {
+                        Text(text = "Cancel")
+                    }
+                    Spacer(modifier = Modifier.width(16.dp))
+                    UiKitPrimaryButton(onClick = { /*TODO*/ }, text = "Save")
+                }
+
+            }
+        }
+    }
 }
 
 @Composable
