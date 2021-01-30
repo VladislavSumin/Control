@@ -12,6 +12,13 @@ object Configuration {
         const val coroutines = "1.4.2"
     }
 
+    object Android {
+        const val compileSdkVersion = 30
+        const val buildToolsVersion = "30.0.3"
+        const val minSdkVersion = 26
+        const val targetSdkVersion = 30
+    }
+
     object Dependencies {
         object Kotlin {
             const val plugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.kotlin}"
