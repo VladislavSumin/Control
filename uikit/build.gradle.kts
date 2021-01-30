@@ -1,10 +1,14 @@
+import ru.falseteam.config.Configuration
+
 plugins {
     id("com.android.library")
     kotlin("android")
 }
+
 val pIsBuildAgent: String by project
 val pBaseVersionName: String by project
 val pBuildNumber: String by project
+
 android {
     compileSdkVersion(30)
     buildToolsVersion = "30.0.3"
@@ -39,10 +43,14 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = ru.falseteam.config.Configuration.Versions.compose
+        kotlinCompilerExtensionVersion = Configuration.Versions.compose
     }
 }
 
 dependencies {
-
+    with(Configuration.Dependencies.Compose) {
+        api(ui)
+        api(material)
+        api(uiTooling)
+    }
 }

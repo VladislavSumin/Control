@@ -1,4 +1,4 @@
-package ru.falseteam.control.ui
+package ru.falseteam.uikit
 
 import androidx.compose.ui.graphics.Color
 

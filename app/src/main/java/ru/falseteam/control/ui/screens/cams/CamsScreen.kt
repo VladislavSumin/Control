@@ -14,8 +14,8 @@ import androidx.compose.ui.unit.dp
 import ru.falseteam.control.BuildConfig
 import ru.falseteam.control.R
 import ru.falseteam.control.di.kodeinViewModel
-import ru.falseteam.control.ui.green900
-import ru.falseteam.control.ui.red900
+import ru.falseteam.uikit.green900
+import ru.falseteam.uikit.red900
 import ru.falseteam.control.ui.screens.Screen
 import ru.falseteam.control.ui.screens.main.AmbientNavigation
 import ru.falseteam.control.ui.screens.navigate

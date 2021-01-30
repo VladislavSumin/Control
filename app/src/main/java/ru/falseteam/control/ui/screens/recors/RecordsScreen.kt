@@ -29,10 +29,9 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.Util
 import ru.falseteam.control.R
 import ru.falseteam.control.di.kodeinViewModel
-import ru.falseteam.control.ui.PrimaryButton
-import ru.falseteam.control.ui.red900
+import ru.falseteam.uikit.elements.UiKitPrimaryButton
+import ru.falseteam.uikit.red900
 import java.time.LocalDate
-import java.util.*
 
 @Composable
 fun RecordsScreen(viewModel: RecordsViewModel = kodeinViewModel()) {
@@ -142,7 +141,7 @@ private fun ErrorScreen(state: RecordsState.Error, viewModel: RecordsViewModel) 
                 text = "Ошибка: ${state.error}",
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             )
-            PrimaryButton(
+            UiKitPrimaryButton(
                 text = "Retry",
                 onClick = { viewModel.forceUpdate() },
                 modifier = Modifier

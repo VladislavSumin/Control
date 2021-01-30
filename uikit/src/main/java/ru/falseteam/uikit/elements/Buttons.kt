@@ -1,4 +1,4 @@
-package ru.falseteam.control.ui
+package ru.falseteam.uikit.elements
 
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
@@ -14,7 +14,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun PrimaryButton(
+fun UiKitPrimaryButton(
     onClick: () -> Unit,
     text: String,
     modifier: Modifier = Modifier,
@@ -22,25 +22,37 @@ fun PrimaryButton(
     enabled: Boolean = true,
 ) {
     ButtonInternal(
-        onClick, text, modifier, showProgress, enabled, 36.dp, 16.dp, MaterialTheme.shapes.small,
-
-        )
-}
-
-@Composable
-fun PrimaryAccentButton(
-    onClick: () -> Unit,
-    text: String,
-    modifier: Modifier = Modifier,
-    showProgress: Boolean = false,
-    enabled: Boolean = true,
-) {
-    ButtonInternal(
-        onClick, text, modifier, showProgress, enabled, 52.dp, 24.dp, MaterialTheme.shapes.medium,
+        onClick,
+        text,
+        modifier,
+        showProgress,
+        enabled,
+        36.dp,
+        16.dp,
+        MaterialTheme.shapes.small,
     )
 }
 
-@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun UiKitPrimaryAccentButton(
+    onClick: () -> Unit,
+    text: String,
+    modifier: Modifier = Modifier,
+    showProgress: Boolean = false,
+    enabled: Boolean = true,
+) {
+    ButtonInternal(
+        onClick,
+        text,
+        modifier,
+        showProgress,
+        enabled,
+        52.dp,
+        24.dp,
+        MaterialTheme.shapes.medium,
+    )
+}
+
 @Composable
 private fun ButtonInternal(
     onClick: () -> Unit,

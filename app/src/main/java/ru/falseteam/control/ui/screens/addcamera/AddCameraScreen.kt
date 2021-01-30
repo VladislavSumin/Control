@@ -12,7 +12,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import ru.falseteam.control.api.dto.CameraDTO
 import ru.falseteam.control.di.kodeinViewModel
-import ru.falseteam.control.ui.PrimaryAccentButton
+import ru.falseteam.uikit.elements.UiKitPrimaryAccentButton
 import ru.falseteam.control.ui.screens.main.AmbientNavigation
 
 @Composable
@@ -72,7 +72,7 @@ fun AddCameraScreen(
 
         Spacer(modifier = Modifier.weight(1f))
 
-        PrimaryAccentButton(
+        UiKitPrimaryAccentButton(
             onClick = {
                 viewModel.onClickAdd(
                     CameraDTO(

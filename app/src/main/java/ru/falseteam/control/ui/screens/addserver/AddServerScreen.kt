@@ -9,7 +9,7 @@ import androidx.compose.runtime.savedinstancestate.savedInstanceState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import ru.falseteam.control.di.kodeinViewModel
-import ru.falseteam.control.ui.PrimaryAccentButton
+import ru.falseteam.uikit.elements.UiKitPrimaryAccentButton
 import ru.falseteam.control.ui.screens.Screen
 import ru.falseteam.control.ui.screens.main.AmbientNavigation
 import ru.falseteam.control.ui.screens.navigate
@@ -48,7 +48,7 @@ private fun InputState(viewModel: AddServerViewModel) {
 
         Spacer(modifier = Modifier.weight(1f))
 
-        PrimaryAccentButton(
+        UiKitPrimaryAccentButton(
             onClick = {
                 viewModel.onClickEnter(url)
             },

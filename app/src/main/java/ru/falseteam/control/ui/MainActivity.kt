@@ -10,6 +10,7 @@ import org.kodein.di.instance
 import ru.falseteam.control.di.Kodein
 import ru.falseteam.control.domain.themes.ThemesInteractor
 import ru.falseteam.control.ui.screens.main.MainScreen
+import ru.falseteam.uikit.ControlTheme
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

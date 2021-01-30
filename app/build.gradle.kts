@@ -104,9 +104,6 @@ dependencies {
     }
 
     with(Configuration.Dependencies.Compose) {
-        implementation(ui)
-        implementation(material)
-        implementation(uiTooling)
         implementation(navigation)
     }
 
