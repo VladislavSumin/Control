@@ -4,15 +4,18 @@ import android.content.Context
 import android.net.Uri
 import android.util.AttributeSet
 import android.widget.CalendarView
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusModifier
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.AmbientContext
@@ -28,6 +31,7 @@ import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.exoplayer2.upstream.DataSource
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.Util
+import kotlinx.coroutines.runBlocking
 import ru.falseteam.control.R
 import ru.falseteam.control.di.kodeinViewModel
 import ru.falseteam.uikit.elements.UiKitPrimaryButton
@@ -47,6 +51,8 @@ fun RecordsScreen(viewModel: RecordsViewModel = kodeinViewModel()) {
 
 @Composable
 private fun Content(viewModel: RecordsViewModel) {
+    ChangeNameScreen(viewModel)
+
     when (val state = viewModel.state.collectAsState().value) {
         RecordsState.Loading -> LoadingScreen()
         is RecordsState.Error -> ErrorScreen(state, viewModel)
@@ -155,14 +161,20 @@ private fun ErrorScreen(state: RecordsState.Error, viewModel: RecordsViewModel) 
 
 @Composable
 private fun ShowResultScreen(state: RecordsState.ShowResult, viewModel: RecordsViewModel) {
-    // ChangeNameDialog()
     RecordsList(state.records, viewModel)
 }
 
 @Composable
-private fun ChangeNameDialog() {
+fun ChangeNameScreen(viewModel: RecordsViewModel) {
+    val state = viewModel.renameDialogState.collectAsState().value
+    if (state is RecordRenameDialogState.Show) ChangeNameDialog(state, viewModel)
+}
+
+@Composable
+private fun ChangeNameDialog(state: RecordRenameDialogState.Show, viewModel: RecordsViewModel) {
+    val name = state.name.collectAsState().value
     Dialog(
-        onDismissRequest = { /*TODO*/ },
+        onDismissRequest = { viewModel.hideRenameDialog() },
     ) {
         Surface(
             shape = MaterialTheme.shapes.medium
@@ -171,22 +183,27 @@ private fun ChangeNameDialog() {
                 Text(text = "Имя записи", style = MaterialTheme.typography.h6)
                 Spacer(modifier = Modifier.height(16.dp))
                 TextField(
-                    value = "",
-                    onValueChange = { /*TODO*/ },
-                    modifier = Modifier.fillMaxWidth(),
+                    value = name,
+                    singleLine = true,
+                    onValueChange = { runBlocking { state.name.emit(it) } },
+                    modifier = Modifier
+                        .fillMaxWidth()
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 Row(
                     horizontalArrangement = Arrangement.End,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    OutlinedButton(onClick = { /*TODO*/ }) {
+                    OutlinedButton(onClick = { viewModel.hideRenameDialog() }) {
                         Text(text = "Cancel")
                     }
                     Spacer(modifier = Modifier.width(16.dp))
-                    UiKitPrimaryButton(onClick = { /*TODO*/ }, text = "Save")
+                    UiKitPrimaryButton(
+                        onClick = { /*TODO*/ },
+                        text = "Save",
+                        showProgress = state is RecordRenameDialogState.Applying
+                    )
                 }
-
             }
         }
     }
@@ -222,14 +239,15 @@ private fun RecordCard(
         Column(modifier = Modifier.fillMaxWidth()) {
             Row {
                 Text(
-                    text = "Без названия...",
-                    style = MaterialTheme.typography.body2,
+                    text = record.name ?: "Без названия...",
+                    style = if (record.name != null) MaterialTheme.typography.body1
+                    else MaterialTheme.typography.body2,
                     modifier = Modifier
                         .align(Alignment.CenterVertically)
                         .padding(16.dp, 0.dp)
                 )
                 Spacer(modifier = Modifier.weight(1f))
-                IconButton(onClick = { /*TODO*/ }) {
+                IconButton(onClick = { viewModel.showRenameDialog(record) }) {
                     Icon(vectorResource(id = R.drawable.ic_edit), "rename")
                 }
             }

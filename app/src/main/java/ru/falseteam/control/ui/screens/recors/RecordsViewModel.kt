@@ -17,6 +17,7 @@ class RecordsViewModel(
 ) : ViewModel() {
     val state = MutableStateFlow<RecordsState>(RecordsState.Loading)
     val filterState = MutableStateFlow(RecordFilterUiModel())
+    val renameDialogState = MutableStateFlow<RecordRenameDialogState>(RecordRenameDialogState.Hide)
 
     private val forceUpdate = MutableSharedFlow<Unit>(1)
     private val recordUpdateEvent = MutableSharedFlow<UpdateType>()
@@ -121,6 +122,18 @@ class RecordsViewModel(
     fun updateFilterModel(filterUiModel: RecordFilterUiModel) {
         viewModelScope.launch {
             filterState.emit(filterUiModel)
+        }
+    }
+
+    fun showRenameDialog(recordUiModel: RecordUiModel) {
+        viewModelScope.launch {
+            renameDialogState.emit(RecordRenameDialogState.Open(recordUiModel))
+        }
+    }
+
+    fun hideRenameDialog() {
+        viewModelScope.launch {
+            renameDialogState.emit(RecordRenameDialogState.Hide)
         }
     }
 
