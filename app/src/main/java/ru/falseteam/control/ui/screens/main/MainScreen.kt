@@ -68,11 +68,15 @@ private fun MainContent(navController: NavHostController) {
 
 @Composable
 private fun Navigation(navController: NavController, navItems: List<NavItem>) {
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-//    val a = navController.currentDestination?.arguments?.get(KEY_ROUTE)
-//    val currentRoute = navController.currentDestination?.arguments?.get(KEY_ROUTE)?.defaultValue?.toString()?:Screen.StartScreen.path
+    // This state needed to refresh navigation when changed
+    navController.currentBackStackEntryAsState().value
+    // But in part of case this return null
+    // navBackStackEntry?.arguments?.getString(KEY_ROUTE)
+    // And at same time this work normally
+    // TODO check situation after library update
     val currentRoute =
-        navBackStackEntry?.arguments?.getString(KEY_ROUTE) ?: Screen.StartScreen.path
+        navController.currentDestination?.arguments?.get(KEY_ROUTE)?.defaultValue
+            ?: Screen.StartScreen.path
     if (navItems.find { it.screen.path == currentRoute } != null) {
         BottomNavigation(backgroundColor = MaterialTheme.colors.surface, elevation = 12.dp) {
             navItems.forEach { navItem ->
@@ -83,8 +87,7 @@ private fun Navigation(navController: NavController, navItems: List<NavItem>) {
                     onClick = {
                         if (navItem.screen.path != currentRoute)
                             navController.navigate(navItem.screen) {
-//                                popUpTo(Screen.HomeScreen)
-                                popUpTo = 0 // navController.graph.startDestination
+                                popUpTo(Screen.HomeScreen)
                                 launchSingleTop = true
                             }
                     }
