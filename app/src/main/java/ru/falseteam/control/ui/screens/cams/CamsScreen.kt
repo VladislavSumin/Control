@@ -1,9 +1,10 @@
 package ru.falseteam.control.ui.screens.cams
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.ScrollableColumn
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -98,8 +99,7 @@ private fun IsCameraConnectedText(isConnected: Boolean) {
 
 @Composable
 private fun CamsList(cams: List<CameraUiModel>) {
-    // TODO replace with recycler
-    ScrollableColumn {
-        cams.forEach { CameraCard(camera = it) }
+    LazyColumn {
+        this.items(cams) { CameraCard(camera = it) }
     }
 }
