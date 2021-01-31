@@ -24,6 +24,7 @@ import ru.falseteam.control.ui.screens.addserver.AddServerScreen
 import ru.falseteam.control.ui.screens.cams.CamsScreen
 import ru.falseteam.control.ui.screens.livestream.LivestreamScreen
 import ru.falseteam.control.ui.screens.navigate
+import ru.falseteam.control.ui.screens.popUpTo
 import ru.falseteam.control.ui.screens.recors.RecordsScreen
 import ru.falseteam.control.ui.screens.settings.SettingsScreen
 
@@ -52,7 +53,7 @@ fun MainScreen() {
 
 @Composable
 private fun MainContent(navController: NavHostController) {
-    NavHost(navController = navController, startDestination = Screen.DefaultScreen.path) {
+    NavHost(navController = navController, startDestination = Screen.StartScreen.path) {
         composable(Screen.Cams.path) { CamsScreen() }
         composable(Screen.Records.path) { RecordsScreen() }
         composable(Screen.Settings.path) { SettingsScreen() }
@@ -68,8 +69,10 @@ private fun MainContent(navController: NavHostController) {
 @Composable
 private fun Navigation(navController: NavController, navItems: List<NavItem>) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
+//    val a = navController.currentDestination?.arguments?.get(KEY_ROUTE)
+//    val currentRoute = navController.currentDestination?.arguments?.get(KEY_ROUTE)?.defaultValue?.toString()?:Screen.StartScreen.path
     val currentRoute =
-        navBackStackEntry?.arguments?.getString(KEY_ROUTE) ?: Screen.DefaultScreen.path
+        navBackStackEntry?.arguments?.getString(KEY_ROUTE) ?: Screen.StartScreen.path
     if (navItems.find { it.screen.path == currentRoute } != null) {
         BottomNavigation(backgroundColor = MaterialTheme.colors.surface, elevation = 12.dp) {
             navItems.forEach { navItem ->
@@ -78,10 +81,12 @@ private fun Navigation(navController: NavController, navItems: List<NavItem>) {
                     label = { Text(navItem.name) },
                     selected = currentRoute == navItem.screen.path,
                     onClick = {
-                        navController.navigate(navItem.screen) {
-                            popUpTo = 0 // navController.graph.startDestination
-                            launchSingleTop = true
-                        }
+                        if (navItem.screen.path != currentRoute)
+                            navController.navigate(navItem.screen) {
+//                                popUpTo(Screen.HomeScreen)
+                                popUpTo = 0 // navController.graph.startDestination
+                                launchSingleTop = true
+                            }
                     }
                 )
             }

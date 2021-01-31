@@ -19,7 +19,7 @@ fun AddServerScreen(viewModel: AddServerViewModel = kodeinViewModel()) {
     when (viewModel.state.collectAsState().value) {
         AddServerState.Input -> InputState(viewModel = viewModel)
         AddServerState.Success -> {
-            AmbientNavigation.current.navigate(Screen.Cams) {
+            AmbientNavigation.current.navigate(Screen.HomeScreen) {
                 popUpTo = 0
                 launchSingleTop = true
             }

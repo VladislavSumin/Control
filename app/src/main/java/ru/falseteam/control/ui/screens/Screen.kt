@@ -2,11 +2,14 @@ package ru.falseteam.control.ui.screens
 
 import androidx.navigation.NavController
 import androidx.navigation.NavOptionsBuilder
+import androidx.navigation.PopUpToBuilder
 import androidx.navigation.compose.navigate
+import androidx.navigation.compose.popUpTo
 
 sealed class Screen(val path: String) {
     companion object {
-        val DefaultScreen: Screen = AddServer
+        val StartScreen: Screen = AddServer
+        val HomeScreen: Screen = Cams
     }
 
     object Cams : Screen("cams")
@@ -24,4 +27,8 @@ sealed class Screen(val path: String) {
 
 fun NavController.navigate(screen: Screen, builder: NavOptionsBuilder.() -> Unit = {}) {
     navigate(screen.path, builder)
+}
+
+fun NavOptionsBuilder.popUpTo(screen: Screen, popUpToBuilder: PopUpToBuilder.() -> Unit = {}) {
+    popUpTo(screen.path, popUpToBuilder)
 }
