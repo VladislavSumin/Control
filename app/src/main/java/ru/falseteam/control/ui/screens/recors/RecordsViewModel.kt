@@ -127,13 +127,24 @@ class RecordsViewModel(
 
     fun showRenameDialog(recordUiModel: RecordUiModel) {
         viewModelScope.launch {
-            renameDialogState.emit(RecordRenameDialogState.Open(recordUiModel))
+            renameDialogState.emit(RecordRenameDialogState.Edit(recordUiModel))
         }
     }
 
     fun hideRenameDialog() {
         viewModelScope.launch {
             renameDialogState.emit(RecordRenameDialogState.Hide)
+        }
+    }
+
+    fun rename(recordUiModel: RecordUiModel, newName: String) {
+        viewModelScope.launch {
+            renameDialogState.emit(
+                RecordRenameDialogState.Applying(
+                    recordUiModel,
+                    MutableStateFlow(newName)
+                )
+            )
         }
     }
 

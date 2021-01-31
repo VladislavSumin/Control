@@ -4,7 +4,6 @@ import android.content.Context
 import android.net.Uri
 import android.util.AttributeSet
 import android.widget.CalendarView
-import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -12,10 +11,6 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusModifier
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.AmbientContext
@@ -184,6 +179,7 @@ private fun ChangeNameDialog(state: RecordRenameDialogState.Show, viewModel: Rec
                 Spacer(modifier = Modifier.height(16.dp))
                 TextField(
                     value = name,
+                    readOnly = state !is RecordRenameDialogState.Edit,
                     singleLine = true,
                     onValueChange = { runBlocking { state.name.emit(it) } },
                     modifier = Modifier
@@ -199,7 +195,7 @@ private fun ChangeNameDialog(state: RecordRenameDialogState.Show, viewModel: Rec
                     }
                     Spacer(modifier = Modifier.width(16.dp))
                     UiKitPrimaryButton(
-                        onClick = { /*TODO*/ },
+                        onClick = { viewModel.rename(state.record, name) },
                         text = "Save",
                         showProgress = state is RecordRenameDialogState.Applying
                     )

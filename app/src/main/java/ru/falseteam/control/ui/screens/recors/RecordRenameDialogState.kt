@@ -6,23 +6,23 @@ sealed class RecordRenameDialogState {
     object Hide : RecordRenameDialogState()
 
     abstract class Show : RecordRenameDialogState() {
-        abstract val recordDTO: RecordUiModel
+        abstract val record: RecordUiModel
         abstract val name: MutableStateFlow<String>
     }
 
-    data class Open(
-        override val recordDTO: RecordUiModel,
-        override val name: MutableStateFlow<String> = MutableStateFlow(recordDTO.name ?: "")
+    data class Edit(
+        override val record: RecordUiModel,
+        override val name: MutableStateFlow<String> = MutableStateFlow(record.name ?: "")
     ) : Show()
 
     data class Applying(
-        override val recordDTO: RecordUiModel,
-        override val name: MutableStateFlow<String> = MutableStateFlow(recordDTO.name ?: "")
+        override val record: RecordUiModel,
+        override val name: MutableStateFlow<String> = MutableStateFlow(record.name ?: "")
     ) : Show()
 
     data class Error(
-        override val recordDTO: RecordUiModel,
-        override val name: MutableStateFlow<String> = MutableStateFlow(recordDTO.name ?: "")
+        override val record: RecordUiModel,
+        override val name: MutableStateFlow<String> = MutableStateFlow(record.name ?: "")
     ) : Show()
 
 }
