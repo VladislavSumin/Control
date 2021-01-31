@@ -165,7 +165,7 @@ class RecordsViewModel(
                         e
                     )
                 )
-                //TODO add exceptions logging here!!!
+                // TODO add exceptions logging here!!!
             }
         }
     }

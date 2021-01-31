@@ -31,6 +31,7 @@ import ru.falseteam.control.R
 import ru.falseteam.control.di.kodeinViewModel
 import ru.falseteam.uikit.elements.UiKitPrimaryButton
 import ru.falseteam.uikit.elements.UikitCheckBoxListItem
+import ru.falseteam.uikit.elements.UikitFullScreenProgressBar
 import ru.falseteam.uikit.red900
 import java.time.LocalDate
 
@@ -49,7 +50,7 @@ private fun Content(viewModel: RecordsViewModel) {
     ChangeNameScreen(viewModel)
 
     when (val state = viewModel.state.collectAsState().value) {
-        RecordsState.Loading -> LoadingScreen()
+        RecordsState.Loading -> UikitFullScreenProgressBar()
         is RecordsState.Error -> ErrorScreen(state, viewModel)
         is RecordsState.ShowResult -> ShowResultScreen(state, viewModel)
     }
@@ -115,18 +116,6 @@ private fun CalendarFilter(state: RecordFilterUiModel, viewModel: RecordsViewMod
 }
 
 @Composable
-private fun LoadingScreen() {
-    // TODO make global function like this
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight()
-    ) {
-        CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-    }
-}
-
-@Composable
 private fun ErrorScreen(state: RecordsState.Error, viewModel: RecordsViewModel) {
     Box(
         modifier = Modifier
@@ -187,12 +176,12 @@ private fun ChangeNameDialog(state: RecordRenameDialogState.Show, viewModel: Rec
                 )
                 Spacer(modifier = Modifier.height(16.dp))
 
-                //TODO add animation
+                // TODO add animation
                 if (state is RecordRenameDialogState.Error) {
                     Text(
                         text = "Error: ${state.exception.message}",
                         color = red900
-                    ) //TODO use theme
+                    ) // TODO use theme
                     Spacer(modifier = Modifier.height(16.dp))
                 }
 

@@ -20,12 +20,11 @@ import ru.falseteam.uikit.red900
 import ru.falseteam.control.ui.screens.Screen
 import ru.falseteam.control.ui.screens.main.AmbientNavigation
 import ru.falseteam.control.ui.screens.navigate
+import ru.falseteam.uikit.elements.UikitFullScreenProgressBar
 
 @Composable
 fun CamsScreen(viewModel: CamsViewModel = kodeinViewModel()) {
-    val camsState = viewModel.camsUi
-        .collectAsState(initial = null)
-
+    val cams = viewModel.camsUi.collectAsState(initial = null).value
     val navigation = AmbientNavigation.current
     Scaffold(
         floatingActionButton = {
@@ -34,18 +33,8 @@ fun CamsScreen(viewModel: CamsViewModel = kodeinViewModel()) {
             }
         },
     ) {
-        val cams = camsState.value
-        if (cams != null) {
-            CamsList(cams)
-        } else {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight()
-            ) {
-                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-            }
-        }
+        if (cams != null) CamsList(cams)
+        else UikitFullScreenProgressBar()
     }
 }
 

@@ -85,11 +85,12 @@ private fun Navigation(navController: NavController, navItems: List<NavItem>) {
                     label = { Text(navItem.name) },
                     selected = currentRoute == navItem.screen.path,
                     onClick = {
-                        if (navItem.screen.path != currentRoute)
+                        if (navItem.screen.path != currentRoute) {
                             navController.navigate(navItem.screen) {
                                 popUpTo(Screen.HomeScreen)
                                 launchSingleTop = true
                             }
+                        }
                     }
                 )
             }

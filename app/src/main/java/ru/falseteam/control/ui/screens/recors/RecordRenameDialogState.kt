@@ -26,5 +26,4 @@ sealed class RecordRenameDialogState {
         override val name: MutableStateFlow<String> = MutableStateFlow(record.name ?: ""),
         val exception: Exception
     ) : Show()
-
 }
