@@ -2,7 +2,9 @@ package ru.falseteam.control.ui.screens.recors
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import ru.falseteam.control.domain.cams.CamsInteractor
@@ -23,6 +25,8 @@ class RecordsViewModel(
     private val recordUpdateEvent = MutableSharedFlow<UpdateType>()
 
     private val dateFormatter = SimpleDateFormat("HH:mm dd.MM.yyyy", Locale.getDefault())
+
+    private var renameJob: Job? = null
 
     init {
         viewModelScope.launch(Dispatchers.Default) {
@@ -133,18 +137,36 @@ class RecordsViewModel(
 
     fun hideRenameDialog() {
         viewModelScope.launch {
+            renameJob?.cancel()
             renameDialogState.emit(RecordRenameDialogState.Hide)
         }
     }
 
     fun rename(recordUiModel: RecordUiModel, newName: String) {
-        viewModelScope.launch {
+        renameJob = viewModelScope.launch {
             renameDialogState.emit(
                 RecordRenameDialogState.Applying(
                     recordUiModel,
                     MutableStateFlow(newName)
                 )
             )
+            try {
+                recordsInteractor.rename(recordUiModel.id, newName)
+                recordUpdateEvent.emit(
+                    UpdateType.Update(recordUiModel.copy(name = newName))
+                )
+                renameDialogState.emit(RecordRenameDialogState.Hide)
+            } catch (e: Exception) {
+                if (e is CancellationException) throw e
+                renameDialogState.emit(
+                    RecordRenameDialogState.Error(
+                        recordUiModel,
+                        MutableStateFlow(newName),
+                        e
+                    )
+                )
+                //TODO add exceptions logging here!!!
+            }
         }
     }
 

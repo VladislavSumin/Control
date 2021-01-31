@@ -17,4 +17,6 @@ interface RecordsApi {
     suspend fun delete(serverInfo: ServerInfo, id: Long)
 
     suspend fun setKeepForever(serverInfo: ServerInfo, id: Long, keepForever: Boolean)
+
+    suspend fun rename(serverInfo: ServerInfo, id: Long, name: String)
 }

@@ -82,6 +82,10 @@ class RecordsInteractorImpl(
             )
         }
 
+    override suspend fun rename(id: Long, name: String?) = withContext(Dispatchers.IO) {
+        cameraRecordQueries.rename(name, id)
+    }
+
     override suspend fun saveNewRecord(cameraDTO: CameraDTO, timestamp: Long, record: Path): Unit =
         withContext(Dispatchers.IO) {
             val duration = (videoEncodeInteractor.getDuration(record) * 1000).toLong()

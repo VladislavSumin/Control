@@ -38,6 +38,9 @@ class RecordsInteractorImpl(
     override suspend fun setKeepForever(id: Long, keepForever: Boolean) =
         recordsApi.setKeepForever(serversInteractor.getPrimaryServer(), id, keepForever)
 
+    override suspend fun rename(id: Long, name: String) =
+        recordsApi.rename(serversInteractor.getPrimaryServer(), id, name)
+
     override suspend fun getRecordUri(id: Long): Uri {
         val server = serversInteractor.getPrimaryServer()
         return Uri.parse("${server.url}/api/v1/records/video/$id")

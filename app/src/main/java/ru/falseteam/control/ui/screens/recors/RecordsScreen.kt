@@ -179,13 +179,23 @@ private fun ChangeNameDialog(state: RecordRenameDialogState.Show, viewModel: Rec
                 Spacer(modifier = Modifier.height(16.dp))
                 TextField(
                     value = name,
-                    readOnly = state !is RecordRenameDialogState.Edit,
+                    readOnly = state is RecordRenameDialogState.Applying,
                     singleLine = true,
                     onValueChange = { runBlocking { state.name.emit(it) } },
                     modifier = Modifier
                         .fillMaxWidth()
                 )
                 Spacer(modifier = Modifier.height(16.dp))
+
+                //TODO add animation
+                if (state is RecordRenameDialogState.Error) {
+                    Text(
+                        text = "Error: ${state.exception.message}",
+                        color = red900
+                    ) //TODO use theme
+                    Spacer(modifier = Modifier.height(16.dp))
+                }
+
                 Row(
                     horizontalArrangement = Arrangement.End,
                     modifier = Modifier.fillMaxWidth()

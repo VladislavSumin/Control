@@ -33,4 +33,9 @@ class RecordsApiImpl(
         httpClient.patch<Unit>(serverInfo, "/api/v1/records/keep_forever/$id") {
             parameter("value", keepForever)
         }
+
+    override suspend fun rename(serverInfo: ServerInfo, id: Long, name: String) =
+        httpClient.patch<Unit>(serverInfo, "/api/v1/records/rename/$id") {
+            parameter("name", name)
+        }
 }

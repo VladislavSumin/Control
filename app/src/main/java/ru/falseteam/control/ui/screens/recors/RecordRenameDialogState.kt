@@ -1,6 +1,7 @@
 package ru.falseteam.control.ui.screens.recors
 
 import kotlinx.coroutines.flow.MutableStateFlow
+import java.lang.Exception
 
 sealed class RecordRenameDialogState {
     object Hide : RecordRenameDialogState()
@@ -22,7 +23,8 @@ sealed class RecordRenameDialogState {
 
     data class Error(
         override val record: RecordUiModel,
-        override val name: MutableStateFlow<String> = MutableStateFlow(record.name ?: "")
+        override val name: MutableStateFlow<String> = MutableStateFlow(record.name ?: ""),
+        val exception: Exception
     ) : Show()
 
 }

@@ -42,6 +42,13 @@ class RecordsApi(
             call.respond(HttpStatusCode.OK)
         }
 
+        patch("/api/v1/records/rename/{id}") {
+            val id = call.parameters["id"]!!.toLong()
+            val name = call.parameters["name"]
+            recordsInteractor.rename(id, name)
+            call.respond(HttpStatusCode.OK)
+        }
+
         get("/api/v1/records/{id}") {
             val id = call.parameters["id"]!!.toLong()
             val record = recordsInteractor.getById(id)

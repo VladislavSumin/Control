@@ -20,5 +20,10 @@ deleteById:
 DELETE FROM cameraRecord
 WHERE id = ?;
 
+rename:
+UPDATE cameraRecord
+SET name = ?
+WHERE id = ?;
+
 lastInsertRowId:
 SELECT last_insert_rowid();

@@ -23,6 +23,8 @@ interface RecordsInteractor {
 
     suspend fun setKeepForever(id: Long, keepForever: Boolean)
 
+    suspend fun rename(id: Long, name: String?)
+
     suspend fun saveNewRecord(cameraDTO: CameraDTO, timestamp: Long, record: Path)
 
     fun getRecordsTmpPath(): Path

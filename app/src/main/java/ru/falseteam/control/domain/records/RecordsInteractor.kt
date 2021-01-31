@@ -19,5 +19,7 @@ interface RecordsInteractor {
 
     suspend fun setKeepForever(id: Long, keepForever: Boolean)
 
+    suspend fun rename(id: Long, name: String)
+
     suspend fun getRecordUri(id: Long): Uri
 }
