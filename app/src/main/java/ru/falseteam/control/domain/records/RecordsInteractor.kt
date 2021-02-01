@@ -13,6 +13,7 @@ interface RecordsInteractor {
         startTime: Long? = null,
         endTime: Long? = null,
         reverse: Boolean = false,
+        cams: List<Long>? = null
     ): List<CameraRecordDTO>
 
     suspend fun delete(id: Long)

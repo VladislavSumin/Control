@@ -27,9 +27,14 @@ class RecordsApi(
                 val startTime = call.parameters["start_time"]?.toLong()
                 val endTime = call.parameters["end_time"]?.toLong()
                 val reverse = call.parameters["reverse"]?.toBoolean() ?: false
+                // TODO refactor
+                val cams = call.parameters["cams"]
+                    ?.trim { it == '[' || it == ']' }
+                    ?.split(',')
+                    ?.map { it.trim().toLong() }
                 call.respond(
                     recordsInteractor.getFiltered(
-                        onlyKeepForever, onlyNamed, startTime, endTime, reverse
+                        onlyKeepForever, onlyNamed, startTime, endTime, reverse, cams
                     )
                 )
             }

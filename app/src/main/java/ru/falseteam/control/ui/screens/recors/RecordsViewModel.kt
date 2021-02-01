@@ -31,17 +31,27 @@ class RecordsViewModel(
 
     init {
         viewModelScope.launch(Dispatchers.Default) {
-            launch { forceUpdate.emit(Unit) }
+            forceUpdate.emit(Unit)
+
+            val cams = filterCamsState
+                .map { state ->
+                    state.cams
+                        .asSequence()
+                        .filter { it.isChecked }
+                        .map { it.id }
+                        .toList()
+                }
+                .distinctUntilChanged()
 
             combine(
                 filterState,
+                cams,
                 forceUpdate,
-            ) { filterState, _ -> filterState }
-                .flatMapLatest(this@RecordsViewModel::request)
+                this@RecordsViewModel::request
+            )
+                .flattenConcat()
                 .flatMapLatest(this@RecordsViewModel::applyUpdateEvents)
-                .collect {
-                    state.emit(it)
-                }
+                .collect(state::emit)
         }
 
         viewModelScope.launch {
@@ -78,7 +88,11 @@ class RecordsViewModel(
         }
     }
 
-    private suspend fun request(recordFilterUiModel: RecordFilterUiModel): Flow<RecordsState> =
+    private suspend fun request(
+        recordFilterUiModel: RecordFilterUiModel,
+        camsFilter: List<Long>,
+        @Suppress("UNUSED_PARAMETER") forceUpdate: Unit,
+    ): Flow<RecordsState> =
         flow {
             emit(RecordsState.Loading)
             try {
@@ -94,6 +108,8 @@ class RecordsViewModel(
                         .atStartOfDay(ZoneId.systemDefault())
                         .toEpochSecond() * 1000,
                     reverse = true,
+                    cams = if (camsFilter.isEmpty()) null
+                    else camsFilter
                 )
                     .map { record ->
                         val camera = cams.find { it.id == record.cameraId }

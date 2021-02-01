@@ -12,6 +12,7 @@ interface RecordsApi {
         startTime: Long? = null,
         endTime: Long? = null,
         reverse: Boolean = false,
+        cams: List<Long>? = null
     ): List<CameraRecordDTO>
 
     suspend fun delete(serverInfo: ServerInfo, id: Long)

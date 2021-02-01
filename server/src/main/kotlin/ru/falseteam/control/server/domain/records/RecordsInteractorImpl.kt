@@ -53,13 +53,15 @@ class RecordsInteractorImpl(
         onlyNamed: Boolean,
         startTime: Long?,
         endTime: Long?,
-        reverse: Boolean
+        reverse: Boolean,
+        cams: List<Long>?
     ): List<CameraRecordDTO> {
         return getAll().asSequence()
             .filter { !onlyKeepForever || it.keepForever }
             .filter { !onlyNamed || (it.name != null && it.name!!.isNotEmpty()) }
             .filter { startTime == null || startTime < it.timestamp }
             .filter { endTime == null || endTime >= it.timestamp }
+            .filter { cams == null || it.cameraId in cams }
             .toList()
             .let { if (reverse) it.reversed() else it }
     }

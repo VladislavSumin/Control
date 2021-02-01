@@ -17,13 +17,15 @@ class RecordsApiImpl(
         onlyNamed: Boolean,
         startTime: Long?,
         endTime: Long?,
-        reverse: Boolean
+        reverse: Boolean,
+        cams: List<Long>?
     ): List<CameraRecordDTO> = httpClient.get(serverInfo, "/api/v1/records") {
         parameter("only_keep_forever", onlyKeepForever)
         parameter("only_named", onlyNamed)
         if (startTime != null) parameter("start_time", startTime)
         if (endTime != null) parameter("end_time", endTime)
         parameter("reverse", reverse)
+        if (cams != null) parameter("cams", cams)
     }
 
     override suspend fun delete(serverInfo: ServerInfo, id: Long) =

@@ -21,7 +21,8 @@ class RecordsInteractorImpl(
         onlyNamed: Boolean,
         startTime: Long?,
         endTime: Long?,
-        reverse: Boolean
+        reverse: Boolean,
+        cams: List<Long>?
     ): List<CameraRecordDTO> =
         recordsApi.getFiltered(
             serversInteractor.getPrimaryServer(),
@@ -29,7 +30,8 @@ class RecordsInteractorImpl(
             onlyNamed,
             startTime,
             endTime,
-            reverse
+            reverse,
+            cams
         )
 
     override suspend fun delete(id: Long) =
