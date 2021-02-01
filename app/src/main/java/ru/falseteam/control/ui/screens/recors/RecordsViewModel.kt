@@ -19,6 +19,7 @@ class RecordsViewModel(
 ) : ViewModel() {
     val state = MutableStateFlow<RecordsState>(RecordsState.Loading)
     val filterState = MutableStateFlow(RecordFilterUiModel())
+    val filterCamsState = MutableStateFlow(RecordCamsFilterState(emptyList()))
     val renameDialogState = MutableStateFlow<RecordRenameDialogState>(RecordRenameDialogState.Hide)
 
     private val forceUpdate = MutableSharedFlow<Unit>(1)
@@ -41,6 +42,15 @@ class RecordsViewModel(
                 .collect {
                     state.emit(it)
                 }
+        }
+
+        viewModelScope.launch {
+            val cams = camsInteractor.observeAll().first()
+            filterCamsState.emit(
+                RecordCamsFilterState(
+                    cams.map { RecordCamsFilterState.Entity(it.id, it.name) }
+                )
+            )
         }
     }
 
@@ -139,6 +149,16 @@ class RecordsViewModel(
         viewModelScope.launch {
             renameJob?.cancel()
             renameDialogState.emit(RecordRenameDialogState.Hide)
+        }
+    }
+
+    fun changeCamsFilterSelection(camera: RecordCamsFilterState.Entity) {
+        viewModelScope.launch {
+            val cams = filterCamsState.value.cams.toMutableList()
+            val index = cams.indexOf(camera)
+            if (index < 0) return@launch
+            cams[index] = camera.copy(isChecked = !camera.isChecked)
+            filterCamsState.emit(RecordCamsFilterState(cams))
         }
     }
 

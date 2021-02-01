@@ -95,6 +95,8 @@ private fun FilterContent(viewModel: RecordsViewModel) {
             onCheckedChange = { viewModel.updateFilterModel(state.copy(isOnlyNamed = !state.isOnlyNamed)) }
         )
         Divider()
+
+        CamsFilter(viewModel)
     }
 }
 
@@ -112,6 +114,21 @@ private fun CalendarFilter(state: RecordFilterUiModel, viewModel: RecordsViewMod
             }
         }
         AndroidView(viewBlock = { calendar })
+    }
+}
+
+@Composable
+private fun CamsFilter(viewModel: RecordsViewModel) {
+    val cams = viewModel.filterCamsState.collectAsState().value.cams
+    LazyColumn {
+        items(cams) { camera ->
+            UikitCheckBoxListItem(
+                text = camera.name,
+                checked = camera.isChecked,
+                onCheckedChange = { viewModel.changeCamsFilterSelection(camera) }
+            )
+            Divider()
+        }
     }
 }
 
