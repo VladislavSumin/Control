@@ -1,15 +1,12 @@
 package ru.falseteam.control.ui.screens.recors
 
-import android.annotation.SuppressLint
-import android.content.Context
-import android.net.Uri
-import android.util.AttributeSet
-import android.widget.CalendarView
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -19,22 +16,12 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.window.Dialog
-import androidx.core.util.Pools
-import com.google.android.exoplayer2.MediaItem
-import com.google.android.exoplayer2.SimpleExoPlayer
-import com.google.android.exoplayer2.source.ProgressiveMediaSource
-import com.google.android.exoplayer2.ui.PlayerView
-import com.google.android.exoplayer2.upstream.DataSource
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
-import com.google.android.exoplayer2.util.Util
 import kotlinx.coroutines.runBlocking
 import ru.falseteam.control.R
 import ru.falseteam.control.di.kodeinViewModel
 import ru.falseteam.uikit.elements.UiKitPrimaryButton
-import ru.falseteam.uikit.elements.UikitCheckBoxListItem
 import ru.falseteam.uikit.elements.UikitFullScreenProgressBar
 import ru.falseteam.uikit.red900
-import java.time.LocalDate
 
 @Composable
 fun RecordsScreen(viewModel: RecordsViewModel = kodeinViewModel()) {
@@ -42,7 +29,7 @@ fun RecordsScreen(viewModel: RecordsViewModel = kodeinViewModel()) {
     Scaffold(
         scaffoldState = scaffoldState,
         topBar = { TopBar(scaffoldState, viewModel) },
-        drawerContent = { FilterContent(viewModel) },
+        drawerContent = { RecordsFilterScreen(viewModel) },
     ) { Content(viewModel) }
 }
 
@@ -52,7 +39,7 @@ private fun Content(viewModel: RecordsViewModel) {
 
     val context = AmbientContext.current
     val playerCache = remember {
-        PlayerCache(context)
+        RecordsPlayerCache(context)
     }
 
     when (val state = viewModel.state.collectAsState().value) {
@@ -77,63 +64,6 @@ private fun TopBar(scaffoldState: ScaffoldState, viewModel: RecordsViewModel) {
             onClick = { viewModel.forceUpdate() }
         ) {
             Icon(vectorResource(id = R.drawable.ic_refresh), "refresh")
-        }
-    }
-}
-
-@Composable
-private fun FilterContent(viewModel: RecordsViewModel) {
-    val state = viewModel.filterState.collectAsState().value
-    Column {
-        CalendarFilter(state, viewModel)
-        Divider()
-
-        UikitCheckBoxListItem(
-            text = "Только сохраненные",
-            checked = state.isOnlySaved,
-            onCheckedChange = { viewModel.updateFilterModel(state.copy(isOnlySaved = !state.isOnlySaved)) }
-        )
-        Divider()
-
-        UikitCheckBoxListItem(
-            text = "Только c именем",
-            checked = state.isOnlyNamed,
-            onCheckedChange = { viewModel.updateFilterModel(state.copy(isOnlyNamed = !state.isOnlyNamed)) }
-        )
-        Divider()
-
-        CamsFilter(viewModel)
-    }
-}
-
-@Composable
-private fun CalendarFilter(state: RecordFilterUiModel, viewModel: RecordsViewModel) {
-    Surface {
-        val context = AmbientContext.current
-        val calendar = remember {
-            CalendarView(context).apply {
-                setOnDateChangeListener { _, year, month, dayOfMonth ->
-                    val date = LocalDate.of(year, month + 1, dayOfMonth)
-                    val newState = state.copy(date = date)
-                    viewModel.updateFilterModel(newState)
-                }
-            }
-        }
-        AndroidView(viewBlock = { calendar })
-    }
-}
-
-@Composable
-private fun CamsFilter(viewModel: RecordsViewModel) {
-    val cams = viewModel.filterCamsState.collectAsState().value.cams
-    LazyColumn {
-        items(cams) { camera ->
-            UikitCheckBoxListItem(
-                text = camera.name,
-                checked = camera.isChecked,
-                onCheckedChange = { viewModel.changeCamsFilterSelection(camera) }
-            )
-            Divider()
         }
     }
 }
@@ -170,7 +100,7 @@ private fun ErrorScreen(state: RecordsState.Error, viewModel: RecordsViewModel) 
 private fun ShowResultScreen(
     state: RecordsState.ShowResult,
     viewModel: RecordsViewModel,
-    playerCache: PlayerCache
+    playerCache: RecordsPlayerCache
 ) {
     RecordsList(state.records, viewModel, playerCache)
 }
@@ -235,7 +165,7 @@ private fun ChangeNameDialog(state: RecordRenameDialogState.Show, viewModel: Rec
 private fun RecordsList(
     records: List<RecordUiModel>,
     viewModel: RecordsViewModel,
-    playerCache: PlayerCache,
+    playerCache: RecordsPlayerCache,
 ) {
     LazyColumn {
         items(records) { record ->
@@ -247,7 +177,7 @@ private fun RecordsList(
 @Composable
 private fun RecordCard(
     record: RecordUiModel,
-    playerCache: PlayerCache,
+    playerCache: RecordsPlayerCache,
     viewModel: RecordsViewModel
 ) {
     Card(
@@ -273,7 +203,7 @@ private fun RecordCard(
                 }
             }
 
-            VideoRecord(record.uri, playerCache)
+            VideoRecord(record, playerCache)
 
             Row(
                 modifier = Modifier.padding(16.dp, 8.dp)
@@ -304,10 +234,10 @@ private fun RecordCard(
 }
 
 @Composable
-private fun VideoRecord(uri: Uri, playerCache: PlayerCache) {
+private fun VideoRecord(record: RecordUiModel, playerCache: RecordsPlayerCache) {
     Surface {
         val player = remember {
-            playerCache.acquire()
+            playerCache.acquire(record)
         }
         AndroidView(
             modifier = Modifier
@@ -315,50 +245,13 @@ private fun VideoRecord(uri: Uri, playerCache: PlayerCache) {
                 .aspectRatio(16 / 9f),
             viewBlock = {
                 player
-            }) {
-            it.player?.apply {
-                this as SimpleExoPlayer
-                setMediaSource(playerCache.createMedia(uri))
-                prepare()
+            }
+        ) {
+            if (it.currentPlayId != record.id) {
+                it.setRecord(record)
+            } else {
+                it.player.prepare()
             }
         }
-    }
-}
-
-private class PlayerCache(
-    private val context: Context
-) {
-    private val pool = Pools.SimplePool<MyPlayer>(10)
-    private val mediaFactory by lazy {
-        val dataSourceFactory: DataSource.Factory = DefaultDataSourceFactory(
-            context,
-            Util.getUserAgent(context, context.packageName)
-        )
-
-        ProgressiveMediaSource.Factory(dataSourceFactory)
-    }
-
-    fun createMedia(uri: Uri): ProgressiveMediaSource {
-        val mediaItem = MediaItem.Builder().setUri(uri).build()
-        return mediaFactory.createMediaSource(mediaItem)
-    }
-
-    fun acquire(): MyPlayer = pool.acquire() ?: MyPlayer(context, this).apply {
-        player = SimpleExoPlayer.Builder(context).build()
-    }
-
-    fun release(player: MyPlayer) = pool.release(player)
-}
-
-@SuppressLint("ViewConstructor")
-private class MyPlayer constructor(
-    context: Context,
-    private val cache: PlayerCache
-) : PlayerView(context) {
-
-    override fun onDetachedFromWindow() {
-        super.onDetachedFromWindow()
-        player?.stop()
-        cache.release(this)
     }
 }
