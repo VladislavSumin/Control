@@ -16,6 +16,12 @@ class RecordsPlayerCache(private val context: Context) {
     private val cache = LinkedList<CacheablePlayerView>()
     private val mediaFactory = MediaFactory(context)
 
+    init {
+        repeat(4) {
+            release(create())
+        }
+    }
+
     fun acquire(record: RecordUiModel): CacheablePlayerView {
         val iterator = cache.iterator()
         while (iterator.hasNext()) {
