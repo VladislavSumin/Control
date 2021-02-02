@@ -1,5 +1,6 @@
 package ru.falseteam.control.ui.screens.recors
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.net.Uri
 import android.util.AttributeSet
@@ -49,10 +50,15 @@ fun RecordsScreen(viewModel: RecordsViewModel = kodeinViewModel()) {
 private fun Content(viewModel: RecordsViewModel) {
     ChangeNameScreen(viewModel)
 
+    val context = AmbientContext.current
+    val playerCache = remember {
+        PlayerCache(context)
+    }
+
     when (val state = viewModel.state.collectAsState().value) {
         RecordsState.Loading -> UikitFullScreenProgressBar()
         is RecordsState.Error -> ErrorScreen(state, viewModel)
-        is RecordsState.ShowResult -> ShowResultScreen(state, viewModel)
+        is RecordsState.ShowResult -> ShowResultScreen(state, viewModel, playerCache)
     }
 }
 
@@ -161,8 +167,12 @@ private fun ErrorScreen(state: RecordsState.Error, viewModel: RecordsViewModel) 
 }
 
 @Composable
-private fun ShowResultScreen(state: RecordsState.ShowResult, viewModel: RecordsViewModel) {
-    RecordsList(state.records, viewModel)
+private fun ShowResultScreen(
+    state: RecordsState.ShowResult,
+    viewModel: RecordsViewModel,
+    playerCache: PlayerCache
+) {
+    RecordsList(state.records, viewModel, playerCache)
 }
 
 @Composable
@@ -222,12 +232,11 @@ private fun ChangeNameDialog(state: RecordRenameDialogState.Show, viewModel: Rec
 }
 
 @Composable
-private fun RecordsList(records: List<RecordUiModel>, viewModel: RecordsViewModel) {
-    val context = AmbientContext.current
-    val playerCache = remember {
-        PlayerCache(context)
-    }
-
+private fun RecordsList(
+    records: List<RecordUiModel>,
+    viewModel: RecordsViewModel,
+    playerCache: PlayerCache,
+) {
     LazyColumn {
         items(records) { record ->
             RecordCard(record = record, playerCache, viewModel)
@@ -334,23 +343,22 @@ private class PlayerCache(
         return mediaFactory.createMediaSource(mediaItem)
     }
 
-    fun acquire(): MyPlayer = pool.acquire() ?: MyPlayer(context).apply {
+    fun acquire(): MyPlayer = pool.acquire() ?: MyPlayer(context, this).apply {
         player = SimpleExoPlayer.Builder(context).build()
     }
 
     fun release(player: MyPlayer) = pool.release(player)
 }
 
-private class MyPlayer @JvmOverloads constructor(
+@SuppressLint("ViewConstructor")
+private class MyPlayer constructor(
     context: Context,
-    attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
-) : PlayerView(context, attrs, defStyleAttr) {
-    var cache: PlayerCache? = null
+    private val cache: PlayerCache
+) : PlayerView(context) {
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         player?.stop()
-        cache?.release(this)
+        cache.release(this)
     }
 }
