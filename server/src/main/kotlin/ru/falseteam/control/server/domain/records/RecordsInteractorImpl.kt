@@ -17,7 +17,6 @@ import ru.falseteam.control.server.domain.videoencoder.VideoEncodeInteractor
 import ru.falseteam.control.server.repository.ServerConfigurationRepository
 import ru.falseteam.control.server.utils.toBoolean
 import ru.falseteam.control.server.utils.toLong
-import java.io.File
 import java.nio.file.Files
 import java.nio.file.Path
 
@@ -71,7 +70,8 @@ class RecordsInteractorImpl(
     }
 
     override suspend fun delete(id: Long) = withContext(Dispatchers.IO) {
-        getRecord(id).delete()
+        getRecord(id).toFile().delete()
+        getPreview(id).toFile().delete()
         cameraRecordQueries.deleteById(id)
     }
 
@@ -103,19 +103,19 @@ class RecordsInteractorImpl(
             val id = insert(cameraRecordDto)
 
             val recordLocation = getRecord(id)
-            recordLocation.parentFile.mkdirs()
+            recordLocation.parent.toFile().mkdirs()
             val preview = getPreview(id)
 
             videoEncodeInteractor.createPreviewImage(record, preview)
-            Files.move(record, recordLocation.toPath())
+            Files.move(record, recordLocation)
         }
 
-    override fun getRecord(id: Long): File {
-        return getRecordFile(id, "mp4").toFile() //TODO!!!
+    override fun getRecord(id: Long): Path {
+        return getRecordFile(id, "mp4")
     }
 
-    private fun getPreview(id: Long): Path {
-        return getRecordFile(id, "png")
+    override fun getPreview(id: Long): Path {
+        return getRecordFile(id, "jpg")
     }
 
     private fun getRecordFile(id: Long, ext: String): Path {

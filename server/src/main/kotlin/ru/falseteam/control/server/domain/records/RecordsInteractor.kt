@@ -30,5 +30,7 @@ interface RecordsInteractor {
 
     fun getRecordsTmpPath(): Path
 
-    fun getRecord(id: Long): File
+    fun getRecord(id: Long): Path
+
+    fun getPreview(id: Long): Path
 }
