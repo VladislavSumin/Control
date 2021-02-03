@@ -16,10 +16,14 @@ class VideoEncodeInteractorImpl : VideoEncodeInteractor {
     private val ffprobe: FFprobe
 
     init {
-        val ffmpeg = FFmpeg(PathUtils.getPathOfProgram("ffmpeg")
-            ?: throw Exception("ffmpeg not found"))
-        ffprobe = FFprobe(PathUtils.getPathOfProgram("ffprobe")
-            ?: throw Exception("ffprobe not found"))
+        val ffmpeg = FFmpeg(
+            PathUtils.getPathOfProgram("ffmpeg")
+                ?: throw Exception("ffmpeg not found")
+        )
+        ffprobe = FFprobe(
+            PathUtils.getPathOfProgram("ffprobe")
+                ?: throw Exception("ffprobe not found")
+        )
         executor = FFmpegExecutor(ffmpeg, ffprobe)
     }
 
@@ -28,12 +32,24 @@ class VideoEncodeInteractorImpl : VideoEncodeInteractor {
             .setVerbosity(FFmpegBuilder.Verbosity.QUIET)
             .setInput(input.toAbsolutePath().toString())
             .addOutput(output.toAbsolutePath().toString())
-            // .setVideoFrameRate(24, 1)
             .addExtraArgs("-c", "copy")
             .done()
 
         executor.createJob(builder).run()
     }
+
+    override suspend fun createPreviewImage(input: Path, outputImage: Path) =
+        withContext(Dispatchers.IO) {
+            //ffmpeg -i input.mp4 -ss 00:00:01.000 -vframes 1 output.png
+            val builder = FFmpegBuilder()
+                .setVerbosity(FFmpegBuilder.Verbosity.QUIET)
+                .setInput(input.toAbsolutePath().toString())
+                .addOutput(outputImage.toAbsolutePath().toString())
+                .addExtraArgs("-ss", "00:00", "-vframes", "1")
+                .done()
+
+            executor.createJob(builder).run()
+        }
 
     override suspend fun getDuration(file: Path): Double = withContext(Dispatchers.IO) {
         ffprobe.probe(file.toAbsolutePath().toString())

@@ -91,6 +91,7 @@ class RecordsInteractorImpl(
     override suspend fun saveNewRecord(cameraDTO: CameraDTO, timestamp: Long, record: Path): Unit =
         withContext(Dispatchers.IO) {
             val duration = (videoEncodeInteractor.getDuration(record) * 1000).toLong()
+
             val cameraRecordDto = CameraRecordDTO(
                 cameraId = cameraDTO.id,
                 name = null,
@@ -99,14 +100,26 @@ class RecordsInteractorImpl(
                 length = duration,
                 keepForever = false,
             )
-
             val id = insert(cameraRecordDto)
-            val recordLocation = getRecordsPath().resolve("$id.mp4")
-            Files.move(record, recordLocation)
+
+            val recordLocation = getRecord(id)
+            recordLocation.parentFile.mkdirs()
+            val preview = getPreview(id)
+
+            videoEncodeInteractor.createPreviewImage(record, preview)
+            Files.move(record, recordLocation.toPath())
         }
 
     override fun getRecord(id: Long): File {
-        return getRecordsPath().resolve("$id.mp4").toFile()
+        return getRecordFile(id, "mp4").toFile() //TODO!!!
+    }
+
+    private fun getPreview(id: Long): Path {
+        return getRecordFile(id, "png")
+    }
+
+    private fun getRecordFile(id: Long, ext: String): Path {
+        return getRecordsPath().resolve("${id / 1000}").resolve("${id % 1000}.$ext")
     }
 
     override fun getRecordsTmpPath(): Path = Path.of(serverConfigurationRepository.recordsTmpPath)
