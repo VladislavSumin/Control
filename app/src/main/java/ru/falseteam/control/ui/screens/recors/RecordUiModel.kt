@@ -8,6 +8,7 @@ data class RecordUiModel(
     val cameraName: String?,
     val date: String,
     val keepForever: Boolean,
+    val length: String,
     val uri: Uri,
     val previewUri: Uri,
 )

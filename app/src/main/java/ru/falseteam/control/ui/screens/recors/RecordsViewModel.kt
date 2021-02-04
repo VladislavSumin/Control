@@ -113,12 +113,18 @@ class RecordsViewModel(
                 )
                     .map { record ->
                         val camera = cams.find { it.id == record.cameraId }
+                        val length = "%02d:%02d".format(
+                            record.length / 60 / 1000,
+                            (record.length / 1000) % 60
+                        )
+
                         RecordUiModel(
                             id = record.id,
                             name = record.name,
                             cameraName = camera?.name,
                             date = dateFormatter.format(Date(record.timestamp)),
                             keepForever = record.keepForever,
+                            length = length,
                             uri = recordsInteractor.getRecordUri(record.id),
                             previewUri = recordsInteractor.getPreviewUri(record.id),
                         )

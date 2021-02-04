@@ -227,7 +227,7 @@ private fun RecordCard(
                     text = record.cameraName ?: "Unknown camera",
                     modifier = Modifier.weight(1f)
                 )
-                Text(text = record.date)
+                Text(text = "${record.length}  ${record.date}")
             }
 
             Divider(modifier = Modifier.padding(8.dp, 0.dp))
