@@ -47,4 +47,9 @@ class RecordsInteractorImpl(
         val server = serversInteractor.getPrimaryServer()
         return Uri.parse("${server.url}/api/v1/records/video/$id")
     }
+
+    override suspend fun getPreviewUri(id: Long): Uri {
+        val server = serversInteractor.getPrimaryServer()
+        return Uri.parse("${server.url}/api/v1/records/preview/$id")
+    }
 }

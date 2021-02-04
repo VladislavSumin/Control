@@ -23,4 +23,6 @@ interface RecordsInteractor {
     suspend fun rename(id: Long, name: String)
 
     suspend fun getRecordUri(id: Long): Uri
+
+    suspend fun getPreviewUri(id: Long): Uri
 }

@@ -119,7 +119,8 @@ class RecordsViewModel(
                             cameraName = camera?.name,
                             date = dateFormatter.format(Date(record.timestamp)),
                             keepForever = record.keepForever,
-                            uri = recordsInteractor.getRecordUri(record.id)
+                            uri = recordsInteractor.getRecordUri(record.id),
+                            previewUri = recordsInteractor.getPreviewUri(record.id),
                         )
                     }
                 emit(RecordsState.ShowResult(records))

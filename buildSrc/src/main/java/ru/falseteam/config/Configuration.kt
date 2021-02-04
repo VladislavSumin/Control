@@ -10,6 +10,7 @@ object Configuration {
         const val sentry = "4.0.0"
         const val compose = "1.0.0-alpha11"
         const val coroutines = "1.4.2"
+        const val glide = "4.12.0"
     }
 
     object Android {
@@ -45,6 +46,9 @@ object Configuration {
         const val sentry = "io.sentry:sentry:${Versions.sentry}"
 
         const val exoplayer = "com.google.android.exoplayer:exoplayer:2.12.3"
+
+        const val glide = "com.github.bumptech.glide:glide:${Versions.glide}"
+        const val glideCompiler = "com.github.bumptech.glide:compiler:${Versions.glide}"
 
         object Logging {
             const val log4j2Api = "org.apache.logging.log4j:log4j-api:${Versions.log4j2}"

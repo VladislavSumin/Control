@@ -5,6 +5,7 @@ plugins {
     id("com.android.application")
     kotlin("android")
     kotlin("plugin.serialization") version ru.falseteam.config.Configuration.Versions.kotlin
+    kotlin("kapt")
 }
 
 val pIsBuildAgent: String by project
@@ -101,6 +102,8 @@ dependencies {
         implementation(setting)
         implementation(sentryAndroid)
         implementation(exoplayer)
+        implementation(glide)
+        kapt(glideCompiler)
     }
 
     with(Configuration.Dependencies.Logging) {

@@ -1,21 +1,31 @@
 package ru.falseteam.control.ui.screens.recors
 
+import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
+import android.net.Uri
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.AmbientContext
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.window.Dialog
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import kotlinx.coroutines.runBlocking
 import ru.falseteam.control.R
 import ru.falseteam.control.di.kodeinViewModel
@@ -203,7 +213,12 @@ private fun RecordCard(
                 }
             }
 
-            VideoRecord(record, playerCache)
+            val (isPlayerActive, setIsPlayerActive) = remember { mutableStateOf(false) }
+            if (isPlayerActive) {
+                VideoRecord(record, playerCache)
+            } else {
+                Preview(record = record) { setIsPlayerActive(true) }
+            }
 
             Row(
                 modifier = Modifier.padding(16.dp, 8.dp)
@@ -234,6 +249,65 @@ private fun RecordCard(
 }
 
 @Composable
+private fun Preview(record: RecordUiModel, onlClick: () -> Unit) {
+    val image = loadPicture(uri = record.previewUri)
+    Box(
+        Modifier
+            .fillMaxWidth()
+            .aspectRatio(16 / 9.0f)
+    ) {
+        when (image) {
+            PictureLoadState.Loading -> UikitFullScreenProgressBar()
+            is PictureLoadState.Success -> {
+                Image(
+                    bitmap = image.resource.asImageBitmap(),
+                    contentDescription = "record preview",
+                    Modifier.clickable(onClick = onlClick)
+                )
+                FloatingActionButton(
+                    onClick = onlClick,
+                    backgroundColor = Color(0x80000000),
+                    modifier = Modifier.align(Alignment.Center)
+                ) {
+                    Icon(
+                        imageVector = vectorResource(id = R.drawable.ic_play),
+                        contentDescription = "play",
+                        tint = Color.White,
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun loadPicture(uri: Uri): PictureLoadState {
+    val context = AmbientContext.current
+    val (bitmapState, _) = remember {
+        val state = mutableStateOf<PictureLoadState>(PictureLoadState.Loading)
+        val (_, setState) = state
+        Glide.with(context)
+            .asBitmap()
+            .load(uri)
+            .into(object : CustomTarget<Bitmap>() {
+                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                    setState(PictureLoadState.Success(resource))
+                }
+
+                override fun onLoadCleared(placeholder: Drawable?) {}
+            })
+        state
+    }
+
+    return bitmapState
+}
+
+private sealed class PictureLoadState {
+    object Loading : PictureLoadState()
+    data class Success(val resource: Bitmap) : PictureLoadState()
+}
+
+@Composable
 private fun VideoRecord(record: RecordUiModel, playerCache: RecordsPlayerCache) {
     Surface {
         val player = remember {
@@ -249,9 +323,10 @@ private fun VideoRecord(record: RecordUiModel, playerCache: RecordsPlayerCache) 
         ) {
             if (it.currentPlayId != record.id) {
                 it.setRecord(record)
-            } else {
-                it.player.prepare()
             }
+            it.player.prepare()
+            it.player.play()
+            it.hideController()
         }
     }
 }

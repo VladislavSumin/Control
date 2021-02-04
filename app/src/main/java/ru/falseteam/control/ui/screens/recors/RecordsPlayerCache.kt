@@ -59,7 +59,6 @@ class CacheablePlayerView constructor(
     fun setRecord(record: RecordUiModel) {
         currentPlayId = record.id
         player.setMediaSource(mediaFactory.createMedia(record.uri))
-        player.prepare()
     }
 
 
