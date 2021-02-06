@@ -7,7 +7,7 @@ object Configuration {
         const val log4j2 = "2.14.0"
         const val kodein = "7.2.0"
         const val sqldelight = "1.4.4"
-        const val sentry = "4.0.0"
+        const val sentry = "4.1.0"
         const val compose = "1.0.0-alpha11"
         const val coroutines = "1.4.2"
         const val glide = "4.12.0"
