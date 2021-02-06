@@ -1,50 +1,29 @@
 package ru.falseteam.control.server.domain.records
 
-import com.squareup.sqldelight.runtime.coroutines.asFlow
-import com.squareup.sqldelight.runtime.coroutines.mapToList
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.withContext
 import ru.falseteam.control.api.dto.CameraDTO
 import ru.falseteam.control.api.dto.CameraRecordDTO
-import ru.falseteam.control.server.database.CameraRecord
-import ru.falseteam.control.server.database.CameraRecordQueries
+import ru.falseteam.control.api.dto.CameraRecordsInfoDTO
 import ru.falseteam.control.server.domain.videoencoder.VideoEncodeInteractor
+import ru.falseteam.control.server.repository.CameraRecordsRepository
 import ru.falseteam.control.server.repository.ServerConfigurationRepository
-import ru.falseteam.control.server.utils.toBoolean
-import ru.falseteam.control.server.utils.toLong
 import java.nio.file.Files
 import java.nio.file.Path
 
 class RecordsInteractorImpl(
-    private val cameraRecordQueries: CameraRecordQueries,
+    private val cameraRecordsRepository: CameraRecordsRepository,
     private val videoEncodeInteractor: VideoEncodeInteractor,
     private val serverConfigurationRepository: ServerConfigurationRepository,
 ) : RecordsInteractor {
-    private val allObservable = cameraRecordQueries.selectAll()
-        .asFlow()
-        .mapToList(Dispatchers.IO)
-        .map { list -> list.map { it.toDTO() } }
-        .shareIn(
-            scope = GlobalScope,
-            started = SharingStarted.WhileSubscribed(replayExpirationMillis = 0),
-            replay = 1
-        )
-
     init {
         getRecordsPath().toFile().mkdirs()
         getRecordsTmpPath().toFile().mkdirs()
     }
 
-    override fun observeAll(): Flow<List<CameraRecordDTO>> = allObservable
-
-    override suspend fun getAll(): List<CameraRecordDTO> = withContext(Dispatchers.IO) {
-        cameraRecordQueries.selectAll().executeAsList().map { it.toDTO() }
-    }
+    override suspend fun getAll(): List<CameraRecordDTO> = cameraRecordsRepository.getAll()
+    override fun observeAll(): Flow<List<CameraRecordDTO>> = cameraRecordsRepository.observeAll()
 
     // TODO make custom sql request
     override suspend fun getFiltered(
@@ -65,28 +44,18 @@ class RecordsInteractorImpl(
             .let { if (reverse) it.reversed() else it }
     }
 
-    override suspend fun getById(id: Long): CameraRecordDTO? = withContext(Dispatchers.IO) {
-        cameraRecordQueries.selectById(id).executeAsOneOrNull()?.toDTO()
-    }
+    override suspend fun getById(id: Long): CameraRecordDTO? = cameraRecordsRepository.getOrNull(id)
 
     override suspend fun delete(id: Long) = withContext(Dispatchers.IO) {
         getRecord(id).toFile().delete()
         getPreview(id).toFile().delete()
-        cameraRecordQueries.deleteById(id)
+        cameraRecordsRepository.delete(id)
     }
 
-    // TODO throw exception if no records changed
     override suspend fun setKeepForever(id: Long, keepForever: Boolean) =
-        withContext(Dispatchers.IO) {
-            cameraRecordQueries.setKeepForever(
-                keepForever = keepForever.toLong(),
-                id = id
-            )
-        }
+        cameraRecordsRepository.setKeepForever(id, keepForever)
 
-    override suspend fun rename(id: Long, name: String?) = withContext(Dispatchers.IO) {
-        cameraRecordQueries.rename(name, id)
-    }
+    override suspend fun rename(id: Long, name: String?) = cameraRecordsRepository.rename(id, name)
 
     override suspend fun saveNewRecord(cameraDTO: CameraDTO, timestamp: Long, record: Path): Unit =
         withContext(Dispatchers.IO) {
@@ -100,7 +69,7 @@ class RecordsInteractorImpl(
                 length = duration,
                 keepForever = false,
             )
-            val id = insert(cameraRecordDto)
+            val id = cameraRecordsRepository.insert(cameraRecordDto)
 
             val recordLocation = getRecord(id)
             recordLocation.parent.toFile().mkdirs()
@@ -125,34 +94,7 @@ class RecordsInteractorImpl(
     override fun getRecordsTmpPath(): Path = Path.of(serverConfigurationRepository.recordsTmpPath)
     private fun getRecordsPath(): Path = Path.of(serverConfigurationRepository.recordsPath)
 
-    private suspend fun insert(cameraRecord: CameraRecordDTO): Long = withContext(Dispatchers.IO) {
-        cameraRecordQueries.transactionWithResult {
-            cameraRecordQueries.insert(cameraRecord.toEntity())
-            cameraRecordQueries.lastInsertRowId().executeAsOne()
-        }
-    }
-
-    private fun CameraRecordDTO.toEntity(): CameraRecord {
-        return CameraRecord(
-            id = id,
-            cameraId = cameraId,
-            name = name,
-            timestamp = timestamp,
-            fileSize = fileSize,
-            length = length,
-            keepForever = keepForever.toLong()
-        )
-    }
-
-    private fun CameraRecord.toDTO(): CameraRecordDTO {
-        return CameraRecordDTO(
-            id = id,
-            cameraId = cameraId,
-            name = name,
-            timestamp = timestamp,
-            fileSize = fileSize,
-            length = length,
-            keepForever = keepForever.toBoolean()
-        )
+    override fun observeRecordsInfo(): Flow<List<CameraRecordsInfoDTO>> {
+        return TODO()
     }
 }

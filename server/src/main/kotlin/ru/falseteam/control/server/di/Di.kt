@@ -23,6 +23,8 @@ import ru.falseteam.control.server.domain.records.RecordsInteractor
 import ru.falseteam.control.server.domain.records.RecordsInteractorImpl
 import ru.falseteam.control.server.domain.videoencoder.VideoEncodeInteractor
 import ru.falseteam.control.server.domain.videoencoder.VideoEncodeInteractorImpl
+import ru.falseteam.control.server.repository.CameraRecordsRepository
+import ru.falseteam.control.server.repository.CameraRecordsRepositoryImpl
 import ru.falseteam.control.server.repository.ServerConfigurationRepository
 import ru.falseteam.control.server.repository.ServerConfigurationRepositoryImpl
 import ru.falseteam.control.server.rsub.CamsRSubImpl
@@ -34,6 +36,7 @@ import java.nio.file.Path
 val Kodein = DI {
     // Repository
     bind<ServerConfigurationRepository>() with singleton { ServerConfigurationRepositoryImpl() }
+    bind<CameraRecordsRepository>() with singleton { CameraRecordsRepositoryImpl(instance()) }
 
     // Database
     bind<SqlDriver>() with singleton { JdbcSqliteDriver("jdbc:sqlite:data/database.sqlite") }
