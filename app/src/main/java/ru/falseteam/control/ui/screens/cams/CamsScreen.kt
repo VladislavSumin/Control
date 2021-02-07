@@ -1,5 +1,6 @@
 package ru.falseteam.control.ui.screens.cams
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -81,35 +82,55 @@ private fun CameraCard(camera: CameraUiModel) {
                 }
             }
 
-            RecordsInfo(recordsInfoUiModel = camera.allRecordsInfo)
-            RecordsInfo(recordsInfoUiModel = camera.favouriteRecordsInfo)
+            Divider(modifier = Modifier.padding(0.dp, 8.dp))
+            RecordsInfo(
+                icon = R.drawable.ic_sigma,
+                recordsInfoUiModel = camera.allRecordsInfo
+            )
+            Divider(modifier = Modifier.padding(0.dp, 8.dp))
+            RecordsInfo(
+                icon = R.drawable.ic_star_filled,
+                recordsInfoUiModel = camera.favouriteRecordsInfo,
+            )
 
         }
     }
 }
 
 @Composable
-private fun RecordsInfo(recordsInfoUiModel: RecordsInfoUiModel) {
+private fun RecordsInfo(@DrawableRes icon: Int, recordsInfoUiModel: RecordsInfoUiModel) {
     Row {
-        Text(text = "Все записи", Modifier.weight(2f))
+        Icon(
+            imageVector = vectorResource(id = icon),
+            contentDescription = "",
+            modifier = Modifier.padding(0.dp, 0.dp, 8.dp, 0.dp)
+        )
 
         Icon(
             imageVector = vectorResource(id = R.drawable.ic_camera_records),
             contentDescription = "total count"
         )
-        Text(text = recordsInfoUiModel.totalCount, Modifier.weight(1f))
-
+        Text(text = recordsInfoUiModel.totalCount,
+            Modifier
+                .weight(.75f)
+                .padding(4.dp, 0.dp))
         Icon(
             imageVector = vectorResource(id = R.drawable.ic_time),
             contentDescription = "total length"
         )
-        Text(text = recordsInfoUiModel.totalLength, Modifier.weight(1f))
+        Text(text = recordsInfoUiModel.totalLength,
+            Modifier
+                .weight(1f)
+                .padding(4.dp, 0.dp))
 
         Icon(
             imageVector = vectorResource(id = R.drawable.ic_save),
             contentDescription = "total size"
         )
-        Text(text = recordsInfoUiModel.totalSize, Modifier.weight(1f))
+        Text(text = recordsInfoUiModel.totalSize,
+            Modifier
+                .weight(1f)
+                .padding(4.dp, 0.dp))
     }
 }
 
