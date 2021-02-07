@@ -3,7 +3,6 @@ import ru.falseteam.config.Configuration.Dependencies
 
 plugins {
     kotlin("jvm")
-    kotlin("plugin.serialization") version ru.falseteam.config.Configuration.Versions.kotlin
 }
 
 java {
@@ -11,17 +10,14 @@ java {
     targetCompatibility = JavaVersion.VERSION_1_8
 }
 
-group = "ru.falseteam.control.api"
+group = "ru.falseteam.control.common"
 version = "0.1.0"
 
 dependencies {
-    implementation("ru.falseteam.rsub:rsub-core")
-    api(project(":common"))
 
     with(Dependencies.Kotlin) {
         implementation(stdLibJdk8)
         implementation(coroutines)
-        implementation(serialization)
     }
 }
 

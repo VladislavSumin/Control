@@ -91,24 +91,25 @@ private fun CameraCard(camera: CameraUiModel) {
 @Composable
 private fun RecordsInfo(recordsInfoUiModel: RecordsInfoUiModel) {
     Row {
-        Text(text = "Все записи")
+        Text(text = "Все записи", Modifier.weight(2f))
+
         Icon(
             imageVector = vectorResource(id = R.drawable.ic_camera_records),
             contentDescription = "total count"
         )
-        Text(text = recordsInfoUiModel.totalCount)
+        Text(text = recordsInfoUiModel.totalCount, Modifier.weight(1f))
 
         Icon(
             imageVector = vectorResource(id = R.drawable.ic_time),
             contentDescription = "total length"
         )
-        Text(text = recordsInfoUiModel.totalLength)
+        Text(text = recordsInfoUiModel.totalLength, Modifier.weight(1f))
 
         Icon(
             imageVector = vectorResource(id = R.drawable.ic_save),
             contentDescription = "total size"
         )
-        Text(text = recordsInfoUiModel.totalSize)
+        Text(text = recordsInfoUiModel.totalSize, Modifier.weight(1f))
     }
 }
 

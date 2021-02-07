@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.combine
 import ru.falseteam.control.api.dto.CameraDTO
 import ru.falseteam.control.api.dto.CameraRecordsInfoDTO
 import ru.falseteam.control.api.dto.CameraStatusDTO
+import ru.falseteam.control.common.ByteSize
 import ru.falseteam.control.domain.cams.CamsInteractor
 
 class CamsViewModel(
@@ -46,7 +47,7 @@ class CamsViewModel(
         return RecordsInfoUiModel(
             totalCount = recordsInfo.totalCount.toString(),
             totalLength = recordsInfo.totalLength.toString(),
-            totalSize = recordsInfo.totalSize.toString(),
+            totalSize = ByteSize(recordsInfo.totalSize).toHumanReadableBinString(),
         )
     }
 }
