@@ -39,6 +39,13 @@ fun CamsScreen(viewModel: CamsViewModel = kodeinViewModel()) {
 }
 
 @Composable
+private fun CamsList(cams: List<CameraUiModel>) {
+    LazyColumn {
+        this.items(cams) { CameraCard(camera = it) }
+    }
+}
+
+@Composable
 private fun CameraCard(camera: CameraUiModel) {
     val navigation = AmbientNavigation.current
     Card(
@@ -73,7 +80,35 @@ private fun CameraCard(camera: CameraUiModel) {
                     )
                 }
             }
+
+            RecordsInfo(recordsInfoUiModel = camera.allRecordsInfo)
+            RecordsInfo(recordsInfoUiModel = camera.favouriteRecordsInfo)
+
         }
+    }
+}
+
+@Composable
+private fun RecordsInfo(recordsInfoUiModel: RecordsInfoUiModel) {
+    Row {
+        Text(text = "Все записи")
+        Icon(
+            imageVector = vectorResource(id = R.drawable.ic_camera_records),
+            contentDescription = "total count"
+        )
+        Text(text = recordsInfoUiModel.totalCount)
+
+        Icon(
+            imageVector = vectorResource(id = R.drawable.ic_time),
+            contentDescription = "total length"
+        )
+        Text(text = recordsInfoUiModel.totalLength)
+
+        Icon(
+            imageVector = vectorResource(id = R.drawable.ic_save),
+            contentDescription = "total size"
+        )
+        Text(text = recordsInfoUiModel.totalSize)
     }
 }
 
@@ -83,12 +118,5 @@ private fun IsCameraConnectedText(isConnected: Boolean) {
         Text(text = "Connected", color = green900)
     } else {
         Text(text = "Disconnected", color = red900)
-    }
-}
-
-@Composable
-private fun CamsList(cams: List<CameraUiModel>) {
-    LazyColumn {
-        this.items(cams) { CameraCard(camera = it) }
     }
 }

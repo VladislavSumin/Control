@@ -36,7 +36,17 @@ class CamsViewModel(
             camera.id,
             camera.name,
             "${camera.address}:${camera.port}",
-            isConnected
+            isConnected,
+            createRecordInfoUiModel(recordsInfo.allRecords),
+            createRecordInfoUiModel(recordsInfo.keepForeverRecords),
+        )
+    }
+
+    private fun createRecordInfoUiModel(recordsInfo: CameraRecordsInfoDTO.RecordsCategoryInfo): RecordsInfoUiModel {
+        return RecordsInfoUiModel(
+            totalCount = recordsInfo.totalCount.toString(),
+            totalLength = recordsInfo.totalLength.toString(),
+            totalSize = recordsInfo.totalSize.toString(),
         )
     }
 }

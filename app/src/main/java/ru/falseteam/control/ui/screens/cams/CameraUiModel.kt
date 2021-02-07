@@ -4,5 +4,7 @@ data class CameraUiModel(
     val id: Long,
     val name: String,
     val address: String,
-    val isConnected: Boolean
+    val isConnected: Boolean,
+    val allRecordsInfo: RecordsInfoUiModel,
+    val favouriteRecordsInfo: RecordsInfoUiModel,
 )

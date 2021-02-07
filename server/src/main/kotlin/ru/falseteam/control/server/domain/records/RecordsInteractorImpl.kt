@@ -31,12 +31,16 @@ class RecordsInteractorImpl(
                     //TODO optimize records list iteration count
                     val keepForever = records.filter { it.keepForever }
                     CameraRecordsInfoDTO(
-                        totalCount = records.size,
-                        totalLength = records.sumOf { it.length },
-                        totalSize = records.sumOf { it.fileSize },
-                        totalKeepForever = keepForever.size,
-                        totalKeepForeverLength = keepForever.sumOf { it.length },
-                        totalKeepForeverSize = keepForever.sumOf { it.fileSize },
+                        allRecords = CameraRecordsInfoDTO.RecordsCategoryInfo(
+                            totalCount = records.size,
+                            totalLength = records.sumOf { it.length },
+                            totalSize = records.sumOf { it.fileSize },
+                        ),
+                        keepForeverRecords = CameraRecordsInfoDTO.RecordsCategoryInfo(
+                            totalCount = keepForever.size,
+                            totalLength = keepForever.sumOf { it.length },
+                            totalSize = keepForever.sumOf { it.fileSize },
+                        ),
                         lastRecordTimestamp = records.maxOf { it.timestamp }
                     )
                 }

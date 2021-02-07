@@ -4,11 +4,15 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class CameraRecordsInfoDTO(
-    val totalCount: Int,
-    val totalLength: Long,
-    val totalSize: Long,
-    val totalKeepForever: Int,
-    val totalKeepForeverLength: Long,
-    val totalKeepForeverSize: Long,
+    val allRecords: RecordsCategoryInfo,
+    val keepForeverRecords: RecordsCategoryInfo,
     val lastRecordTimestamp: Long,
-)
+) {
+    @Serializable
+    data class RecordsCategoryInfo(
+        val totalCount: Int,
+        val totalLength: Long,
+        val totalSize: Long,
+    )
+}
+
