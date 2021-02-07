@@ -36,5 +36,5 @@ interface RecordsInteractor {
 
     fun getPreview(id: Long): Path
 
-    fun observeRecordsInfo(): Flow<List<CameraRecordsInfoDTO>>
+    fun observeRecordsInfo(): Flow<Map<Long, CameraRecordsInfoDTO>>
 }

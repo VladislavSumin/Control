@@ -2,6 +2,7 @@ package ru.falseteam.control.api.rsub
 
 import kotlinx.coroutines.flow.Flow
 import ru.falseteam.control.api.dto.CameraDTO
+import ru.falseteam.control.api.dto.CameraRecordsInfoDTO
 import ru.falseteam.control.api.dto.CameraStatusDTO
 import ru.falseteam.rsub.RSubFlowPolicy
 import ru.falseteam.rsub.RSubInterface
@@ -13,4 +14,7 @@ interface CamsRSub {
 
     @RSubFlowPolicy(RSubFlowPolicy.Policy.SUPPRESS_EXCEPTION_AND_RECONNECT)
     fun observeStatus(): Flow<Map<Long, CameraStatusDTO>>
+
+    @RSubFlowPolicy(RSubFlowPolicy.Policy.SUPPRESS_EXCEPTION_AND_RECONNECT)
+    fun observeRecordsInfo(): Flow<Map<Long, CameraRecordsInfoDTO>>
 }

@@ -27,13 +27,17 @@ class RecordsInteractorImpl(
         .map { records ->
             records
                 .groupBy { it.cameraId }
-                .map { (id, records) ->
+                .mapValues { (_, records) ->
                     //TODO optimize records list iteration count
+                    val keepForever = records.filter { it.keepForever }
                     CameraRecordsInfoDTO(
-                        cameraId = id,
                         totalCount = records.size,
                         totalLength = records.sumOf { it.length },
-                        totalSize = records.sumOf { it.fileSize }
+                        totalSize = records.sumOf { it.fileSize },
+                        totalKeepForever = keepForever.size,
+                        totalKeepForeverLength = keepForever.sumOf { it.length },
+                        totalKeepForeverSize = keepForever.sumOf { it.fileSize },
+                        lastRecordTimestamp = records.maxOf { it.timestamp }
                     )
                 }
         }.shareIn(
@@ -119,7 +123,7 @@ class RecordsInteractorImpl(
     override fun getRecordsTmpPath(): Path = Path.of(serverConfigurationRepository.recordsTmpPath)
     private fun getRecordsPath(): Path = Path.of(serverConfigurationRepository.recordsPath)
 
-    override fun observeRecordsInfo(): Flow<List<CameraRecordsInfoDTO>> {
+    override fun observeRecordsInfo(): Flow<Map<Long, CameraRecordsInfoDTO>> {
         return cameraRecordsInfoObservable
     }
 }

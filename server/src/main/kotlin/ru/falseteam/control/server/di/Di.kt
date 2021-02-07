@@ -71,6 +71,6 @@ val Kodein = DI {
             registerImpl(instance<CamsRecordRSub>())
         }
     }
-    bind<CamsRSub>() with singleton { CamsRSubImpl(instance(), instance()) }
+    bind<CamsRSub>() with singleton { CamsRSubImpl(instance(), instance(), instance()) }
     bind<CamsRecordRSub>() with singleton { CamsRecordRSubImpl(instance()) }
 }
