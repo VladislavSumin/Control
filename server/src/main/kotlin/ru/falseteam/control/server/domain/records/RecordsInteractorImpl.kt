@@ -1,7 +1,11 @@
 package ru.falseteam.control.server.domain.records
 
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.withContext
 import ru.falseteam.control.api.dto.CameraDTO
 import ru.falseteam.control.api.dto.CameraRecordDTO
@@ -17,6 +21,27 @@ class RecordsInteractorImpl(
     private val videoEncodeInteractor: VideoEncodeInteractor,
     private val serverConfigurationRepository: ServerConfigurationRepository,
 ) : RecordsInteractor {
+
+    //TODO make custom sql request
+    private val cameraRecordsInfoObservable = cameraRecordsRepository.observeAll()
+        .map { records ->
+            records
+                .groupBy { it.cameraId }
+                .map { (id, records) ->
+                    //TODO optimize records list iteration count
+                    CameraRecordsInfoDTO(
+                        cameraId = id,
+                        totalCount = records.size,
+                        totalLength = records.sumOf { it.length },
+                        totalSize = records.sumOf { it.fileSize }
+                    )
+                }
+        }.shareIn(
+            scope = GlobalScope,
+            started = SharingStarted.WhileSubscribed(replayExpirationMillis = 0),
+            replay = 1
+        )
+
     init {
         getRecordsPath().toFile().mkdirs()
         getRecordsTmpPath().toFile().mkdirs()
@@ -95,6 +120,6 @@ class RecordsInteractorImpl(
     private fun getRecordsPath(): Path = Path.of(serverConfigurationRepository.recordsPath)
 
     override fun observeRecordsInfo(): Flow<List<CameraRecordsInfoDTO>> {
-        return TODO()
+        return cameraRecordsInfoObservable
     }
 }

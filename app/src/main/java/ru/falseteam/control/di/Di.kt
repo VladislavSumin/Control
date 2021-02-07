@@ -14,7 +14,6 @@ import ru.falseteam.control.api.RecordsApi
 import ru.falseteam.control.api.RecordsApiImpl
 import ru.falseteam.control.api.rsub.CamsRSub
 import ru.falseteam.control.api.rsub.CamsRecordRSub
-import ru.falseteam.control.api.rsub.CamsStatusRSub
 import ru.falseteam.control.domain.analytic.AnalyticInteractor
 import ru.falseteam.control.domain.analytic.AnalyticInteractorImpl
 import ru.falseteam.control.domain.cams.CamsInteractor
@@ -46,7 +45,7 @@ val Kodein = DI.lazy {
     // Domain
     bind<AnalyticInteractor>() with singleton { AnalyticInteractorImpl(instance()) }
     bind<CamsInteractor>() with singleton {
-        CamsInteractorImpl(instance(), instance(), instance(), instance())
+        CamsInteractorImpl(instance(), instance(), instance())
     }
     bind<RecordsInteractor>() with singleton {
         RecordsInteractorImpl(instance(), instance(), instance())
@@ -86,6 +85,5 @@ val Kodein = DI.lazy {
         }
     }
     bind<CamsRSub>() with singleton { instance<RSubClient>().getProxy(CamsRSub::class) }
-    bind<CamsStatusRSub>() with singleton { instance<RSubClient>().getProxy(CamsStatusRSub::class) }
     bind<CamsRecordRSub>() with singleton { instance<RSubClient>().getProxy(CamsRecordRSub::class) }
 }

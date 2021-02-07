@@ -5,7 +5,6 @@ import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver
 import org.kodein.di.*
 import ru.falseteam.control.api.rsub.CamsRSub
 import ru.falseteam.control.api.rsub.CamsRecordRSub
-import ru.falseteam.control.api.rsub.CamsStatusRSub
 import ru.falseteam.control.server.api.CamsApi
 import ru.falseteam.control.server.api.RecordsApi
 import ru.falseteam.control.server.database.CameraQueries
@@ -29,7 +28,6 @@ import ru.falseteam.control.server.repository.ServerConfigurationRepository
 import ru.falseteam.control.server.repository.ServerConfigurationRepositoryImpl
 import ru.falseteam.control.server.rsub.CamsRSubImpl
 import ru.falseteam.control.server.rsub.CamsRecordRSubImpl
-import ru.falseteam.control.server.rsub.CamsStatusRSubImpl
 import ru.falseteam.rsub.server.RSubServer
 import java.nio.file.Path
 
@@ -70,11 +68,9 @@ val Kodein = DI {
     bind<RSubServer>() with singleton {
         RSubServer().apply {
             registerImpl(instance<CamsRSub>())
-            registerImpl(instance<CamsStatusRSub>())
             registerImpl(instance<CamsRecordRSub>())
         }
     }
-    bind<CamsRSub>() with singleton { CamsRSubImpl(instance()) }
-    bind<CamsStatusRSub>() with singleton { CamsStatusRSubImpl(instance()) }
+    bind<CamsRSub>() with singleton { CamsRSubImpl(instance(), instance()) }
     bind<CamsRecordRSub>() with singleton { CamsRecordRSubImpl(instance()) }
 }
