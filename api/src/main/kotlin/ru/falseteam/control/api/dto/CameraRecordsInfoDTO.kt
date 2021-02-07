@@ -1,5 +1,8 @@
 package ru.falseteam.control.api.dto
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class CameraRecordsInfoDTO(
     val totalCount: Int,
     val totalLength: Long,
