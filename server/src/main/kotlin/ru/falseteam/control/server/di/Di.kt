@@ -6,6 +6,7 @@ import org.kodein.di.*
 import ru.falseteam.control.api.rsub.CamsRSub
 import ru.falseteam.control.api.rsub.CamsRecordRSub
 import ru.falseteam.control.server.api.CamsApi
+import ru.falseteam.control.server.api.EntityApi
 import ru.falseteam.control.server.api.RecordsApi
 import ru.falseteam.control.server.database.CameraQueries
 import ru.falseteam.control.server.database.CameraRecordQueries
@@ -18,6 +19,8 @@ import ru.falseteam.control.server.domain.configuration.ConfigurationInteractor
 import ru.falseteam.control.server.domain.configuration.ConfigurationInteractorImpl
 import ru.falseteam.control.server.domain.debug.DebugInteractor
 import ru.falseteam.control.server.domain.debug.DebugInteractorImpl
+import ru.falseteam.control.server.domain.entity.EntityInteractor
+import ru.falseteam.control.server.domain.entity.EntityInteractorImpl
 import ru.falseteam.control.server.domain.records.RecordsInteractor
 import ru.falseteam.control.server.domain.records.RecordsInteractorImpl
 import ru.falseteam.control.server.domain.videoencoder.VideoEncodeInteractor
@@ -59,10 +62,12 @@ val Kodein = DI {
     bind<VideoEncodeInteractor>() with singleton { VideoEncodeInteractorImpl() }
     bind<ConfigurationInteractor>() with singleton { ConfigurationInteractorImpl(instance()) }
     bind<DebugInteractor>() with singleton { DebugInteractorImpl(instance()) }
+    bind<EntityInteractor>() with singleton { EntityInteractorImpl() }
 
     // Api
     bind<CamsApi>() with singleton { CamsApi(instance(), instance()) }
     bind<RecordsApi>() with singleton { RecordsApi(instance()) }
+    bind<EntityApi>() with singleton { EntityApi(instance()) }
 
     // rSub
     bind<RSubServer>() with singleton {
