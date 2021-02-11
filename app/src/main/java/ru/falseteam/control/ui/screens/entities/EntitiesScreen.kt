@@ -43,6 +43,9 @@ private fun EntityCard(entity: EntityUiModel) {
         Column(modifier = Modifier.padding(16.dp, 8.dp)) {
             Text(text = entity.id)
             Text(text = entity.type)
+            entity.states.forEach {
+                Text(it.toString())
+            }
         }
     }
 }
