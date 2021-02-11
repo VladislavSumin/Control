@@ -16,4 +16,8 @@ class SwitchEntity(id: String) : Entity(id) {
     }
 
     override val info: EntityInfoDTO = Info
+
+    suspend fun setState(state: Boolean) {
+        statesObservable.emit(mapOf("isEnabled" to EntityStateDto.BooleanState(state)))
+    }
 }

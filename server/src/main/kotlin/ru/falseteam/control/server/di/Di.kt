@@ -9,6 +9,7 @@ import ru.falseteam.control.api.rsub.EntitiesRSub
 import ru.falseteam.control.server.api.CamsApi
 import ru.falseteam.control.server.api.EntityApi
 import ru.falseteam.control.server.api.RecordsApi
+import ru.falseteam.control.server.api.entity.SwitchEntityApi
 import ru.falseteam.control.server.database.CameraQueries
 import ru.falseteam.control.server.database.CameraRecordQueries
 import ru.falseteam.control.server.database.Database
@@ -70,6 +71,7 @@ val Kodein = DI {
     bind<CamsApi>() with singleton { CamsApi(instance(), instance()) }
     bind<RecordsApi>() with singleton { RecordsApi(instance()) }
     bind<EntityApi>() with singleton { EntityApi(instance()) }
+    bind<SwitchEntityApi>() with singleton { SwitchEntityApi(instance()) }
 
     // rSub
     bind<RSubServer>() with singleton {

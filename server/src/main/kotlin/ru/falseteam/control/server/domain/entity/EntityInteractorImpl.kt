@@ -32,6 +32,8 @@ class EntityInteractorImpl : EntityInteractor {
         }
     }
 
+    private suspend fun getEntities() = entitiesObservable.first()
+
     override suspend fun getEntitiesInfo(): Map<String, EntityInfoDTO> =
         entitiesInfoObservable.first()
 
@@ -42,6 +44,8 @@ class EntityInteractorImpl : EntityInteractor {
 
     override fun observeEntitiesStates(): Flow<Map<String, Map<String, EntityStateDto>>> =
         entitiesStatesObservable
+
+    override suspend fun getEntity(id: String): Entity = getEntities().getValue(id)
 
     private operator fun MutableMap<String, Entity>.plusAssign(entity: Entity) {
         this[entity.id] = entity

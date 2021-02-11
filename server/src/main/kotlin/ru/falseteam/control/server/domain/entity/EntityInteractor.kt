@@ -10,4 +10,6 @@ interface EntityInteractor {
 
     suspend fun getEntitiesStates(): Map<String, Map<String, EntityStateDto>>
     fun observeEntitiesStates(): Flow<Map<String, Map<String, EntityStateDto>>>
+
+    suspend fun getEntity(id: String): Entity
 }
