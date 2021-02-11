@@ -22,6 +22,7 @@ import ru.falseteam.control.ui.screens.Screen
 import ru.falseteam.control.ui.screens.addcamera.AddCameraScreen
 import ru.falseteam.control.ui.screens.addserver.AddServerScreen
 import ru.falseteam.control.ui.screens.cams.CamsScreen
+import ru.falseteam.control.ui.screens.entities.EntitiesScreen
 import ru.falseteam.control.ui.screens.livestream.LivestreamScreen
 import ru.falseteam.control.ui.screens.navigate
 import ru.falseteam.control.ui.screens.popUpTo
@@ -55,6 +56,7 @@ fun MainScreen() {
 private fun MainContent(navController: NavHostController) {
     NavHost(navController = navController, startDestination = Screen.StartScreen.path) {
         composable(Screen.Cams.path) { CamsScreen() }
+        composable(Screen.Entities.path) { EntitiesScreen() }
         composable(Screen.Records.path) { RecordsScreen() }
         composable(Screen.Settings.path) { SettingsScreen() }
         composable(Screen.AddCamera.path) { AddCameraScreen() }
@@ -101,6 +103,7 @@ private fun Navigation(navController: NavController, navItems: List<NavItem>) {
 private val navItems = listOf(
     NavItem.Records,
     NavItem.Cams,
+    NavItem.Entities,
     NavItem.Settings,
 )
 
@@ -111,5 +114,6 @@ private sealed class NavItem(
 ) {
     object Records : NavItem(Screen.Records, "Records", R.drawable.ic_camera_records)
     object Cams : NavItem(Screen.Cams, "Cams", R.drawable.ic_security_camera)
+    object Entities : NavItem(Screen.Entities, "Entities", R.drawable.ic_home)
     object Settings : NavItem(Screen.Settings, "Settings", R.drawable.ic_settings)
 }

@@ -14,10 +14,13 @@ import ru.falseteam.control.api.RecordsApi
 import ru.falseteam.control.api.RecordsApiImpl
 import ru.falseteam.control.api.rsub.CamsRSub
 import ru.falseteam.control.api.rsub.CamsRecordRSub
+import ru.falseteam.control.api.rsub.EntitiesRSub
 import ru.falseteam.control.domain.analytic.AnalyticInteractor
 import ru.falseteam.control.domain.analytic.AnalyticInteractorImpl
 import ru.falseteam.control.domain.cams.CamsInteractor
 import ru.falseteam.control.domain.cams.CamsInteractorImpl
+import ru.falseteam.control.domain.entities.EntitiesInteractor
+import ru.falseteam.control.domain.entities.EntitiesInteractorImpl
 import ru.falseteam.control.domain.records.RecordsInteractor
 import ru.falseteam.control.domain.records.RecordsInteractorImpl
 import ru.falseteam.control.domain.servers.ServersInteractor
@@ -31,6 +34,7 @@ import ru.falseteam.control.repository.themes.ThemesRepositoryImpl
 import ru.falseteam.control.ui.screens.addcamera.AddCameraViewModel
 import ru.falseteam.control.ui.screens.addserver.AddServerViewModel
 import ru.falseteam.control.ui.screens.cams.CamsViewModel
+import ru.falseteam.control.ui.screens.entities.EntitiesViewModel
 import ru.falseteam.control.ui.screens.recors.RecordsViewModel
 import ru.falseteam.rsub.client.RSubClient
 import ru.falseteam.rsub.connector.ktorwebsocket.client.RSubConnectorKtorWebSocket
@@ -52,6 +56,7 @@ val Kodein = DI.lazy {
     }
     bind<ThemesInteractor>() with singleton { ThemesInteractorImpl(instance()) }
     bind<ServersInteractor>() with singleton { ServersInteractorImpl(instance()) }
+    bind<EntitiesInteractor>() with singleton { EntitiesInteractorImpl(instance()) }
 
     // Api
     bind<CamsApi>() with singleton { CamsApiImpl(instance()) }
@@ -63,6 +68,7 @@ val Kodein = DI.lazy {
     bindViewModel<CamsViewModel>() with provider { CamsViewModel(instance()) }
     bindViewModel<RecordsViewModel>() with provider { RecordsViewModel(instance(), instance()) }
     bindViewModel<AddServerViewModel>() with provider { AddServerViewModel(instance()) }
+    bindViewModel<EntitiesViewModel>() with provider { EntitiesViewModel(instance()) }
 
     // rSub
     bind<HttpClient>() with singleton {
@@ -86,4 +92,5 @@ val Kodein = DI.lazy {
     }
     bind<CamsRSub>() with singleton { instance<RSubClient>().getProxy(CamsRSub::class) }
     bind<CamsRecordRSub>() with singleton { instance<RSubClient>().getProxy(CamsRecordRSub::class) }
+    bind<EntitiesRSub>() with singleton { instance<RSubClient>().getProxy(EntitiesRSub::class) }
 }

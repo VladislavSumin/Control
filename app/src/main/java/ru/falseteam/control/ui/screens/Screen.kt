@@ -14,6 +14,7 @@ sealed class Screen(val path: String) {
 
     object Cams : Screen("cams")
     object Records : Screen("records")
+    object Entities : Screen("entities")
     object Settings : Screen("settings")
     object AddCamera : Screen("add_camera")
     object AddServer : Screen("add_server")
