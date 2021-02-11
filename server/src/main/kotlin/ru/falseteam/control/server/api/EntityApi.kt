@@ -12,5 +12,9 @@ class EntityApi(
         get(path = "/api/v1/entities") {
             call.respond(entityInteractor.getEntitiesInfo())
         }
+
+        get(path = "/api/v1/entities/states") {
+            call.respond(entityInteractor.getEntitiesStates())
+        }
     }
 }
