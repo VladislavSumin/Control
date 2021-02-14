@@ -8,7 +8,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath("com.android.tools.build:gradle:7.0.0-alpha05")
+        classpath("com.android.tools.build:gradle:7.0.0-alpha06")
         classpath(ru.falseteam.config.Configuration.Dependencies.Kotlin.plugin)
         classpath(ru.falseteam.config.Configuration.Dependencies.Sqldelight.plugin)
         classpath("com.github.jengelman.gradle.plugins:shadow:6.1.0")
