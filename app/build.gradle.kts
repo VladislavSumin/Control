@@ -94,6 +94,10 @@ dependencies {
     implementation(project(":uikit"))
     implementation("ru.falseteam.rsub:rsub-ktor-websocket-connector-client")
 
+    with(Configuration.Dependencies.Kotlin) {
+        implementation(reflect)
+    }
+
     with(Configuration.Dependencies) {
         implementation(kodein)
         implementation(kodeinAndroidX)
@@ -112,7 +116,9 @@ dependencies {
 
     with(Configuration.Dependencies.Compose) {
         implementation(navigation)
+        debugImplementation(uiTooling)
     }
+
     with(Configuration.Dependencies.Android) {
         implementation(activity)
         implementation(activityCompose)

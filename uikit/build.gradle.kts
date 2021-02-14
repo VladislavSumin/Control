@@ -55,6 +55,5 @@ dependencies {
     with(Configuration.Dependencies.Compose) {
         api(ui)
         api(material)
-        api(uiTooling)
     }
 }
