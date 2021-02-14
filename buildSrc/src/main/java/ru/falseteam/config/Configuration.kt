@@ -5,7 +5,7 @@ object Configuration {
         const val kotlin = "1.4.30"
         const val ktor = "1.5.1"
         const val log4j2 = "2.14.0"
-        const val kodein = "7.2.0"
+        const val kodein = "7.3.1"
         const val sqldelight = "1.4.4"
         const val sentry = "4.1.0"
         const val compose = "1.0.0-alpha12"
@@ -47,7 +47,7 @@ object Configuration {
         const val sentryAndroid = "io.sentry:sentry-android:${Versions.sentry}"
         const val sentry = "io.sentry:sentry:${Versions.sentry}"
 
-        const val exoplayer = "com.google.android.exoplayer:exoplayer:2.12.3"
+        const val exoplayer = "com.google.android.exoplayer:exoplayer:2.13.1"
 
         const val glide = "com.github.bumptech.glide:glide:${Versions.glide}"
         const val glideCompiler = "com.github.bumptech.glide:compiler:${Versions.glide}"
