@@ -5,6 +5,8 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.savedinstancestate.savedInstanceState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -29,7 +31,7 @@ fun AddServerScreen(viewModel: AddServerViewModel = kodeinViewModel()) {
 
 @Composable
 private fun InputState(viewModel: AddServerViewModel) {
-    val (url, setUrl) = savedInstanceState { "" }
+    val (url, setUrl) = rememberSaveable { mutableStateOf("") }
     Column(
         Modifier
             .fillMaxWidth()
