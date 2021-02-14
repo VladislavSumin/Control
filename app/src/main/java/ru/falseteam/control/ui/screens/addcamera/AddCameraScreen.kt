@@ -6,6 +6,8 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.savedinstancestate.savedInstanceState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
@@ -22,9 +24,9 @@ fun AddCameraScreen(
     val state = viewModel.state.collectAsState().value
     val isLoading = state is AddCameraState.Loading
 
-    val (name, setName) = savedInstanceState { "" }
-    val (address, setAddress) = savedInstanceState { "" }
-    val (port, setPort) = savedInstanceState { "" }
+    val (name, setName) = rememberSaveable { mutableStateOf("") }
+    val (address, setAddress) = rememberSaveable { mutableStateOf("") }
+    val (port, setPort) = rememberSaveable { mutableStateOf("") }
 
     if (state is AddCameraState.Success) {
         AmbientNavigation.current.popBackStack()

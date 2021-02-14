@@ -94,6 +94,10 @@ dependencies {
     implementation(project(":uikit"))
     implementation("ru.falseteam.rsub:rsub-ktor-websocket-connector-client")
 
+    with(Configuration.Dependencies.Kotlin) {
+        implementation(reflect)
+    }
+
     with(Configuration.Dependencies) {
         implementation(kodein)
         implementation(kodeinAndroidX)
@@ -112,11 +116,19 @@ dependencies {
 
     with(Configuration.Dependencies.Compose) {
         implementation(navigation)
+        debugImplementation(uiTooling)
+    }
+
+    with(Configuration.Dependencies.Android) {
+        implementation(activity)
+        implementation(activityCompose)
+        implementation(activityKtx)
     }
 
     implementation("androidx.core:core-ktx:1.3.2")
     implementation("androidx.appcompat:appcompat:1.2.0")
-    implementation("com.google.android.material:material:1.2.1")
+    implementation("com.google.android.material:material:1.3.0")
+
 //    testImplementation("junit:junit:4.13.1")
 //    androidTestImplementation("androidx.test.ext:junit:1.1.2")
 //    androidTestImplementation("androidx.test.espresso:espresso-core:3.3.0")

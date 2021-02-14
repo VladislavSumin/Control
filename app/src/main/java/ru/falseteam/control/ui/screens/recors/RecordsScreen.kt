@@ -213,7 +213,7 @@ private fun RecordCard(
                 }
             }
 
-            val (isPlayerActive, setIsPlayerActive) = remember { mutableStateOf(false) }
+            val (isPlayerActive, setIsPlayerActive) = remember(record) { mutableStateOf(false) }
             if (isPlayerActive) {
                 VideoRecord(record, playerCache)
             } else {
@@ -283,7 +283,7 @@ private fun Preview(record: RecordUiModel, onlClick: () -> Unit) {
 @Composable
 private fun loadPicture(uri: Uri): PictureLoadState {
     val context = AmbientContext.current
-    val (bitmapState, _) = remember {
+    val (bitmapState, _) = remember(uri) {
         val state = mutableStateOf<PictureLoadState>(PictureLoadState.Loading)
         val (_, setState) = state
         Glide.with(context)
