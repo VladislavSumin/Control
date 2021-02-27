@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import ru.falseteam.control.BuildConfig
@@ -19,18 +20,18 @@ import ru.falseteam.control.di.kodeinViewModel
 import ru.falseteam.uikit.green900
 import ru.falseteam.uikit.red900
 import ru.falseteam.control.ui.screens.Screen
-import ru.falseteam.control.ui.screens.main.AmbientNavigation
+import ru.falseteam.control.ui.screens.main.LocalNavigation
 import ru.falseteam.control.ui.screens.navigate
 import ru.falseteam.uikit.elements.UikitFullScreenProgressBar
 
 @Composable
 fun CamsScreen(viewModel: CamsViewModel = kodeinViewModel()) {
     val cams = viewModel.camsUi.collectAsState(initial = null).value
-    val navigation = AmbientNavigation.current
+    val navigation = LocalNavigation.current
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(onClick = { navigation.navigate(Screen.AddCamera) }) {
-                Image(vectorResource(id = R.drawable.ic_add), "add camera")
+                Image(ImageVector.vectorResource(id = R.drawable.ic_add), "add camera")
             }
         },
     ) {
@@ -48,7 +49,7 @@ private fun CamsList(cams: List<CameraUiModel>) {
 
 @Composable
 private fun CameraCard(camera: CameraUiModel) {
-    val navigation = AmbientNavigation.current
+    val navigation = LocalNavigation.current
     Card(
         modifier = Modifier
             .padding(8.dp, 6.dp)
@@ -101,13 +102,13 @@ private fun CameraCard(camera: CameraUiModel) {
 private fun RecordsInfo(@DrawableRes icon: Int, recordsInfoUiModel: RecordsInfoUiModel) {
     Row {
         Icon(
-            imageVector = vectorResource(id = icon),
+            imageVector = ImageVector.vectorResource(id = icon),
             contentDescription = "",
             modifier = Modifier.padding(0.dp, 0.dp, 8.dp, 0.dp)
         )
 
         Icon(
-            imageVector = vectorResource(id = R.drawable.ic_camera_records),
+            imageVector = ImageVector.vectorResource(id = R.drawable.ic_camera_records),
             contentDescription = "total count"
         )
         Text(text = recordsInfoUiModel.totalCount,
@@ -115,7 +116,7 @@ private fun RecordsInfo(@DrawableRes icon: Int, recordsInfoUiModel: RecordsInfoU
                 .weight(.75f)
                 .padding(4.dp, 0.dp))
         Icon(
-            imageVector = vectorResource(id = R.drawable.ic_time),
+            imageVector = ImageVector.vectorResource(id = R.drawable.ic_time),
             contentDescription = "total length"
         )
         Text(text = recordsInfoUiModel.totalLength,
@@ -124,7 +125,7 @@ private fun RecordsInfo(@DrawableRes icon: Int, recordsInfoUiModel: RecordsInfoU
                 .padding(4.dp, 0.dp))
 
         Icon(
-            imageVector = vectorResource(id = R.drawable.ic_save),
+            imageVector = ImageVector.vectorResource(id = R.drawable.ic_save),
             contentDescription = "total size"
         )
         Text(text = recordsInfoUiModel.totalSize,

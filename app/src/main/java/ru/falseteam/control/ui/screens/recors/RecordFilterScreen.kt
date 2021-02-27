@@ -9,7 +9,7 @@ import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
-import androidx.compose.ui.platform.AmbientContext
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
 import ru.falseteam.uikit.elements.UikitCheckBoxListItem
 import java.time.LocalDate
@@ -42,7 +42,7 @@ fun RecordsFilterScreen(viewModel: RecordsViewModel) {
 @Composable
 private fun CalendarFilter(state: RecordFilterUiModel, viewModel: RecordsViewModel) {
     Surface {
-        val context = AmbientContext.current
+        val context = LocalContext.current
         val calendar = remember {
             CalendarView(context).apply {
                 setOnDateChangeListener { _, year, month, dayOfMonth ->
@@ -52,7 +52,7 @@ private fun CalendarFilter(state: RecordFilterUiModel, viewModel: RecordsViewMod
                 }
             }
         }
-        AndroidView(viewBlock = { calendar })
+        AndroidView(factory = { calendar })
     }
 }
 

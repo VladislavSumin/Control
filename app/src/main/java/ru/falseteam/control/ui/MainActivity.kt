@@ -1,10 +1,11 @@
 package ru.falseteam.control.ui
 
 import android.os.Bundle
+import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.platform.setContent
+import androidx.compose.ui.platform.LocalContext
 import org.kodein.di.direct
 import org.kodein.di.instance
 import ru.falseteam.control.di.Kodein
@@ -20,7 +21,7 @@ class MainActivity : AppCompatActivity() {
             Kodein.direct.instance<ThemesInteractor>().observeIsDarkTheme().collectAsState(
                 initial = false
             )
-
+            LocalContext
             ControlTheme(darkTheme = isDarkTheme) {
                 MainScreen()
             }

@@ -8,10 +8,10 @@ object Configuration {
         const val kodein = "7.3.1"
         const val sqldelight = "1.4.4"
         const val sentry = "4.1.0"
-        const val compose = "1.0.0-alpha12"
+        const val compose = "1.0.0-beta01"
         const val coroutines = "1.4.2"
         const val glide = "4.12.0"
-        const val activity = "1.3.0-alpha02"
+        const val activity = "1.3.0-alpha03"
     }
 
     object Android {
@@ -71,7 +71,7 @@ object Configuration {
             const val ui = "androidx.compose.ui:ui:${Versions.compose}"
             const val material = "androidx.compose.material:material:${Versions.compose}"
             const val uiTooling = "androidx.compose.ui:ui-tooling:${Versions.compose}"
-            const val navigation = "androidx.navigation:navigation-compose:1.0.0-alpha07"
+            const val navigation = "androidx.navigation:navigation-compose:1.0.0-alpha08"
         }
 
         object Android {

@@ -9,7 +9,7 @@ import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.AmbientContext
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import org.kodein.di.direct
@@ -19,7 +19,7 @@ import ru.falseteam.control.di.Kodein
 @Composable
 fun LivestreamScreen(id: Long) {
     Surface {
-        val context = AmbientContext.current
+        val context = LocalContext.current
         val surfaceView = remember {
             SurfaceView(context).apply {
                 holder.addCallback(SurfaceCallback(id, VideoDecodeThread()))
@@ -31,7 +31,7 @@ fun LivestreamScreen(id: Long) {
                 .fillMaxWidth()
                 .fillMaxHeight()
                 .padding(1.dp),
-            viewBlock = { surfaceView }
+            factory = { surfaceView }
         ) {
         }
     }
