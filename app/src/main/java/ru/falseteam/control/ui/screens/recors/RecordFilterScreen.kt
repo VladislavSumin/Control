@@ -43,16 +43,14 @@ fun RecordsFilterScreen(viewModel: RecordsViewModel) {
 private fun CalendarFilter(state: RecordFilterUiModel, viewModel: RecordsViewModel) {
     Surface {
         val context = LocalContext.current
-        val calendar = remember {
-            CalendarView(context).apply {
-                setOnDateChangeListener { _, year, month, dayOfMonth ->
-                    val date = LocalDate.of(year, month + 1, dayOfMonth)
-                    val newState = state.copy(date = date)
-                    viewModel.updateFilterModel(newState)
-                }
+        val calendar = remember { CalendarView(context) }
+        AndroidView(factory = { calendar }) {
+            it.setOnDateChangeListener { _, year, month, dayOfMonth ->
+                val date = LocalDate.of(year, month + 1, dayOfMonth)
+                val newState = state.copy(date = date)
+                viewModel.updateFilterModel(newState)
             }
         }
-        AndroidView(factory = { calendar })
     }
 }
 
