@@ -3,6 +3,7 @@ package ru.falseteam.control.di
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.compose.viewModel
 import org.kodein.di.*
 
 class DiViewModelFactory(
@@ -21,7 +22,7 @@ inline fun <reified T : ViewModel> DI.Builder.bindViewModel(overrides: Boolean? 
 @Composable
 inline fun <reified VM : ViewModel> kodeinViewModel(
     key: String? = null
-): VM = androidx.compose.ui.viewinterop.viewModel(
+): VM = viewModel(
     VM::class.java,
     key,
     Kodein.direct.instance()

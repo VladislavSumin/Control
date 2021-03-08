@@ -6,11 +6,9 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Providers
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.staticAmbientOf
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -29,13 +27,15 @@ import ru.falseteam.control.ui.screens.popUpTo
 import ru.falseteam.control.ui.screens.recors.RecordsScreen
 import ru.falseteam.control.ui.screens.settings.SettingsScreen
 
-val AmbientNavigation = staticAmbientOf<NavController>()
+val LocalNavigation = staticCompositionLocalOf<NavController> {
+    throw RuntimeException()
+}
 
 @Composable
 fun MainScreen() {
     val navController = rememberNavController()
-    Providers(
-        AmbientNavigation provides navController
+    CompositionLocalProvider(
+        LocalNavigation provides navController
     ) {
         Scaffold(
             bottomBar = { Navigation(navController = navController, navItems = navItems) }
@@ -83,7 +83,7 @@ private fun Navigation(navController: NavController, navItems: List<NavItem>) {
         BottomNavigation(backgroundColor = MaterialTheme.colors.surface, elevation = 12.dp) {
             navItems.forEach { navItem ->
                 BottomNavigationItem(
-                    icon = { Icon(vectorResource(id = navItem.icon), null) },
+                    icon = { Icon(ImageVector.vectorResource(id = navItem.icon), null) },
                     label = { Text(navItem.name) },
                     selected = currentRoute == navItem.screen.path,
                     onClick = {

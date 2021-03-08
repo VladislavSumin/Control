@@ -18,7 +18,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.platform.AmbientContext
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -26,6 +27,8 @@ import androidx.compose.ui.window.Dialog
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import ru.falseteam.control.R
 import ru.falseteam.control.di.kodeinViewModel
@@ -47,7 +50,7 @@ fun RecordsScreen(viewModel: RecordsViewModel = kodeinViewModel()) {
 private fun Content(viewModel: RecordsViewModel) {
     ChangeNameScreen(viewModel)
 
-    val context = AmbientContext.current
+    val context = LocalContext.current
     val playerCache = remember {
         RecordsPlayerCache(context)
     }
@@ -65,15 +68,15 @@ private fun TopBar(scaffoldState: ScaffoldState, viewModel: RecordsViewModel) {
         Spacer(modifier = Modifier.weight(1f))
         IconButton(
             modifier = Modifier.align(Alignment.CenterVertically),
-            onClick = { scaffoldState.drawerState.open() }
+            onClick = { GlobalScope.launch { scaffoldState.drawerState.open() } } //FIXME check this run GlobalScope later
         ) {
-            Icon(vectorResource(id = R.drawable.ic_filter), "filter")
+            Icon(ImageVector.vectorResource(id = R.drawable.ic_filter), "filter")
         }
         IconButton(
             modifier = Modifier.align(Alignment.CenterVertically),
             onClick = { viewModel.forceUpdate() }
         ) {
-            Icon(vectorResource(id = R.drawable.ic_refresh), "refresh")
+            Icon(ImageVector.vectorResource(id = R.drawable.ic_refresh), "refresh")
         }
     }
 }
@@ -209,7 +212,7 @@ private fun RecordCard(
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 IconButton(onClick = { viewModel.showRenameDialog(record) }) {
-                    Icon(vectorResource(id = R.drawable.ic_edit), "rename")
+                    Icon(ImageVector.vectorResource(id = R.drawable.ic_edit), "rename")
                 }
             }
 
@@ -234,14 +237,18 @@ private fun RecordCard(
             Row {
                 IconButton(onClick = { viewModel.setKeepForever(record) }) {
                     if (record.keepForever) Icon(
-                        vectorResource(id = R.drawable.ic_star_filled), "start set",
+                        ImageVector.vectorResource(id = R.drawable.ic_star_filled), "start set",
                         tint = Color.Unspecified
                     )
-                    else Icon(vectorResource(id = R.drawable.ic_star), "start not set")
+                    else Icon(ImageVector.vectorResource(id = R.drawable.ic_star), "start not set")
                 }
                 Spacer(modifier = Modifier.weight(1f))
                 IconButton(onClick = { viewModel.deleteRecord(record.id) }) {
-                    Icon(vectorResource(id = R.drawable.ic_delete), "delete", tint = red900)
+                    Icon(
+                        ImageVector.vectorResource(id = R.drawable.ic_delete),
+                        "delete",
+                        tint = red900
+                    )
                 }
             }
         }
@@ -270,7 +277,7 @@ private fun Preview(record: RecordUiModel, onlClick: () -> Unit) {
                     modifier = Modifier.align(Alignment.Center)
                 ) {
                     Icon(
-                        imageVector = vectorResource(id = R.drawable.ic_play),
+                        imageVector = ImageVector.vectorResource(id = R.drawable.ic_play),
                         contentDescription = "play",
                         tint = Color.White,
                     )
@@ -282,7 +289,7 @@ private fun Preview(record: RecordUiModel, onlClick: () -> Unit) {
 
 @Composable
 private fun loadPicture(uri: Uri): PictureLoadState {
-    val context = AmbientContext.current
+    val context = LocalContext.current
     val (bitmapState, _) = remember(uri) {
         val state = mutableStateOf<PictureLoadState>(PictureLoadState.Loading)
         val (_, setState) = state
@@ -317,9 +324,7 @@ private fun VideoRecord(record: RecordUiModel, playerCache: RecordsPlayerCache) 
             modifier = Modifier
                 .fillMaxWidth()
                 .aspectRatio(16 / 9f),
-            viewBlock = {
-                player
-            }
+            factory = { player }
         ) {
             if (it.currentPlayId != record.id) {
                 it.setRecord(record)

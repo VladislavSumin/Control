@@ -3,15 +3,17 @@ package ru.falseteam.config
 object Configuration {
     object Versions {
         const val kotlin = "1.4.30"
-        const val ktor = "1.5.1"
+        const val ktor = "1.5.2"
         const val log4j2 = "2.14.0"
         const val kodein = "7.3.1"
         const val sqldelight = "1.4.4"
-        const val sentry = "4.1.0"
-        const val compose = "1.0.0-alpha12"
-        const val coroutines = "1.4.2"
+        const val sentry = "4.3.0"
+        const val compose = "1.0.0-beta01"
+        const val coroutines = "1.4.3"
         const val glide = "4.12.0"
-        const val activity = "1.3.0-alpha02"
+        const val activity = "1.3.0-alpha03"
+        const val exoplayer = "2.13.2"
+        const val serialization = "1.1.0"
     }
 
     object Android {
@@ -30,7 +32,8 @@ object Configuration {
                 "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.coroutines}"
             const val coroutinesDebug =
                 "org.jetbrains.kotlinx:kotlinx-coroutines-debug:${Versions.coroutines}"
-            const val serialization = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.0.1"
+            const val serialization =
+                "org.jetbrains.kotlinx:kotlinx-serialization-json:${Versions.serialization}"
         }
 
         //TODO make separate object for ktor
@@ -47,7 +50,7 @@ object Configuration {
         const val sentryAndroid = "io.sentry:sentry-android:${Versions.sentry}"
         const val sentry = "io.sentry:sentry:${Versions.sentry}"
 
-        const val exoplayer = "com.google.android.exoplayer:exoplayer:2.13.1"
+        const val exoplayer = "com.google.android.exoplayer:exoplayer:${Versions.exoplayer}"
 
         const val glide = "com.github.bumptech.glide:glide:${Versions.glide}"
         const val glideCompiler = "com.github.bumptech.glide:compiler:${Versions.glide}"
@@ -71,7 +74,7 @@ object Configuration {
             const val ui = "androidx.compose.ui:ui:${Versions.compose}"
             const val material = "androidx.compose.material:material:${Versions.compose}"
             const val uiTooling = "androidx.compose.ui:ui-tooling:${Versions.compose}"
-            const val navigation = "androidx.navigation:navigation-compose:1.0.0-alpha07"
+            const val navigation = "androidx.navigation:navigation-compose:1.0.0-alpha08"
         }
 
         object Android {

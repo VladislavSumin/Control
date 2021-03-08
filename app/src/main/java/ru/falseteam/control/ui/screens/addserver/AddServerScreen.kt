@@ -7,13 +7,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.savedinstancestate.savedInstanceState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import ru.falseteam.control.di.kodeinViewModel
 import ru.falseteam.uikit.elements.UiKitPrimaryAccentButton
 import ru.falseteam.control.ui.screens.Screen
-import ru.falseteam.control.ui.screens.main.AmbientNavigation
+import ru.falseteam.control.ui.screens.main.LocalNavigation
 import ru.falseteam.control.ui.screens.navigate
 
 @Composable
@@ -21,7 +20,7 @@ fun AddServerScreen(viewModel: AddServerViewModel = kodeinViewModel()) {
     when (viewModel.state.collectAsState().value) {
         AddServerState.Input -> InputState(viewModel = viewModel)
         AddServerState.Success -> {
-            AmbientNavigation.current.navigate(Screen.HomeScreen) {
+            LocalNavigation.current.navigate(Screen.HomeScreen) {
                 popUpTo = 0
                 launchSingleTop = true
             }

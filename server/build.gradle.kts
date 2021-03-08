@@ -32,8 +32,8 @@ sqldelight {
 }
 
 buildConfig {
-    className = "BuildConfig"
-    packageName = "ru.falseteam.control.server"
+    className("BuildConfig")
+    packageName("ru.falseteam.control.server")
     buildConfigField("String", "version", "\"$version\"")
     buildConfigField("int", "buildNumber", pBuildNumber)
     buildConfigField("boolean", "DEBUG", pIsBuildAgent.toBoolean().not().toString())

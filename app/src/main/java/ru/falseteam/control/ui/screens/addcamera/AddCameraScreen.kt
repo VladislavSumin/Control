@@ -8,14 +8,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.savedinstancestate.savedInstanceState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import ru.falseteam.control.api.dto.CameraDTO
 import ru.falseteam.control.di.kodeinViewModel
 import ru.falseteam.uikit.elements.UiKitPrimaryAccentButton
-import ru.falseteam.control.ui.screens.main.AmbientNavigation
+import ru.falseteam.control.ui.screens.main.LocalNavigation
 
 @Composable
 fun AddCameraScreen(
@@ -29,7 +28,7 @@ fun AddCameraScreen(
     val (port, setPort) = rememberSaveable { mutableStateOf("") }
 
     if (state is AddCameraState.Success) {
-        AmbientNavigation.current.popBackStack()
+        LocalNavigation.current.popBackStack()
         return
     }
 
