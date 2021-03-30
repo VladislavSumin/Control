@@ -101,13 +101,16 @@ dependencies {
     with(Configuration.Dependencies) {
         implementation(kodein)
         implementation(kodeinAndroidX)
-        implementation(ktorClient)
-        implementation(ktorClientSerialization)
         implementation(setting)
         implementation(sentryAndroid)
         implementation(exoplayer)
         implementation(glide)
         kapt(glideCompiler)
+    }
+
+    with(Configuration.Dependencies.Ktor) {
+        implementation(client)
+        implementation(clientSerialization)
     }
 
     with(Configuration.Dependencies.Logging) {

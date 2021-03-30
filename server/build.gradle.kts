@@ -49,11 +49,12 @@ dependencies {
         implementation(reflect)
         implementation(coroutinesDebug)
     }
+    with(Dependencies.Ktor) {
+        implementation(server)
+        implementation(webSocket)
+        implementation(serverSerialization)
+    }
     with(Dependencies) {
-        implementation(ktorServer)
-        implementation(ktorWebSocket)
-        implementation(ktorSerialization)
-
         implementation(kodein)
         implementation(setting)
         implementation(sentry)
