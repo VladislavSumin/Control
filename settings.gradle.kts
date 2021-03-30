@@ -4,7 +4,7 @@ plugins {
 
 rootProject.name = "Control"
 includeBuild("../rSub")
-include(":common", ":app", ":server", ":api", "cams-connection", ":uikit")
+include(":common", ":app", ":server", ":api", "cams-connection", ":uikit", "mqtt-client")
 
 val pIsBuildAgent: String by settings
 
