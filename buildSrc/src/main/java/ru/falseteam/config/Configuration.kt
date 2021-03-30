@@ -37,13 +37,14 @@ object Configuration {
                 "org.jetbrains.kotlinx:kotlinx-serialization-json:${Versions.serialization}"
         }
 
-        //TODO make separate object for ktor
-        const val ktorServer = "io.ktor:ktor-server-netty:${Versions.ktor}"
-        const val ktorWebSocket = "io.ktor:ktor-websockets:${Versions.ktor}"
-        const val ktorClient = "io.ktor:ktor-client-okhttp:${Versions.ktor}"
-        const val ktorNetwork = "io.ktor:ktor-network:${Versions.ktor}"
-        const val ktorSerialization = "io.ktor:ktor-serialization:${Versions.ktor}"
-        const val ktorClientSerialization = "io.ktor:ktor-client-serialization:${Versions.ktor}"
+        object Ktor {
+            const val server = "io.ktor:ktor-server-netty:${Versions.ktor}"
+            const val webSocket = "io.ktor:ktor-websockets:${Versions.ktor}"
+            const val client = "io.ktor:ktor-client-okhttp:${Versions.ktor}"
+            const val network = "io.ktor:ktor-network:${Versions.ktor}"
+            const val serverSerialization = "io.ktor:ktor-serialization:${Versions.ktor}"
+            const val clientSerialization = "io.ktor:ktor-client-serialization:${Versions.ktor}"
+        }
 
         const val kodein = "org.kodein.di:kodein-di:${Versions.kodein}"
         const val kodeinAndroidX = "org.kodein.di:kodein-di-framework-android-x:${Versions.kodein}"
@@ -75,7 +76,8 @@ object Configuration {
             const val ui = "androidx.compose.ui:ui:${Versions.compose}"
             const val material = "androidx.compose.material:material:${Versions.compose}"
             const val uiTooling = "androidx.compose.ui:ui-tooling:${Versions.compose}"
-            const val navigation = "androidx.navigation:navigation-compose:${Versions.composeNavigation}"
+            const val navigation =
+                "androidx.navigation:navigation-compose:${Versions.composeNavigation}"
         }
 
         object Android {

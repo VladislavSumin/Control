@@ -21,10 +21,9 @@ dependencies {
         implementation(coroutines)
         implementation(serialization)
     }
-    with(Dependencies) {
-        implementation(ktorNetwork)
+    with(Dependencies.Ktor) {
+        implementation(network)
     }
-
     with(Dependencies.Logging) {
         implementation(slf4j)
     }
