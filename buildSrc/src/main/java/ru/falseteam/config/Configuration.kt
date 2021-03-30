@@ -2,16 +2,17 @@ package ru.falseteam.config
 
 object Configuration {
     object Versions {
-        const val kotlin = "1.4.30"
+        const val kotlin = "1.4.31"
         const val ktor = "1.5.2"
-        const val log4j2 = "2.14.0"
-        const val kodein = "7.3.1"
+        const val log4j2 = "2.14.1"
+        const val kodein = "7.5.0"
         const val sqldelight = "1.4.4"
         const val sentry = "4.3.0"
-        const val compose = "1.0.0-beta01"
+        const val compose = "1.0.0-beta03"
+        const val composeNavigation = "1.0.0-alpha09"
         const val coroutines = "1.4.3"
         const val glide = "4.12.0"
-        const val activity = "1.3.0-alpha03"
+        const val activity = "1.3.0-alpha05"
         const val exoplayer = "2.13.2"
         const val serialization = "1.1.0"
     }
@@ -74,7 +75,7 @@ object Configuration {
             const val ui = "androidx.compose.ui:ui:${Versions.compose}"
             const val material = "androidx.compose.material:material:${Versions.compose}"
             const val uiTooling = "androidx.compose.ui:ui-tooling:${Versions.compose}"
-            const val navigation = "androidx.navigation:navigation-compose:1.0.0-alpha08"
+            const val navigation = "androidx.navigation:navigation-compose:${Versions.composeNavigation}"
         }
 
         object Android {
