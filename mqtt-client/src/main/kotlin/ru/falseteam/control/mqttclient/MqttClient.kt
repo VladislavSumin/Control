@@ -6,12 +6,13 @@ import kotlinx.coroutines.channels.sendBlocking
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.suspendCancellableCoroutine
 import org.eclipse.paho.client.mqttv3.*
+import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence
 import java.lang.IllegalStateException
 import kotlin.coroutines.resumeWithException
 
 class MqttClient(serverUrl: String, clientId: String = "control-mqtt-client") {
     private val connection = channelFlow {
-        val client = MqttAsyncClient(serverUrl, clientId)
+        val client = MqttAsyncClient(serverUrl, clientId, MemoryPersistence())
         try {
             connect(client)
             send(client)
